@@ -7,320 +7,231 @@
     <style>
         body {
             margin: 0;
-            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-            background: #f7f7f7;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
             color: #222;
         }
         header {
             background: #8D064A;
-            color: white;
-            padding: 1rem;
+            color: #fff;
+            padding: 1.5rem;
             text-align: center;
             font-size: 1.5rem;
             font-weight: bold;
         }
         .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
-        .profiles {
             display: flex;
             flex-wrap: wrap;
-            gap: 2rem;
             justify-content: center;
+            padding: 2rem 1rem;
+            max-width: 1200px;
+            margin: auto;
         }
-        .profile-card {
-            background: white;
+        .card {
+            background: #fff;
             border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            flex: 1 1 300px;
-            max-width: 350px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            margin: 1rem;
             padding: 1.5rem;
+            width: 300px;
             text-align: center;
             transition: transform 0.3s ease;
         }
-        .profile-card:hover {
+        .card:hover {
             transform: translateY(-5px);
         }
-        .profile-card img {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
+        .card img {
+            width: 120px;
+            height: 120px;
             object-fit: cover;
+            border-radius: 50%;
             margin-bottom: 1rem;
         }
-        .profile-card h3 {
+        .card h3 {
             margin: 0.5rem 0;
-            color: #1B65A5;
+            color: #06283F;
         }
-        .profile-card p {
+        .card p {
+            font-size: 0.9rem;
+            color: #333;
+            min-height: 50px;
+        }
+        .card button {
+            margin-top: 1rem;
+            padding: 0.7rem 1.2rem;
+            background: #1B65A5;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
             font-size: 0.95rem;
+        }
+        .card button:hover {
+            background: #0f4c7f;
+        }
+        #quiz-section {
+            display: none;
+            max-width: 700px;
+            margin: auto;
+            padding: 2rem 1rem;
+            text-align: center;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        #quiz-section h2 {
+            color: #8D064A;
             margin-bottom: 1rem;
         }
-        button {
+        .answer-btn {
+            display: block;
+            width: 100%;
+            margin: 0.5rem auto;
+            padding: 0.8rem;
             background: #1B65A5;
             color: white;
             border: none;
-            padding: 0.7rem 1.2rem;
-            border-radius: 6px;
+            border-radius: 5px;
             cursor: pointer;
-            transition: background 0.3s ease;
-        }
-        button:hover {
-            background: #06283F;
-        }
-        .question-section {
-            display: none;
-            background: white;
-            padding: 2rem;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            margin-top: 2rem;
-            animation: fadeIn 0.4s ease forwards;
-        }
-        .question {
-            font-size: 1.2rem;
-            font-weight: bold;
-            margin-bottom: 1.5rem;
-        }
-        .answers {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-        .answers button {
             font-size: 1rem;
-            padding: 1rem;
-            text-align: left;
-            white-space: normal;
         }
-        .result-section {
+        .answer-btn:hover {
+            background: #0f4c7f;
+        }
+        #result-section {
             display: none;
-            background: white;
-            padding: 2rem;
-            margin-top: 2rem;
+            max-width: 700px;
+            margin: auto;
+            padding: 2rem 1rem;
+            text-align: center;
+            background: #fff;
             border-radius: 10px;
-            animation: fadeIn 0.4s ease forwards;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
-        @keyframes fadeIn {
-            from {opacity: 0; transform: translateY(10px);}
-            to {opacity: 1; transform: translateY(0);}
+        #result-section h2 {
+            color: #8D064A;
         }
-        @media screen and (max-width: 768px) {
-            .profiles {
-                flex-direction: column;
-                align-items: center;
-            }
-            .question {
-                font-size: 1rem;
-            }
+        #result-section p {
+            font-size: 1rem;
+            line-height: 1.4;
+        }
+        @media(max-width:768px){
+            .container {flex-direction: column; align-items:center;}
+            .card {width: 90%;}
         }
     </style>
 </head>
 <body>
+
 <header>Scenario HR Avanzato</header>
-<div class="container">
 
-    <!-- SELEZIONE PROFILI -->
-    <div id="profileSelection" class="profiles">
-        <div class="profile-card">
-            <img src="https://i.ibb.co/WvS5GzH/giulia.jpg" alt="Giulia Rossi">
-            <h3>Giulia Rossi - Innovatrice</h3>
-            <p>Giovane con idee fuori dagli schemi, ma inesperta nella gestione di team.</p>
-            <button onclick="startTest('giulia')">Seleziona</button>
-        </div>
-        <div class="profile-card">
-            <img src="https://i.ibb.co/0rF5YcN/marco.jpg" alt="Marco Bianchi">
-            <h3>Marco Bianchi - Tradizionalista</h3>
-            <p>Manager esperto e affidabile, con approccio prudente e consolidato.</p>
-            <button onclick="startTest('marco')">Seleziona</button>
-        </div>
-        <div class="profile-card">
-            <img src="https://i.ibb.co/fM6ngRF/sara.jpg" alt="Sara Verdi">
-            <h3>Sara Verdi - Talento emergente</h3>
-            <p>Leader naturale, in crescita, energica e motivata.</p>
-            <button onclick="startTest('sara')">Seleziona</button>
-        </div>
+<div id="selection-section" class="container">
+    <div class="card">
+        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOE..." alt="Giulia Rossi">
+        <h3>Giulia Rossi - Innovatrice</h3>
+        <p>Giovane con idee fuori dagli schemi, ma inesperta nella gestione di team.</p>
+        <button onclick="startQuiz('innovatrice')">Seleziona</button>
     </div>
-
-    <!-- DOMANDE -->
-    <div id="questionSection" class="question-section">
-        <div class="question" id="questionText"></div>
-        <div class="answers" id="answers"></div>
+    <div class="card">
+        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOE..." alt="Marco Bianchi">
+        <h3>Marco Bianchi - Tradizionalista</h3>
+        <p>Manager esperto e affidabile, con approccio prudente e consolidato.</p>
+        <button onclick="startQuiz('tradizionalista')">Seleziona</button>
     </div>
-
-    <!-- RISULTATO -->
-    <div id="resultSection" class="result-section">
-        <h2>Risultato del tuo percorso</h2>
-        <p id="resultText"></p>
-        <button onclick="location.reload()">Ricomincia</button>
+    <div class="card">
+        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOE..." alt="Sara Verdi">
+        <h3>Sara Verdi - Talento emergente</h3>
+        <p>Leader naturale, in crescita, energica e motivata.</p>
+        <button onclick="startQuiz('talento')">Seleziona</button>
     </div>
 </div>
 
+<div id="quiz-section">
+    <h2 id="quiz-title"></h2>
+    <p id="quiz-question"></p>
+    <div id="answers"></div>
+</div>
+
+<div id="result-section">
+    <h2>Risultato finale</h2>
+    <p id="profile-analysis"></p>
+    <button onclick="window.location.reload()">Ricomincia</button>
+</div>
+
 <script>
-const profiles = {
-    giulia: {
-        questions: [
-            { q: "Come gestiresti un conflitto tra due team creativi?",
-              a: [
-                "Mediazione diretta, favorendo un brainstorming congiunto per trovare soluzioni comuni.",
-                "Separazione temporanea dei team per ridurre tensioni, con revisione processi in seguito.",
-                "Coinvolgerei un facilitatore esterno per garantire neutralità e visione innovativa."
-              ]
-            },
-            { q: "Qual è la tua strategia per introdurre innovazione in un ambiente tradizionale?",
-              a: [
-                "Inserire progetti pilota a basso rischio per mostrare i benefici del cambiamento.",
-                "Organizzare workshop formativi per ridurre resistenze interne.",
-                "Creare una task force multidisciplinare dedicata all’innovazione."
-              ]
-            },
-            { q: "Come reagisci a un rifiuto di un’idea da parte del board?",
-              a: [
-                "Cerco feedback dettagliato e riformulo l’idea per allinearla alle priorità.",
-                "Propongo un test rapido per validarne almeno un aspetto.",
-                "Accetto il rifiuto ma continuo a proporre nuove soluzioni alternative."
-              ]
-            },
-            { q: "Quali strumenti digitali utilizzeresti per ottimizzare i flussi di lavoro?",
-              a: [
-                "Implementerei un ERP integrato con dashboard in tempo reale.",
-                "Utilizzerei strumenti collaborativi (es. Notion, Asana) per trasparenza totale.",
-                "Svilupperei un’app proprietaria personalizzata per la nostra realtà."
-              ]
-            },
-            { q: "Come bilanci creatività e rispetto delle scadenze?",
-              a: [
-                "Calendarizzando revisioni settimanali per ridurre imprevisti.",
-                "Creando un team guardiano delle deadline.",
-                "Incentivando creatività solo nelle fasi iniziali, poi rigida esecuzione."
-              ]
-            }
+    const questions = {
+        innovatrice: [
+            { q: "Come gestiresti un team multiculturale con metodi non convenzionali?", a: ["Cercherei di integrare culture diverse innovando processi", "Applicherei regole classiche di team building", "Ignorerei le differenze e punterei solo agli obiettivi"] },
+            { q: "Se ti offrissero un budget ridotto per un progetto innovativo, cosa faresti?", a: ["Troverei sponsor alternativi", "Ridurrei la portata dell'idea", "Rinuncerei per evitare rischi"] },
+            { q: "Come affronteresti un leader senior contrario alle tue idee?", a: ["Dialogo costante e dati a supporto", "Segui il suo approccio per sicurezza", "Ignorerei i suoi feedback"] },
+            { q: "Preferisci sperimentare o pianificare rigidamente?", a: ["Sperimentare con margini di rischio", "Pianificazione strutturata", "No innovazione, solo routine"] },
+            { q: "Come gestisci fallimenti di progetti innovativi?", a: ["Lezione appresa e nuovo tentativo", "Analisi e blocco di iniziative simili", "Scaricare la responsabilità"] }
         ],
-        result: "Profilo Innovativo: pensi fuori dagli schemi, cerchi sempre soluzioni nuove e non ti fermi davanti agli ostacoli. La tua capacità di adattarti rapidamente ti rende un agente di cambiamento, ma richiede maggiore esperienza di coordinamento per evitare dispersione."
-    },
-    marco: {
-        questions: [
-            { q: "Come affronteresti un cambio improvviso del regolamento aziendale?",
-              a: [
-                "Applicazione immediata con comunicazione chiara a tutti i team.",
-                "Richiesta di un periodo di transizione per ridurre stress organizzativo.",
-                "Analisi legale approfondita prima di implementare ogni cambiamento."
-              ]
-            },
-            { q: "Qual è il tuo metodo per garantire stabilità nei momenti di crisi?",
-              a: [
-                "Focalizzarmi sulle procedure consolidate per minimizzare errori.",
-                "Comunicazioni frequenti e rassicuranti a tutti i livelli.",
-                "Delegare la gestione operativa per concentrarmi sulle decisioni strategiche."
-              ]
-            },
-            { q: "Come ti rapporti con team multigenerazionali?",
-              a: [
-                "Programmi di mentoring reciproco per scambio di esperienze.",
-                "Focus su regole uguali per tutti per evitare favoritismi.",
-                "Attenzione particolare ai più giovani per integrarli rapidamente."
-              ]
-            },
-            { q: "Che ruolo dai alla digitalizzazione in processi consolidati?",
-              a: [
-                "Introdurre tecnologia solo dove strettamente necessario.",
-                "Monitorare l’impatto con KPI precisi prima di ogni investimento.",
-                "Delegare a consulenti esterni l’implementazione per non distrarre il team."
-              ]
-            },
-            { q: "Come garantisci l’allineamento con le policy aziendali?",
-              a: [
-                "Audit periodici e controlli interni stringenti.",
-                "Incentivi economici legati al rispetto delle policy.",
-                "Formazione obbligatoria per tutti i dipendenti ogni trimestre."
-              ]
-            }
+        tradizionalista: [
+            { q: "Come reagisci a una crisi improvvisa?", a: ["Seguo protocolli standard", "Chiedo nuove soluzioni fuori schema", "Ignoro temporaneamente"] },
+            { q: "Come assegni ruoli in un team?", a: ["Basandomi su esperienza e anzianità", "Facendo rotazioni frequenti", "Scelta casuale"] },
+            { q: "Preferisci modelli noti o innovativi?", a: ["Modelli consolidati", "Mix tra tradizione e innovazione", "Solo innovazione estrema"] },
+            { q: "Come valuti le performance?", a: ["Con indicatori classici", "Con metriche sperimentali", "Senza misure precise"] },
+            { q: "Qual è il tuo approccio alla gestione del rischio?", a: ["Prudente e controllato", "Calcolo medio", "Altamente rischioso"] }
         ],
-        result: "Profilo Tradizionalista: preferisci stabilità e affidabilità, riducendo i rischi al minimo. La tua forza è nella coerenza e nel rispetto delle regole, ma potresti trarre vantaggio da un approccio più aperto all’innovazione."
-    },
-    sara: {
-        questions: [
-            { q: "Come gestiresti la tua prima responsabilità di budget?",
-              a: [
-                "Analizzerei i dati storici per costruire una pianificazione prudente.",
-                "Mi farei affiancare da un senior per i primi mesi.",
-                "Investirei subito in strumenti di controllo di spesa digitali."
-              ]
-            },
-            { q: "Qual è il tuo approccio alla gestione di colleghi più esperti di te?",
-              a: [
-                "Li coinvolgerei nelle decisioni chiave per valorizzare la loro esperienza.",
-                "Li osserverei inizialmente senza interferire, guadagnando fiducia con i fatti.",
-                "Imposterei regole chiare fin da subito per evitare fraintendimenti."
-              ]
-            },
-            { q: "Come costruisci autorevolezza con un team nuovo?",
-              a: [
-                "Essendo trasparente sulle mie competenze e limiti.",
-                "Ascoltando attivamente i bisogni del team nelle prime settimane.",
-                "Lavorando più di tutti per dare l’esempio."
-              ]
-            },
-            { q: "Come trasformi un feedback negativo in opportunità?",
-              a: [
-                "Analizzando subito la causa e creando un piano di miglioramento.",
-                "Confrontandomi apertamente con chi l’ha espresso.",
-                "Trasformandolo in obiettivo di sviluppo per il team."
-              ]
-            },
-            { q: "Qual è la tua strategia di crescita personale nei prossimi 3 anni?",
-              a: [
-                "Investire su formazione manageriale certificata.",
-                "Creare un network di mentor.",
-                "Accettare incarichi sfidanti anche fuori comfort zone."
-              ]
-            }
-        ],
-        result: "Profilo Emergente: energia, curiosità e desiderio di crescita sono i tuoi punti forti. La tua leadership naturale è evidente, ma richiede consolidamento con esperienza sul campo e pianificazione strategica."
-    }
-};
+        talento: [
+            { q: "Come costruisci la fiducia di un team nuovo?", a: ["Relazioni personali forti", "Solo risultati tangibili", "Non mi interessa la fiducia"] },
+            { q: "Come reagisci a un feedback negativo?", a: ["Lo accetto e miglioro", "Mi difendo sempre", "Ignoro le critiche"] },
+            { q: "Sei posto davanti a un obiettivo impossibile, cosa fai?", a: ["Motivo il team e innovo", "Chiedo più risorse", "Lascio perdere"] },
+            { q: "Come sviluppi le tue competenze?", a: ["Formazione continua", "Solo sul campo", "Non serve formazione"] },
+            { q: "Come promuovi l'inclusione?", a: ["Attivamente", "In modo neutrale", "Non la considero prioritaria"] }
+        ]
+    };
 
-let currentProfile = null;
-let currentQuestionIndex = 0;
+    let currentProfile = "";
+    let currentQuestionIndex = 0;
+    let answersSelected = [];
 
-function startTest(profileKey) {
-    currentProfile = profiles[profileKey];
-    currentQuestionIndex = 0;
-    document.getElementById("profileSelection").style.display = "none";
-    document.getElementById("questionSection").style.display = "block";
-    loadQuestion();
-}
-
-function loadQuestion() {
-    const q = currentProfile.questions[currentQuestionIndex];
-    document.getElementById("questionText").innerText = q.q;
-    const answersDiv = document.getElementById("answers");
-    answersDiv.innerHTML = "";
-    q.a.forEach(answer => {
-        const btn = document.createElement("button");
-        btn.textContent = answer;
-        btn.onclick = nextQuestion;
-        answersDiv.appendChild(btn);
-    });
-}
-
-function nextQuestion() {
-    currentQuestionIndex++;
-    if (currentQuestionIndex < currentProfile.questions.length) {
+    function startQuiz(profile) {
+        currentProfile = profile;
+        currentQuestionIndex = 0;
+        answersSelected = [];
+        document.getElementById("selection-section").style.display = "none";
+        document.getElementById("quiz-section").style.display = "block";
         loadQuestion();
-    } else {
-        showResult();
     }
-}
 
-function showResult() {
-    document.getElementById("questionSection").style.display = "none";
-    document.getElementById("resultSection").style.display = "block";
-    document.getElementById("resultText").innerText = currentProfile.result;
-}
+    function loadQuestion() {
+        const questionData = questions[currentProfile][currentQuestionIndex];
+        document.getElementById("quiz-title").innerText = "Domanda " + (currentQuestionIndex + 1);
+        document.getElementById("quiz-question").innerText = questionData.q;
+        const answersDiv = document.getElementById("answers");
+        answersDiv.innerHTML = "";
+        questionData.a.forEach(answer => {
+            const btn = document.createElement("button");
+            btn.innerText = answer;
+            btn.classList.add("answer-btn");
+            btn.onclick = () => nextQuestion(answer);
+            answersDiv.appendChild(btn);
+        });
+    }
+
+    function nextQuestion(answer) {
+        answersSelected.push(answer);
+        currentQuestionIndex++;
+        if (currentQuestionIndex < questions[currentProfile].length) {
+            loadQuestion();
+        } else {
+            showResult();
+        }
+    }
+
+    function showResult() {
+        document.getElementById("quiz-section").style.display = "none";
+        document.getElementById("result-section").style.display = "block";
+        const profileDescriptions = {
+            innovatrice: "Hai scelto un approccio innovativo, creativo e resiliente, capace di trasformare complessità in opportunità.",
+            tradizionalista: "La tua scelta denota stabilità, metodo e sicurezza: punti di forza in contesti complessi ma regolati.",
+            talento: "Hai mostrato una leadership naturale, dinamica e collaborativa, in crescita costante e orientata al futuro."
+        };
+        document.getElementById("profile-analysis").innerText = profileDescriptions[currentProfile];
+    }
 </script>
+
 </body>
 </html>
