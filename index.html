@@ -7,64 +7,71 @@
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap"
         rel="stylesheet"/>
   <style>
+    /* Nasconde gli elementi con classe hidden */
     .hidden { display: none !important; }
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Roboto',sans-serif; }
-    body { background: #f5f6fa; color: #222; }
-    .container { max-width: 900px; margin: auto; padding: 20px; }
-    h1 { text-align: center; margin-bottom: 30px; color: #8D064A; }
 
+    /* Reset e base */
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family:'Roboto',sans-serif; }
+    body { background:#f5f6fa; color:#222; }
+    .container { max-width:900px; margin:auto; padding:20px; }
+    h1 { text-align:center; margin-bottom:30px; color:#8D064A; }
+
+    /* Scatole domanda e risultato */
     .question-box, .result-box {
-      background: #fff;
-      padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-      margin-bottom: 20px;
-      animation: fadeIn 0.4s ease-in-out;
+      background:#fff; padding:30px; border-radius:12px;
+      box-shadow:0 4px 15px rgba(0,0,0,0.1); margin-bottom:20px;
+      animation:fadeIn .4s ease-in-out;
     }
-    .question-text { font-size: 1.3rem; font-weight: 700; margin-bottom: 20px; }
-    .option {
-      display: block; width: 100%; background: #1B65A5; color: #fff;
-      padding: 14px; margin: 8px 0; border: none; border-radius: 6px;
-      font-size: 1.05rem; text-align: left; transition: background 0.2s, transform 0.2s;
+    .question-text {
+      font-size:1.3rem; font-weight:700; margin-bottom:20px;
     }
-    .option:hover { background: #4AAFD8; transform: scale(1.02); }
 
+    /* Pulsanti risposta */
+    .option {
+      display:block; width:100%; background:#1B65A5; color:#fff;
+      padding:14px; margin:8px 0; border:none; border-radius:6px;
+      font-size:1.05rem; text-align:left; transition:background .2s,transform .2s;
+    }
+    .option:hover {
+      background:#4AAFD8; transform:scale(1.02);
+    }
+    /* Rimuove ogni focus o active styling residuo */
     .option:focus, .btn:focus {
-      outline: none !important;
-      box-shadow: none !important;
-      background: #1B65A5 !important;
+      outline:none!important; box-shadow:none!important;
+      background:#1B65A5!important;
     }
     .option:active, .btn:active {
-      background: #124b74 !important;
+      background:#1B65A5!important;
     }
 
-    .result-box h2 { color: #8D064A; margin-bottom: 20px; }
-    #radarChart, #barChart { max-width: 600px; margin: 30px auto; }
-    .profile-text { white-space: pre-wrap; line-height: 1.6; margin-top: 20px; }
+    /* Box risultato */
+    .result-box h2 { color:#8D064A; margin-bottom:20px; }
+    #radarChart, #barChart { max-width:600px; margin:30px auto; }
+    .profile-text { white-space:pre-wrap; line-height:1.6; margin-top:20px; }
 
-    .buttons {
-      display: flex; justify-content: flex-start; flex-wrap: wrap; margin-top: 20px;
-    }
+    /* Pulsanti azione */
+    .buttons { display:flex; justify-content:flex-start; flex-wrap:wrap; margin-top:20px; }
     .btn {
-      background: #8D064A; color: #fff; border: none; padding: 12px 20px;
-      border-radius: 8px; font-size: 1rem; margin: 5px 10px 5px 0; transition: background 0.2s;
+      background:#8D064A; color:#fff; border:none; padding:12px 20px;
+      border-radius:8px; font-size:1rem; margin:5px 10px 5px 0;
+      transition:background .2s;
     }
-    .btn:hover { background: #D80D32; }
+    .btn:hover { background:#D80D32; }
 
-    .history { margin-top: 40px; }
-    .history-item { padding: 8px 0; border-bottom: 1px solid #eee; }
+    /* Storico */
+    .history { margin-top:40px; }
+    .history-item { padding:8px 0; border-bottom:1px solid #eee; }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    @media (max-width: 768px) {
-      .option { font-size: 1rem; padding: 12px; }
-      .question-text { font-size: 1.1rem; }
-      .buttons { flex-direction: column; }
+    /* Animazioni e responsive */
+    @keyframes fadeIn { from { opacity:0; transform:translateY(10px);} to { opacity:1; transform:translateY(0);} }
+    @media(max-width:768px){
+      .option { font-size:1rem; padding:12px; }
+      .question-text { font-size:1.1rem; }
+      .buttons { flex-direction:column; }
     }
   </style>
 </head>
+
 <body>
   <div class="container">
     <h1>Test Psicologico Avanzato</h1>
@@ -82,25 +89,67 @@
     </div>
   </div>
 
+  <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>
+    // ----- 10 DOMANDE COMPLESSIVE -----
     const questions = [
       { text:"Come affronti un dilemma etico con impatto economico?", options:[
           "Analizzo razionalmente tutte le variabili",
           "Coinvolgo il team in un dibattito etico",
           "Bilancio profitto e valori cercando un compromesso innovativo"
         ], scores:[5,10,8] },
-      /* …le restanti 19 domande identiche a quelle precedenti… */
-      { text:"Quale approccio prediligi alla leadership?", options:[
-          "Gerarchico e direttivo",
-          "Partecipativo e flessibile",
-          "Distribuito e collaborativo"
-        ], scores:[6,8,10] }
+      { text:"Come gestisci lo stress decisionale in situazioni critiche?", options:[
+          "Pianifico ogni mossa basandomi sui dati",
+          "Agisco velocemente affidandomi all’intuizione",
+          "Cerco confronto immediato con i colleghi"
+        ], scores:[7,9,8] },
+      { text:"Un collaboratore viola una policy per urgenza: come reagisci?", options:[
+          "Applico la policy senza eccezioni",
+          "Dialogo per capire le motivazioni",
+          "Revisito il processo per eliminare il vincolo"
+        ], scores:[5,10,9] },
+      { text:"Come motivi un team demotivato?", options:[
+          "Imposto obiettivi chiari e misurabili",
+          "Organizzo attività di team building creative",
+          "Ascolto le esigenze individuali prima di tutto"
+        ], scores:[7,9,8] },
+      { text:"Sei chiamato a guidare un progetto fuori dalla tua comfort zone: cosa fai?", options:[
+          "Studio accuratamente prima di partire",
+          "Imparo facendo e adatto on the go",
+          "Coinvolgo esperti esterni fin da subito"
+        ], scores:[7,9,10] },
+      { text:"Qual è il tuo approccio alla leadership?", options:[
+          "Stile direttivo e gerarchico",
+          "Stile partecipativo e inclusivo",
+          "Stile distribuito e collaborativo"
+        ], scores:[6,9,10] },
+      { text:"Come reagisci se le tue idee vengono criticate?", options:[
+          "Mi difendo con dati e argomentazioni",
+          "Accolgo il feedback e rifletto",
+          "Ringrazio e cerco nuove prospettive"
+        ], scores:[6,8,10] },
+      { text:"Quando un progetto fallisce, qual è il tuo passo successivo?", options:[
+          "Analizzo gli errori e ristrutturo il piano",
+          "Supporto il team emotivamente",
+          "Cerco soluzioni creative e pivot rapido"
+        ], scores:[7,8,10] },
+      { text:"Come bilanci creatività e risorse limitate?", options:[
+          "Calcolo ROI per ogni idea",
+          "Mantengo margine creativo controllato",
+          "Investo in sperimentazione low‑cost"
+        ], scores:[7,10,8] },
+      { text:"Che peso dai all’empatia nella gestione del team?", options:[
+          "Poco, conta solo il risultato",
+          "Importante per il clima collaborativo",
+          "Fondamentale per la crescita di tutti"
+        ], scores:[5,10,9] }
     ];
 
     let currentQuestion = 0;
     let scoreLog = [];
 
+    // Carica la domanda corrente
     function loadQuestion(){
       const container = document.getElementById('question-container');
       container.innerHTML = '';
@@ -119,6 +168,7 @@
       }
     }
 
+    // Gestisce la scelta e sfoca il bottone
     function selectOption(idx){
       if(document.activeElement) document.activeElement.blur();
       scoreLog.push(questions[currentQuestion].scores[idx]);
@@ -126,17 +176,18 @@
       loadQuestion();
     }
 
+    // Calcola i tratti medi
     function analyzeScores(scores){
       const avg = arr => arr.reduce((a,b)=>a+b,0)/arr.length;
       return {
-        leadership: Math.min(10, avg([scores[0],scores[6],scores[18]])),
-        etica:      Math.min(10, avg([scores[1],scores[4],scores[7]])),
-        adattabilita:Math.min(10, avg([scores[5],scores[15],scores[12]])),
-        creativita: Math.min(10, avg([scores[2],scores[13],scores[14]])),
-        empatia:    Math.min(10, avg([scores[9],scores[10],scores[17]]))
+        leadership:  Math.min(10, avg([scores[0],scores[1],scores[2]])),
+        etica:       Math.min(10, avg([scores[3],scores[4],scores[5]])),
+        adattabilita:Math.min(10, avg([scores[6],scores[7],scores[8]])),
+        empatia:     Math.min(10, avg([scores[9]]))
       };
     }
 
+    // Mostra il risultato
     function showResult(){
       document.getElementById('question-container').classList.add('hidden');
       document.getElementById('result-box').classList.remove('hidden');
@@ -146,50 +197,54 @@
       saveHistory(traits);
     }
 
+    // Grafici radar e barre
     function renderCharts(t){
       new Chart(document.getElementById('radarChart').getContext('2d'),{
         type:'radar',
         data:{
-          labels:['Leadership','Etica','Adattabilità','Creatività','Empatia'],
-          datasets:[{label:'Profilo',data:[t.leadership,t.etica,t.adattabilita,t.creativita,t.empatia],
-            backgroundColor:'rgba(24,99,195,0.2)',borderColor:'#1863C3'}]
+          labels:['Leadership','Etica','Adattabilità','Empatia'],
+          datasets:[{label:'Profilo',data:[
+            t.leadership,t.etica,t.adattabilita,t.empatia
+          ],backgroundColor:'rgba(24,99,195,0.2)',borderColor:'#1863C3'}]
         },
         options:{responsive:true,scales:{r:{min:0,max:10}}}
       });
       new Chart(document.getElementById('barChart').getContext('2d'),{
         type:'bar',
         data:{
-          labels:['Leadership','Etica','Adattabilità','Creatività','Empatia'],
-          datasets:[{label:'Valore',data:[t.leadership,t.etica,t.adattabilita,t.creativita,t.empatia],
-            backgroundColor:'#8D064A'}]
+          labels:['Leadership','Etica','Adattabilità','Empatia'],
+          datasets:[{label:'Valore',data:[
+            t.leadership,t.etica,t.adattabilita,t.empatia
+          ],backgroundColor:'#8D064A'}]
         },
         options:{responsive:true,scales:{y:{beginAtZero:true,max:10}}}
       });
     }
 
+    // Genera testo di profilo
     function generateProfileText(t){
       const text = `
-Il tuo profilo psicologico evidenzia:
+Il tuo profilo psicologico mostra:
 - Leadership: ${t.leadership.toFixed(1)}/10
 - Etica: ${t.etica.toFixed(1)}/10
 - Adattabilità: ${t.adattabilita.toFixed(1)}/10
-- Creatività: ${t.creativita.toFixed(1)}/10
 - Empatia: ${t.empatia.toFixed(1)}/10
 
-Questi punteggi descrivono un individuo capace di integrare analisi razionale ed empatia, con spiccata flessibilità mentale e gusto per l’innovazione. La tua leadership si esprime in contesti di forte complessità, mentre l’approccio etico e adattivo indica una solida consapevolezza dei valori organizzativi. Psicologicamente possiedi risorse di resilienza e creatività che ti rendono adatto a guidare team in situazioni di incertezza, bilanciando risultato e benessere collettivo.
-      `.trim();
-      document.getElementById('profile-text').innerText = text;
+Mostri un equilibrio tra razionalità e sensibilità umana, con capacità di adattarti ai cambiamenti e mantenere un alto livello di integrità etica. Questo profilo è ideale per ruoli che richiedono guida attenta e supporto empatico al team.`;
+      document.getElementById('profile-text').innerText = text.trim();
     }
 
+    // Salva storico in LocalStorage
     function saveHistory(t){
       const hist = JSON.parse(localStorage.getItem('testHistory')||'[]');
-      hist.push({ date: new Date().toLocaleString(), traits: t });
+      hist.push({ date:new Date().toLocaleString(), traits:t });
       localStorage.setItem('testHistory', JSON.stringify(hist));
       const div = document.getElementById('history');
       div.innerHTML = '<h3>Storico Test</h3>' +
-        hist.map(r=>`<div class="history-item">${r.date}: L${r.traits.leadership.toFixed(1)}, E${r.traits.etica.toFixed(1)}, A${r.traits.adattabilita.toFixed(1)}, C${r.traits.creativita.toFixed(1)}, Emp${r.traits.empatia.toFixed(1)}</div>`).join('');
+        hist.map(r=>`<div class="history-item">${r.date}: L${r.traits.leadership.toFixed(1)}, E${r.traits.etica.toFixed(1)}, A${r.traits.adattabilita.toFixed(1)}, Emp${r.traits.empatia.toFixed(1)}</div>`).join('');
     }
 
+    // Pulsante "Ricomincia"
     document.getElementById('restart').onclick = ()=>location.reload();
 
     // Avvia quiz
