@@ -1,166 +1,240 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Scenario HR Avanzato</title>
-  <style>
-    :root {--primary:#1B65A5;--secondary:#8D064A;--accent:#D80D32;--bg:#F1E5D7;--text:#06283F;--white:#fff;}
-    *{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',sans-serif;}
-    body{background:var(--bg);padding:10px;display:flex;justify-content:center;}
-    .container{max-width:900px;width:100%;background:var(--white);border-radius:10px;padding:20px;box-shadow:0 4px 15px rgba(0,0,0,0.1);}
-    h1{text-align:center;color:var(--secondary);margin-bottom:20px;}
-    .card-list{display:flex;flex-wrap:wrap;justify-content:space-around;gap:15px;margin-bottom:30px;animation:fadeIn 1s ease;}
-    .candidate-card{flex:1 1 30%;min-width:250px;background:#f9f9f9;padding:15px;border-radius:10px;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,0.08);transition:transform .3s;}
-    .candidate-card:hover{transform:translateY(-5px);}
-    .candidate-card img{width:80px;height:80px;border-radius:50%;margin-bottom:10px;}
-    .candidate-card h3{color:var(--primary);margin-bottom:8px;}
-    .candidate-card p{font-size:0.9rem;margin-bottom:15px;color:#555;}
-    .candidate-card button{background:var(--primary);color:var(--white);border:none;padding:8px 14px;border-radius:5px;cursor:pointer;}
-    .candidate-card button:hover{background:var(--text);}
-    .question-section{animation:fadeIn .7s ease;}
-    .question-image{width:100%;border-radius:10px;margin-bottom:15px;}
-    .question{text-align:center;font-size:1.2rem;margin-bottom:20px;padding:0 10px;}
-    .options button{width:100%;padding:12px;font-size:1rem;margin-bottom:10px;border:none;border-radius:6px;cursor:pointer;background:var(--primary);color:var(--white);transition:background .3s;}
-    .options button:hover{background:var(--text);}
-    .progress-bar{background:#e0e0e0;height:8px;border-radius:5px;margin-bottom:20px;overflow:hidden;}
-    .progress-fill{background:var(--accent);height:100%;width:0%;transition:width 0.4s ease;}
-    .result-card{margin-top:30px;background:#f4f4f4;padding:20px;border-left:5px solid var(--accent);border-radius:8px;animation:fadeIn 1s ease;}
-    .stars{font-size:1.5rem;color:gold;margin-bottom:10px;}
-    .btn-reset,.btn-pdf,.btn-linkedin{margin-top:20px;background:var(--secondary);color:var(--white);padding:10px 20px;border:none;border-radius:6px;cursor:pointer;display:inline-block;text-decoration:none;}
-    .btn-reset:hover,.btn-pdf:hover,.btn-linkedin:hover{background:var(--accent);}
-    .btn-linkedin{background:#0077b5;margin-left:10px;}
-    .slide-enter{animation:slideIn 0.5s forwards;}
-    .slide-exit{animation:slideOut 0.5s forwards;}
-    @keyframes slideIn{from{opacity:0;transform:translateX(50px);}to{opacity:1;transform:translateX(0);}}
-    @keyframes slideOut{from{opacity:1;transform:translateX(0);}to{opacity:0;transform:translateX(-50px);}}
-    @keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
-    @media(max-width:768px){.card-list{flex-direction:column;align-items:center;}.candidate-card{width:90%;}}
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scenario HR Avanzato</title>
+<style>
+  :root {
+    --primary: #1B65A5;
+    --secondary: #8D064A;
+    --accent: #D80D32;
+    --bg-light: #F1E5D7;
+    --bg-dark: #1E1E1E;
+    --text-light: #06283F;
+    --text-dark: #EAEAEA;
+    --white: #fff;
+  }
+  body { margin:0; font-family:'Segoe UI',sans-serif; background:var(--bg-light); color:var(--text-light); transition:background 0.3s,color 0.3s; }
+  body.dark { background:var(--bg-dark); color:var(--text-dark); }
+  .container { max-width:900px; margin:20px auto; background:var(--white); padding:20px; border-radius:10px; box-shadow:0 4px 15px rgba(0,0,0,0.1); transition:background 0.3s; }
+  body.dark .container { background:#2A2A2A; }
+  h1 { text-align:center; color:var(--secondary); cursor:pointer; user-select:none; }
+  .theme-switch { position:absolute; top:20px; right:20px; cursor:pointer; padding:5px 10px; border-radius:5px; background:var(--primary); color:white; }
+  .card-list { display:flex; flex-wrap:wrap; gap:15px; justify-content:center; animation:fadeIn 1s ease; }
+  .candidate-card { flex:1 1 30%; min-width:250px; background:#f9f9f9; padding:15px; border-radius:10px; text-align:center; transition:transform .3s; box-shadow:0 2px 8px rgba(0,0,0,0.08); }
+  .candidate-card:hover { transform:translateY(-5px); }
+  .candidate-card img { width:80px; height:80px; border-radius:50%; margin-bottom:10px; }
+  .candidate-card h3 { color:var(--primary); margin-bottom:8px; }
+  .candidate-card p { font-size:0.9rem; margin-bottom:15px; }
+  .candidate-card button { background:var(--primary); color:white; border:none; padding:8px 14px; border-radius:5px; cursor:pointer; }
+  .candidate-card button:hover { background:var(--accent); }
+  .question-section { animation:fadeIn .7s ease; }
+  .question-image { width:100%; border-radius:10px; margin-bottom:15px; }
+  .question { font-size:1.2rem; margin-bottom:20px; text-align:center; }
+  .options button { width:100%; padding:12px; font-size:1rem; margin-bottom:10px; border:none; border-radius:6px; cursor:pointer; background:var(--primary); color:white; transition:background .3s; }
+  .options button:hover { background:var(--accent); }
+  .progress-bar { background:#e0e0e0; height:8px; border-radius:5px; margin-bottom:20px; overflow:hidden; }
+  .progress-fill { background:var(--accent); height:100%; width:0%; transition:width 0.4s ease; }
+  .progress-text { text-align:right; font-size:0.8rem; margin-bottom:10px; }
+  .result-card { margin-top:30px; background:#f4f4f4; padding:20px; border-left:5px solid var(--accent); border-radius:8px; animation:fadeIn 1s ease; }
+  .stars { font-size:1.5rem; color:gold; margin-bottom:10px; }
+  .btn { margin:10px 5px 0 0; background:var(--secondary); color:white; padding:10px 20px; border:none; border-radius:6px; cursor:pointer; }
+  .btn:hover { background:var(--accent); }
+  .btn-linkedin { background:#0077b5; text-decoration:none; padding:10px 20px; border-radius:6px; display:inline-block; color:white; }
+  .btn-linkedin:hover { background:#005983; }
+  .ranking { margin-top:20px; font-size:0.9rem; }
+  .easter-egg { display:none; font-size:1.1rem; color:var(--accent); text-align:center; margin-top:20px; }
+  @keyframes fadeIn { from{opacity:0;} to{opacity:1;} }
+  @keyframes slideIn { from{opacity:0; transform:translateX(50px);} to{opacity:1; transform:translateX(0);} }
+  @media(max-width:768px) { .card-list{flex-direction:column; align-items:center;} .candidate-card{width:90%;} }
+</style>
 </head>
 <body>
-  <div class="container">
-    <h1>Scenario HR Avanzato</h1>
-    <div id="game">
-      <div class="card-list" id="candidate-list"></div>
-      <div class="question-section" id="question-section" style="display:none;">
-        <img id="candidate-img" class="question-image" alt="Candidato">
-        <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
-        <div class="question" id="question"></div>
-        <div class="options" id="options"></div>
-      </div>
-      <div class="result-card" id="result" style="display:none;"></div>
-      <button id="reset" class="btn-reset" style="display:none;">Rigioca</button>
-      <button id="pdf" class="btn-pdf" style="display:none;">Scarica PDF</button>
-      <a id="share-linkedin" href="#" class="btn-linkedin" target="_blank" style="display:none;">Condividi su LinkedIn</a>
+<div class="theme-switch" id="themeSwitch">🌙</div>
+<div class="container">
+  <h1 id="mainTitle">Scenario HR Avanzato</h1>
+  <div id="game">
+    <div class="card-list" id="candidate-list"></div>
+    <div class="question-section" id="question-section" style="display:none;">
+      <img id="candidate-img" class="question-image" alt="Candidato">
+      <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+      <div class="progress-text" id="progressText"></div>
+      <div class="question" id="question"></div>
+      <div class="options" id="options"></div>
     </div>
+    <div class="result-card" id="result" style="display:none;"></div>
+    <button id="reset" class="btn" style="display:none;">Rigioca</button>
+    <button id="pdf" class="btn" style="display:none;">Scarica PDF</button>
+    <a id="share-linkedin" href="#" class="btn-linkedin" target="_blank" style="display:none;">Condividi su LinkedIn</a>
+    <div class="ranking" id="ranking"></div>
+    <div class="easter-egg" id="easterEgg">✨ Easter Egg sbloccato! Sei un vero esploratore HR! ✨</div>
   </div>
+</div>
 
-  <!-- Libreria per PDF -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<!-- Libreria PDF -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+/* =====================
+   DATI CANDIDATI
+===================== */
+const candidates = [
+  { key:"innovatrice", name:"Giulia Rossi", role:"Innovatrice", avatar:"https://randomuser.me/api/portraits/women/44.jpg", bigImage:"https://images.unsplash.com/photo-1522202176988-66273c2fd55f?fit=crop&w=900&q=80", desc:"Giovane con idee fuori dagli schemi, ma inesperta nella gestione di team.", 
+    questions:[
+      {q:"Un membro senior ostacola una nuova idea, cosa fai?", opts:[{text:"Spingi l'idea con determinazione",score:3},{text:"Cerchi compromesso",score:2},{text:"Accetti la posizione del senior",score:1}]},
+      {q:"Budget ridotto: come lo gestisci?", opts:[{text:"Tagli ovunque tranne innovazione",score:3},{text:"Bilanci tagli e R&D",score:2},{text:"Blocchi progetti rischiosi",score:1}]},
+      {q:"Team inesperto ma creativo, come guidi?", opts:[{text:"Lasci libertà completa",score:3},{text:"Imposti linee guida",score:2},{text:"Segui solo metodi collaudati",score:1}]},
+      {q:"Scadenza anticipata, che fai?", opts:[{text:"Riduci controlli, focus su consegna",score:3},{text:"Aumenti ore del team",score:2},{text:"Rinegozi la deadline",score:1}]},
+      {q:"Cliente richiede funzione non testata", opts:[{text:"Accetti e sperimenti",score:3},{text:"Analizzi e valuti rischi",score:2},{text:"Rifiuti subito",score:1}]}
+    ],
+    results:{ high:{title:"Visionaria estrema",desc:"Approccio radicale orientato all'innovazione."}, medium:{title:"Innovatrice bilanciata",desc:"Idee nuove senza perdere di vista le regole."}, low:{title:"Innovatrice prudente",desc:"Creativa ma cauta nei rischi."}}
+  },
+  { key:"tradizionalista", name:"Marco Bianchi", role:"Tradizionalista", avatar:"https://randomuser.me/api/portraits/men/32.jpg", bigImage:"https://images.unsplash.com/photo-1504384308090-c894fdcc538d?fit=crop&w=900&q=80", desc:"Manager esperto e affidabile, con approccio prudente e consolidato.", 
+    questions:[
+      {q:"Nuovo software sconosciuto, che fai?", opts:[{text:"Lo eviti finché non certificato",score:1},{text:"Valuti con prove limitate",score:2},{text:"Adotti subito",score:3}]},
+      {q:"Rischio di mercato elevato, come reagisci?", opts:[{text:"Riduci investimenti",score:1},{text:"Diversifichi portafoglio",score:2},{text:"Aumenti innovazione",score:3}]},
+      {q:"Assunzione di un giovane leader", opts:[{text:"Preferisci senior affidabile",score:1},{text:"Dai fiducia con tutoraggio",score:2},{text:"Lasci leadership al giovane",score:3}]},
+      {q:"Cambio improvviso nel regolamento", opts:[{text:"Aspetti linee guida ufficiali",score:1},{text:"Prepari scenari multipli",score:2},{text:"Agisci subito",score:3}]},
+      {q:"Azienda competitor lancia prodotto innovativo", opts:[{text:"Mantieni strategia attuale",score:1},{text:"Analizzi e valuti risposta",score:2},{text:"Ristrutturi strategia",score:3}]}
+    ],
+    results:{ high:{title:"Tradizionalista innovativo",desc:"Stabilità con apertura alle novità."}, medium:{title:"Tradizionalista adattivo",desc:"Prudente ma flessibile."}, low:{title:"Tradizionalista conservatore",desc:"Sicurezza sopra ogni cosa."}}
+  },
+  { key:"talento", name:"Sara Verdi", role:"Talento emergente", avatar:"https://randomuser.me/api/portraits/women/68.jpg", bigImage:"https://images.unsplash.com/photo-1524504388940-b1c1722653e1?fit=crop&w=900&q=80", desc:"Leader naturale, in crescita, energica e motivata.", 
+    questions:[
+      {q:"Team diviso tra due visioni", opts:[{text:"Imponi la tua scelta",score:3},{text:"Cerchi sintesi condivisa",score:2},{text:"Delego la decisione",score:1}]},
+      {q:"Nuova opportunità internazionale", opts:[{text:"Parti subito con entusiasmo",score:3},{text:"Valuti condizioni",score:2},{text:"Aspetti stabilità",score:1}]},
+      {q:"Un senior contesta le tue capacità", opts:[{text:"Confronto diretto",score:3},{text:"Mediazione HR",score:2},{text:"Ignori la questione",score:1}]},
+      {q:"Budget extra inatteso", opts:[{text:"Investe in formazione",score:3},{text:"Risparmia per sicurezza",score:2},{text:"Lo lascia inutilizzato",score:1}]},
+      {q:"Team richiede smart working completo", opts:[{text:"Accetti subito",score:3},{text:"Parziale flessibilità",score:2},{text:"Nessun cambiamento",score:1}]}
+    ],
+    results:{ high:{title:"Leader carismatico",desc:"Leadership naturale e orientata all'empowerment."}, medium:{title:"Leader collaborativo",desc:"Ascolto e valorizzazione delle persone."}, low:{title:"Leader prudente",desc:"Potenziale ma gestione attenta."}}
+  }
+];
 
-  <script>
-    const { jsPDF } = window.jspdf;
+/* =====================
+   VARIABILI GLOBALI
+===================== */
+let currentProfile=null, step=0, score=0, answers=[];
+const candidateList=document.getElementById('candidate-list');
+const questionSection=document.getElementById('question-section');
+const questionEl=document.getElementById('question');
+const optionsEl=document.getElementById('options');
+const resultEl=document.getElementById('result');
+const resetBtn=document.getElementById('reset');
+const pdfBtn=document.getElementById('pdf');
+const linkedinBtn=document.getElementById('share-linkedin');
+const candidateImg=document.getElementById('candidate-img');
+const progressFill=document.getElementById('progress');
+const progressText=document.getElementById('progressText');
+const rankingEl=document.getElementById('ranking');
+const themeSwitch=document.getElementById('themeSwitch');
+const easterEgg=document.getElementById('easterEgg');
+const mainTitle=document.getElementById('mainTitle');
 
-    const candidates=[
-      {key:"innovatrice",name:"Giulia Rossi",role:"Innovatrice",avatar:"https://randomuser.me/api/portraits/women/44.jpg",bigImage:"https://images.unsplash.com/photo-1522202176988-66273c2fd55f?fit=crop&w=900&q=80",desc:"Giovane con idee fuori dagli schemi, ma inesperta nella gestione di team.",
-        questions:[
-          {q:"Un membro senior ostacola una nuova idea, cosa fai?",opts:[{text:"Spingi l'idea con determinazione",score:3},{text:"Cerchi compromesso",score:2},{text:"Accetti la posizione del senior",score:1}]},
-          {q:"Budget ridotto: come lo gestisci?",opts:[{text:"Tagli ovunque tranne innovazione",score:3},{text:"Bilanci tagli e R&D",score:2},{text:"Blocchi progetti rischiosi",score:1}]},
-          {q:"Team inesperto ma creativo, come guidi?",opts:[{text:"Lasci libertà completa",score:3},{text:"Imposti linee guida",score:2},{text:"Segui solo metodi collaudati",score:1}]},
-          {q:"Scadenza anticipata, che fai?",opts:[{text:"Riduci controlli, focus su consegna",score:3},{text:"Aumenti ore del team",score:2},{text:"Rinegozi la deadline",score:1}]},
-          {q:"Cliente richiede funzione non testata",opts:[{text:"Accetti e sperimenti",score:3},{text:"Analizzi e valuti rischi",score:2},{text:"Rifiuti subito",score:1}]}
-        ],
-        results:{high:{title:"Visionaria estrema",desc:"Approccio radicale orientato all'innovazione."},
-                 medium:{title:"Innovatrice bilanciata",desc:"Idee nuove senza perdere di vista le regole."},
-                 low:{title:"Innovatrice prudente",desc:"Creativa ma cauta nei rischi."}}
-      },
-      {key:"tradizionalista",name:"Marco Bianchi",role:"Tradizionalista",avatar:"https://randomuser.me/api/portraits/men/32.jpg",bigImage:"https://images.unsplash.com/photo-1504384308090-c894fdcc538d?fit=crop&w=900&q=80",desc:"Manager esperto e affidabile, con approccio prudente e consolidato.",
-        questions:[
-          {q:"Nuovo software sconosciuto, che fai?",opts:[{text:"Lo eviti finché non certificato",score:1},{text:"Valuti con prove limitate",score:2},{text:"Adotti subito",score:3}]},
-          {q:"Rischio di mercato elevato, come reagisci?",opts:[{text:"Riduci investimenti",score:1},{text:"Diversifichi portafoglio",score:2},{text:"Aumenti innovazione",score:3}]},
-          {q:"Assunzione di un giovane leader",opts:[{text:"Preferisci senior affidabile",score:1},{text:"Dai fiducia con tutoraggio",score:2},{text:"Lasci leadership al giovane",score:3}]},
-          {q:"Cambio improvviso nel regolamento",opts:[{text:"Aspetti linee guida ufficiali",score:1},{text:"Prepari scenari multipli",score:2},{text:"Agisci subito",score:3}]},
-          {q:"Azienda competitor lancia prodotto innovativo",opts:[{text:"Mantieni strategia attuale",score:1},{text:"Analizzi e valuti risposta",score:2},{text:"Ristrutturi strategia",score:3}]}
-        ],
-        results:{high:{title:"Tradizionalista innovativo",desc:"Stabilità con apertura alle novità."},
-                 medium:{title:"Tradizionalista adattivo",desc:"Prudente ma flessibile."},
-                 low:{title:"Tradizionalista conservatore",desc:"Sicurezza sopra ogni cosa."}}
-      },
-      {key:"talento",name:"Sara Verdi",role:"Talento emergente",avatar:"https://randomuser.me/api/portraits/women/68.jpg",bigImage:"https://images.unsplash.com/photo-1524504388940-b1c1722653e1?fit=crop&w=900&q=80",desc:"Leader naturale, in crescita, energica e motivata.",
-        questions:[
-          {q:"Team diviso tra due visioni",opts:[{text:"Imponi la tua scelta",score:3},{text:"Cerchi sintesi condivisa",score:2},{text:"Delego la decisione",score:1}]},
-          {q:"Nuova opportunità internazionale",opts:[{text:"Parti subito con entusiasmo",score:3},{text:"Valuti condizioni",score:2},{text:"Aspetti stabilità",score:1}]},
-          {q:"Un senior contesta le tue capacità",opts:[{text:"Confronto diretto",score:3},{text:"Mediazione HR",score:2},{text:"Ignori la questione",score:1}]},
-          {q:"Budget extra inatteso",opts:[{text:"Investe in formazione",score:3},{text:"Risparmia per sicurezza",score:2},{text:"Lo lascia inutilizzato",score:1}]},
-          {q:"Team richiede smart working completo",opts:[{text:"Accetti subito",score:3},{text:"Parziale flessibilità",score:2},{text:"Nessun cambiamento",score:1}]}
-        ],
-        results:{high:{title:"Leader carismatico",desc:"Leadership naturale e orientata all'empowerment."},
-                 medium:{title:"Leader collaborativo",desc:"Ascolto e valorizzazione delle persone."},
-                 low:{title:"Leader prudente",desc:"Potenziale ma gestione attenta."}}
-      }
-    ];
+/* =====================
+   EASTER EGG
+===================== */
+let clickCount=0;
+mainTitle.addEventListener('click',()=>{ clickCount++; if(clickCount>=5){easterEgg.style.display='block';} });
 
-    let currentProfile=null,step=0,score=0,answers=[];
-    const candidateList=document.getElementById('candidate-list');
-    const questionSection=document.getElementById('question-section');
-    const questionEl=document.getElementById('question');
-    const optionsEl=document.getElementById('options');
-    const resultEl=document.getElementById('result');
-    const resetBtn=document.getElementById('reset');
-    const pdfBtn=document.getElementById('pdf');
-    const linkedinBtn=document.getElementById('share-linkedin');
-    const candidateImg=document.getElementById('candidate-img');
-    const progressFill=document.getElementById('progress');
+/* =====================
+   THEME SWITCH
+===================== */
+themeSwitch.addEventListener('click',()=>{
+  document.body.classList.toggle('dark');
+  themeSwitch.textContent=document.body.classList.contains('dark')?"☀️":"🌙";
+});
 
-    function startGame(key){
-      currentProfile=candidates.find(c=>c.key===key);
-      candidateImg.src=currentProfile.bigImage;
-      candidateList.style.display='none';questionSection.style.display='block';
-      step=0;score=0;answers=[];showQuestion();
-    }
+/* =====================
+   GESTIONE DOMANDE
+===================== */
+function startGame(key){
+  currentProfile=candidates.find(c=>c.key===key);
+  candidateImg.src=currentProfile.bigImage;
+  candidateList.style.display='none';
+  questionSection.style.display='block';
+  step=0;score=0;answers=[];
+  showQuestion();
+}
 
-    function showQuestion(){
-      const q=currentProfile.questions[step];
-      questionEl.classList.remove('slide-enter');questionEl.classList.remove('slide-exit');
-      void questionEl.offsetWidth;questionEl.classList.add('slide-enter');
-      questionEl.textContent=q.q;optionsEl.innerHTML='';
-      progressFill.style.width=((step/currentProfile.questions.length)*100)+'%';
-      q.opts.forEach(opt=>{
-        const btn=document.createElement('button');
-        btn.textContent=opt.text;
-        btn.onclick=()=>{score+=opt.score;answers.push({question:q.q,answer:opt.text});nextStep();};
-        optionsEl.appendChild(btn);
-      });
-    }
+function showQuestion(){
+  const q=currentProfile.questions[step];
+  questionEl.className='question slide-enter';
+  questionEl.textContent=q.q;
+  optionsEl.innerHTML='';
+  progressFill.style.width=((step/currentProfile.questions.length)*100)+'%';
+  progressText.textContent=`Domanda ${step+1} di ${currentProfile.questions.length}`;
+  q.opts.forEach(opt=>{
+    const btn=document.createElement('button');
+    btn.textContent=opt.text;
+    btn.onclick=()=>{score+=opt.score; answers.push({question:q.q, answer:opt.text}); nextStep();};
+    optionsEl.appendChild(btn);
+  });
+}
 
-    function nextStep(){
-      questionEl.classList.remove('slide-enter');questionEl.classList.add('slide-exit');
-      setTimeout(()=>{
-        step++;(step<currentProfile.questions.length)?showQuestion():showResult();
-      },400);
-    }
+function nextStep(){
+  step++;
+  (step<currentProfile.questions.length)?showQuestion():showResult();
+}
 
-    function showResult(){
-      questionSection.style.display='none';progressFill.style.width='100%';
-      const resKey=score>=12?'high':score>=8?'medium':'low';
-      const res=currentProfile.results[resKey];
-      const stars=score>=12?'⭐⭐⭐':score>=8?'⭐⭐':'⭐';
-      const answersHTML=answers.map(a=>`<li><b>${a.question}</b><br><i>${a.answer}</i></li>`).join('');
-      resultEl.innerHTML=`<div class="stars">${stars}</div><h2>${res.title}</h2><p>${res.desc}</p><h3>Le tue scelte:</h3><ul>${answersHTML}</ul>`;
-      resultEl.style.display='block';resetBtn.style.display='inline-block';pdfBtn.style.display='inline-block';linkedinBtn.style.display='inline-block';
-      linkedinBtn.href=`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(window.location.href)}&summary=${encodeURIComponent(res.title+' - '+res.desc)}`;
-    }
+function showResult(){
+  questionSection.style.display='none';
+  progressFill.style.width='100%';
+  progressText.textContent='Completato!';
+  const resKey=score>=12?'high':score>=8?'medium':'low';
+  const res=currentProfile.results[resKey];
+  const stars=score>=12?'⭐⭐⭐':score>=8?'⭐⭐':'⭐';
+  const answersHTML=answers.map(a=>`<li><b>${a.question}</b><br><i>${a.answer}</i></li>`).join('');
+  resultEl.innerHTML=`<div class="stars">${stars}</div><h2>${res.title}</h2><p>${res.desc}</p><h3>Le tue scelte:</h3><ul>${answersHTML}</ul>`;
+  resultEl.style.display='block';
+  resetBtn.style.display='inline-block';
+  pdfBtn.style.display='inline-block';
+  linkedinBtn.style.display='inline-block';
+  linkedinBtn.href=`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(window.location.href)}&summary=${encodeURIComponent(res.title+' - '+res.desc)}`;
+  saveRanking(res.title,score);
+  renderRanking();
+}
 
-    resetBtn.onclick=()=>{resultEl.style.display='none';resetBtn.style.display='none';pdfBtn.style.display='none';linkedinBtn.style.display='none';candidateList.style.display='flex';questionSection.style.display='none';progressFill.style.width='0%';};
+/* =====================
+   RANKING (LocalStorage)
+===================== */
+function saveRanking(title,score){
+  const history=JSON.parse(localStorage.getItem('ranking')||'[]');
+  history.push({date:new Date().toLocaleString(),title,score});
+  localStorage.setItem('ranking',JSON.stringify(history));
+}
 
-    pdfBtn.onclick=()=>{
-      const doc=new jsPDF();doc.text(`Profilo selezionato: ${currentProfile.name}`,10,10);
-      answers.forEach((a,i)=>{doc.text(`${i+1}. ${a.question}`,10,20+(i*10));doc.text(`Risposta: ${a.answer}`,10,25+(i*10));});
-      doc.save("risultato.pdf");
-    };
+function renderRanking(){
+  const history=JSON.parse(localStorage.getItem('ranking')||'[]');
+  if(!history.length){rankingEl.innerHTML='';return;}
+  rankingEl.innerHTML='<h3>Storico giocate</h3><ul>'+history.map(h=>`<li>${h.date}: <b>${h.title}</b> (${h.score} punti)</li>`).join('')+'</ul>';
+}
 
-    (function renderCandidates(){candidates.forEach(c=>{const card=document.createElement('div');card.className='candidate-card';card.innerHTML=`<img src="${c.avatar}" alt="${c.name}" /><h3>${c.name} - ${c.role}</h3><p>${c.desc}</p><button onclick="startGame('${c.key}')">Seleziona</button>`;candidateList.appendChild(card);});})();
-  </script>
+/* =====================
+   RESET & PDF
+===================== */
+resetBtn.onclick=()=>{resultEl.style.display='none';resetBtn.style.display='none';pdfBtn.style.display='none';linkedinBtn.style.display='none';candidateList.style.display='flex';questionSection.style.display='none';progressFill.style.width='0%';progressText.textContent='';};
+pdfBtn.onclick=()=>{
+  const { jsPDF }=window.jspdf; const doc=new jsPDF();
+  doc.setFontSize(18); doc.text("Risultato Gioco HR",10,20);
+  doc.addImage(candidateImg.src,'JPEG',10,30,60,40);
+  doc.setFontSize(12); doc.text(`Profilo: ${currentProfile.name}`,10,80);
+  answers.forEach((a,i)=>{doc.text(`${i+1}. ${a.question}`,10,95+(i*10));doc.text(`Risposta: ${a.answer}`,10,100+(i*10));});
+  doc.save("risultato.pdf");
+};
+
+/* =====================
+   RENDER CANDIDATI
+===================== */
+(function renderCandidates(){
+  candidates.forEach(c=>{
+    const card=document.createElement('div');
+    card.className='candidate-card';
+    card.innerHTML=`<img src="${c.avatar}" alt="${c.name}" /><h3>${c.name} - ${c.role}</h3><p>${c.desc}</p><button onclick="startGame('${c.key}')">Seleziona</button>`;
+    candidateList.appendChild(card);
+  });
+})();
+renderRanking();
+</script>
 </body>
 </html>
