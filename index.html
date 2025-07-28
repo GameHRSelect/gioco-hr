@@ -7,27 +7,46 @@
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap"
         rel="stylesheet"/>
   <style>
-    /* ---------- BASE ---------- */
-    * { box-sizing:border-box; margin:0; padding:0; font-family:'Roboto',sans-serif; }
-    body { background:#f5f6fa; color:#222; }
-    .container { max-width:900px; margin:auto; padding:20px; }
-    h1 { text-align:center; margin-bottom:30px; color:#8D064A; }
+    /* ========== UTILITY ========== */
+    .hidden { display: none !important; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Roboto', sans-serif; }
+    body { background: #f5f6fa; color: #222; }
+    .container { max-width: 900px; margin: auto; padding: 20px; }
+    h1 { text-align: center; margin-bottom: 30px; color: #8D064A; }
 
-    /* ---------- QUESTION BOX ---------- */
+    /* ========== QUESTION BOX ========== */
     .question-box, .result-box {
-      background:#fff; padding:30px; border-radius:12px;
-      box-shadow:0 4px 15px rgba(0,0,0,0.1); margin-bottom:20px;
-      animation:fadeIn .4s ease-in-out;
+      background: #fff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+      animation: fadeIn 0.4s ease-in-out;
     }
-    .question-text { font-size:1.3rem; font-weight:700; margin-bottom:20px; }
+    .question-text {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+    }
     .option {
-      display:block; width:100%; background:#1B65A5; color:#fff;
-      padding:14px; margin:8px 0; border:none; border-radius:6px;
-      font-size:1.05rem; text-align:left; transition:.2s;
+      display: block;
+      width: 100%;
+      background: #1B65A5;
+      color: #fff;
+      padding: 14px;
+      margin: 8px 0;
+      border: none;
+      border-radius: 6px;
+      font-size: 1.05rem;
+      text-align: left;
+      transition: background 0.2s, transform 0.2s;
     }
-    .option:hover { background:#4AAFD8; transform:scale(1.02); }
+    .option:hover {
+      background: #4AAFD8;
+      transform: scale(1.02);
+    }
 
-    /* ---------- REMOVE FOCUS BIAS ---------- */
+    /* ========== FOCUS RESET ========== */
     .option:focus, .btn:focus {
       outline: none !important;
       box-shadow: none !important;
@@ -37,27 +56,50 @@
       background: #124b74 !important;
     }
 
-    /* ---------- RESULT ---------- */
-    .result-box h2 { color:#8D064A; margin-bottom:20px; }
-    #radarChart, #barChart { max-width:600px; margin:30px auto; }
-    .profile-text { white-space:pre-wrap; line-height:1.6; margin-top:20px; }
-    .buttons { display:flex; justify-content:space-between; flex-wrap:wrap; margin-top:20px; }
-    .btn {
-      background:#8D064A; color:#fff; border:none; padding:12px 20px;
-      border-radius:8px; font-size:1rem; margin:5px 0; transition:.2s;
+    /* ========== RESULT BOX ========== */
+    .result-box h2 { color: #8D064A; margin-bottom: 20px; }
+    #radarChart, #barChart { max-width: 600px; margin: 30px auto; }
+    .profile-text {
+      white-space: pre-wrap;
+      line-height: 1.6;
+      margin-top: 20px;
     }
-    .btn:hover { background:#D80D32; }
+    .buttons {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      margin-top: 20px;
+    }
+    .btn {
+      background: #8D064A;
+      color: #fff;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-size: 1rem;
+      margin: 5px 0;
+      transition: background 0.2s;
+    }
+    .btn:hover {
+      background: #D80D32;
+    }
 
-    /* ---------- HISTORY ---------- */
-    .history { margin-top:40px; }
-    .history-item { padding:8px 0; border-bottom:1px solid #eee; }
+    /* ========== HISTORY ========== */
+    .history { margin-top: 40px; }
+    .history-item {
+      padding: 8px 0;
+      border-bottom: 1px solid #eee;
+    }
 
-    /* ---------- ANIMATIONS & RESPONSIVE ---------- */
-    @keyframes fadeIn { from{opacity:0;transform:translateY(10px);} to{opacity:1;transform:translateY(0);} }
-    @media(max-width:768px){
-      .option { font-size:1rem; padding:12px; }
-      .question-text { font-size:1.1rem; }
-      .buttons { flex-direction:column; }
+    /* ========== ANIMATIONS & RESPONSIVE ========== */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @media (max-width: 768px) {
+      .option { font-size: 1rem; padding: 12px; }
+      .question-text { font-size: 1.1rem; }
+      .buttons { flex-direction: column; }
     }
   </style>
 </head>
@@ -66,7 +108,7 @@
     <h1>Test Psicologico Avanzato</h1>
     <div id="question-container"></div>
 
-    <div class="result-box hidden" id="result-box">
+    <div id="result-box" class="result-box hidden">
       <h2>Risultato del tuo profilo psicologico</h2>
       <canvas id="radarChart"></canvas>
       <canvas id="barChart"></canvas>
@@ -82,8 +124,11 @@
   <!-- Chart.js & jsPDF -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
   <script>
-    /* ---------- DOMANDE (20 elementi) ---------- */
+    /*******************************************************************
+     *                         DATI DEL TEST                          *
+     *******************************************************************/
     const questions = [
       { text:"Come affronti un dilemma etico con impatto economico?", options:[
           "Analizzo razionalmente tutte le variabili",
@@ -135,7 +180,7 @@
           "Sperimentazione immediata in contesti controllati",
           "Supporto il team con formazione continua"
         ], scores:[6,10,9] },
-      { text:"Come ti comporti quando le tue convinzioni vengono messe in discussione?", options:[
+      { text:"Come reagisci quando le tue convinzioni vengono messe in discussione?", options:[
           "Difendo le mie idee con argomentazioni razionali",
           "Ascolto e rivaluto il mio punto di vista",
           "Accolgo il dibattito come opportunità di crescita"
@@ -147,10 +192,10 @@
         ], scores:[7,9,8] },
       { text:"Come bilanci creatività e vincoli di bilancio?", options:[
           "Calcolo ROI dettagliato per ogni idea",
-          "Doy libertà creativa mantenendo un budget di fallback",
+          "Do libertà creativa mantenendo un budget di fallback",
           "Investo in soluzioni a basso costo ma ad alto impatto"
         ], scores:[7,10,8] },
-      { text:"Un sottoposto è più capace in un’area tua di competenza: come reagisci?", options:[
+      { text:"Un subordinato è più capace di te in un’area chiave: come reagisci?", options:[
           "Mantengo l’autorità decisionale",
           "Valorizzo la sua leadership su quell’area",
           "Promuovo una co-leadership per sfruttare il suo talento"
@@ -165,31 +210,32 @@
           "Conduco sessioni di debriefing emotivo con il team",
           "Implemento processi agili per un rilancio immediato"
         ], scores:[7,9,10] },
-      { text:"Quando ti senti sotto pressione, quale leva attivi?", options:[
-          "Analisi fredda delle priorità",
-          "Empowerment emotivo del team",
-          "Innovazione rapida per sorprendere i problemi"
-        ], scores:[7,10,9] },
-      { text:"Come promuovi inclusione e diversità?", options:[
-          "Policy rigorose e formazione obbligatoria",
-          "Eventi culturali e dialogo aperto",
-          "Mentoring incrociato e project exchange"
-        ], scores:[6,10,9] },
-      { text:"Qual è l’importanza dell’intuizione nelle scelte critiche?", options:[
-          "Secondaria rispetto ai dati",
-          "Complementare alla logica",
-          "Parte integrante del processo decisionale"
-        ], scores:[6,8,10] },
-      { text:"Che equilibrio cerchi tra autonomia e controllo?", options:[
-          "Controllo centrale rigoroso",
-          "Autonomia guidata da linee guida chiare",
-          "Massima autonomia con report periodici"
-        ], scores:[7,9,10] }
+      { text:"Quando sei sotto osservazione di autorità superiori?", options:[
+          "Seguo rigidamente le regole",
+          "Adatto stile comunicativo e contenuti",
+          "Gestisco aspettative innovando sotto pressione"
+        ], scores:[7,8,10] },
+      { text:"Come affronti un progetto fuori dalla tua comfort zone?", options:[
+          "Mi formo in autonomia prima di iniziare",
+          "Accetto e imparo durante l'esecuzione",
+          "Coinvolgo esperti esterni subito"
+        ], scores:[7,9,10] },
+      { text:"Come valuti l'importanza dell'empatia?", options:[
+          "Secondaria rispetto ai risultati",
+          "Fondamentale per il team",
+          "Base di ogni relazione lavorativa"
+        ], scores:[5,9,10] },
+      { text:"Quale approccio prediligi alla leadership?", options:[
+          "Gerarchico e direttivo",
+          "Partecipativo e flessibile",
+          "Distribuito e collaborativo"
+        ], scores:[6,8,10] }
     ];
 
     let currentQuestion = 0;
     let scoreLog = [];
 
+    /* ---------- CARICA DOMANDA ---------- */
     function loadQuestion(){
       const container = document.getElementById('question-container');
       container.innerHTML = '';
@@ -208,6 +254,7 @@
       }
     }
 
+    /* ---------- GESTISCI SCELTA ---------- */
     function selectOption(idx){
       if(document.activeElement) document.activeElement.blur();
       scoreLog.push(questions[currentQuestion].scores[idx]);
@@ -215,6 +262,7 @@
       loadQuestion();
     }
 
+    /* ---------- ANALISI TRATTI ---------- */
     function analyzeScores(scores){
       const avg = arr => arr.reduce((a,b)=>a+b,0)/arr.length;
       return {
@@ -226,6 +274,7 @@
       };
     }
 
+    /* ---------- MOSTRA RISULTATO ---------- */
     function showResult(){
       document.getElementById('question-container').classList.add('hidden');
       document.getElementById('result-box').classList.remove('hidden');
@@ -235,6 +284,7 @@
       saveHistory(traits);
     }
 
+    /* ---------- GRAFICI ---------- */
     function renderCharts(t){
       new Chart(document.getElementById('radarChart').getContext('2d'),{
         type:'radar',
@@ -256,6 +306,7 @@
       });
     }
 
+    /* ---------- GENERA TESTO PROFILO ---------- */
     function generateProfileText(t){
       const text = `
 Il tuo profilo psicologico evidenzia:
@@ -266,24 +317,26 @@ Il tuo profilo psicologico evidenzia:
 - Empatia: ${t.empatia.toFixed(1)}/10
 
 Questi punteggi descrivono un individuo capace di integrare analisi razionale ed empatia, con spiccata flessibilità mentale e gusto per l’innovazione. La tua leadership si esprime in contesti di forte complessità, mentre l’approccio etico e adattivo indica una solida consapevolezza dei valori organizzativi. Psicologicamente possiedi risorse di resilienza e creatività che ti rendono adatto a guidare team in situazioni di incertezza, bilanciando risultato e benessere collettivo.
-`;
-      document.getElementById('profile-text').innerText = text.trim();
+      `.trim();
+      document.getElementById('profile-text').innerText = text;
     }
 
+    /* ---------- SALVA STORICO ---------- */
     function saveHistory(t){
-      const history = JSON.parse(localStorage.getItem('testHistory')||'[]');
-      history.push({ date:new Date().toLocaleString(), traits:t });
-      localStorage.setItem('testHistory', JSON.stringify(history));
+      const hist = JSON.parse(localStorage.getItem('testHistory')||'[]');
+      hist.push({ date: new Date().toLocaleString(), traits: t });
+      localStorage.setItem('testHistory', JSON.stringify(hist));
       const div = document.getElementById('history');
       div.innerHTML = '<h3>Storico Test</h3>' +
-        history.map(r=>`<div class="history-item">${r.date}: L${r.traits.leadership.toFixed(1)}, E${r.traits.etica.toFixed(1)}, A${r.traits.adattabilita.toFixed(1)}, C${r.traits.creativita.toFixed(1)}, Emp${r.traits.empatia.toFixed(1)}</div>`).join('');
+        hist.map(r=>`<div class="history-item">${r.date}: L${r.traits.leadership.toFixed(1)}, E${r.traits.etica.toFixed(1)}, A${r.traits.adattabilita.toFixed(1)}, C${r.traits.creativita.toFixed(1)}, Emp${r.traits.empatia.toFixed(1)}</div>`).join('');
     }
 
+    /* ---------- PDF EXPORT ---------- */
     document.getElementById('restart').onclick = ()=>location.reload();
     document.getElementById('savePdf').onclick = ()=>{
       const { jsPDF } = window.jspdf;
-      const doc = new jsPDF({unit:'mm',format:'a4'});
-      const left = 20, top = 20, width = 170;
+      const doc = new jsPDF({ unit:'mm', format:'a4' });
+      const left=20, top=20, width=170;
       doc.setFontSize(18);
       doc.text('Profilo Psicologico Avanzato', left, top);
       doc.setFontSize(12);
@@ -298,7 +351,7 @@ Questi punteggi descrivono un individuo capace di integrare analisi razionale ed
       doc.save('profilo_psicologico.pdf');
     };
 
-    // Avvia quiz
+    // ---------- START ----------
     loadQuestion();
   </script>
 </body>
