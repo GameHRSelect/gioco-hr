@@ -4,7 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Test Psicologico Avanzato</title>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap"
+        rel="stylesheet"/>
   <style>
     /* ---------- BASE ---------- */
     * { box-sizing:border-box; margin:0; padding:0; font-family:'Roboto',sans-serif; }
@@ -12,7 +13,7 @@
     .container { max-width:900px; margin:auto; padding:20px; }
     h1 { text-align:center; margin-bottom:30px; color:#8D064A; }
 
-    /* ---------- CARD & QUESTION ---------- */
+    /* ---------- QUESTION BOX ---------- */
     .question-box, .result-box {
       background:#fff; padding:30px; border-radius:12px;
       box-shadow:0 4px 15px rgba(0,0,0,0.1); margin-bottom:20px;
@@ -51,7 +52,7 @@
     .history { margin-top:40px; }
     .history-item { padding:8px 0; border-bottom:1px solid #eee; }
 
-    /* ---------- KEYFRAMES, RESPONSIVE ---------- */
+    /* ---------- ANIMATIONS & RESPONSIVE ---------- */
     @keyframes fadeIn { from{opacity:0;transform:translateY(10px);} to{opacity:1;transform:translateY(0);} }
     @media(max-width:768px){
       .option { font-size:1rem; padding:12px; }
@@ -82,15 +83,108 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script>
-    /* ---------------- QUESTIONS ---------------- */
+    /* ---------- DOMANDE (20 elementi) ---------- */
     const questions = [
       { text:"Come affronti un dilemma etico con impatto economico?", options:[
           "Analizzo razionalmente tutte le variabili",
           "Coinvolgo il team in un dibattito etico",
-          "Ricerco un compromesso che bilanci profitto e valori"
-        ], scores:[5,10,8]
-      },
-      /* … altre 19 domande analoghe … */
+          "Bilancio profitto e valori cercando un compromesso innovativo"
+        ], scores:[5,10,8] },
+      { text:"Quando sei sotto forte stress decisionale, quale approccio scegli?", options:[
+          "Elaboro un piano dettagliato basato sui dati",
+          "Mi affido all’intuizione e all’esperienza",
+          "Chiedo feedback immediato per convalidare ogni passo"
+        ], scores:[7,9,8] },
+      { text:"Un tuo collega viola una norma per velocizzare un progetto: come reagisci?", options:[
+          "Applico la norma senza eccezioni",
+          "Dialogo per capire le ragioni e formo il collega",
+          "Rivedo i processi per evitare future deroghe"
+        ], scores:[5,10,9] },
+      { text:"Devi guidare un team multiculturale: qual è la tua prima mossa?", options:[
+          "Stabilisco regole comuni chiare",
+          "Facilito sessioni di scambio culturale",
+          "Delego ruoli chiave a rappresentanti di ciascuna cultura"
+        ], scores:[6,10,8] },
+      { text:"Ti viene proposto un ruolo che non desideri: come rispondi?", options:[
+          "Accetto per senso di disciplina",
+          "Propongo un adattamento del ruolo alle mie passioni",
+          "Rifiuto spiegando onestamente le motivazioni"
+        ], scores:[6,9,10] },
+      { text:"Come reagisci a una critica ingiusta sul tuo lavoro?", options:[
+          "Rispondo con dati e fatti",
+          "Ascolto e valuto possibili miglioramenti",
+          "Mantengo distacco emotivo e procedo"
+        ], scores:[6,10,9] },
+      { text:"Devi prendere una decisione in condizioni di incertezza: cosa fai?", options:[
+          "Elaboro scenari multipli e scelgo il più probabile",
+          "Agisco rapidamente per sperimentare soluzioni",
+          "Attendo ulteriori informazioni prima di decidere"
+        ], scores:[7,9,8] },
+      { text:"Come percepisci il concetto di vulnerabilità personale?", options:[
+          "È un segno di debolezza da nascondere",
+          "È una forza che crea empatia",
+          "È uno strumento di crescita condivisa"
+        ], scores:[5,10,8] },
+      { text:"Se un progetto fallisce, qual è il tuo passo successivo?", options:[
+          "Analizzo gli errori e riprogetto il processo",
+          "Rifletto sugli aspetti emotivi per motivare il team",
+          "Cerco soluzioni creative per trasformare il fallimento in opportunità"
+        ], scores:[7,8,10] },
+      { text:"Qual è il tuo approccio ai cambiamenti tecnologici rapidi?", options:[
+          "Eseguo test approfonditi prima dell’adozione",
+          "Sperimentazione immediata in contesti controllati",
+          "Supporto il team con formazione continua"
+        ], scores:[6,10,9] },
+      { text:"Come ti comporti quando le tue convinzioni vengono messe in discussione?", options:[
+          "Difendo le mie idee con argomentazioni razionali",
+          "Ascolto e rivaluto il mio punto di vista",
+          "Accolgo il dibattito come opportunità di crescita"
+        ], scores:[6,9,10] },
+      { text:"Devi motivare un team demotivato: qual è la tua strategia?", options:[
+          "Imposto obiettivi chiari e misurabili",
+          "Organizzo attività di team building",
+          "Ascolto prima le esigenze individuali"
+        ], scores:[7,9,8] },
+      { text:"Come bilanci creatività e vincoli di bilancio?", options:[
+          "Calcolo ROI dettagliato per ogni idea",
+          "Doy libertà creativa mantenendo un budget di fallback",
+          "Investo in soluzioni a basso costo ma ad alto impatto"
+        ], scores:[7,10,8] },
+      { text:"Un sottoposto è più capace in un’area tua di competenza: come reagisci?", options:[
+          "Mantengo l’autorità decisionale",
+          "Valorizzo la sua leadership su quell’area",
+          "Promuovo una co-leadership per sfruttare il suo talento"
+        ], scores:[5,10,9] },
+      { text:"Qual è la tua definizione di resilienza personale?", options:[
+          "Resistenza alle difficoltà",
+          "Capacità di trasformare la crisi in opportunità",
+          "Adattamento rapido senza perdere di vista i valori"
+        ], scores:[7,10,8] },
+      { text:"Come gestisci il fallimento di un progetto chiave?", options:[
+          "Imposto audit formale e procedure correttive",
+          "Conduco sessioni di debriefing emotivo con il team",
+          "Implemento processi agili per un rilancio immediato"
+        ], scores:[7,9,10] },
+      { text:"Quando ti senti sotto pressione, quale leva attivi?", options:[
+          "Analisi fredda delle priorità",
+          "Empowerment emotivo del team",
+          "Innovazione rapida per sorprendere i problemi"
+        ], scores:[7,10,9] },
+      { text:"Come promuovi inclusione e diversità?", options:[
+          "Policy rigorose e formazione obbligatoria",
+          "Eventi culturali e dialogo aperto",
+          "Mentoring incrociato e project exchange"
+        ], scores:[6,10,9] },
+      { text:"Qual è l’importanza dell’intuizione nelle scelte critiche?", options:[
+          "Secondaria rispetto ai dati",
+          "Complementare alla logica",
+          "Parte integrante del processo decisionale"
+        ], scores:[6,8,10] },
+      { text:"Che equilibrio cerchi tra autonomia e controllo?", options:[
+          "Controllo centrale rigoroso",
+          "Autonomia guidata da linee guida chiare",
+          "Massima autonomia con report periodici"
+        ], scores:[7,9,10] }
     ];
 
     let currentQuestion = 0;
@@ -115,9 +209,7 @@
     }
 
     function selectOption(idx){
-      // ELIMINA IL FOCUS DALL'ULTIMO BOTTONE
       if(document.activeElement) document.activeElement.blur();
-
       scoreLog.push(questions[currentQuestion].scores[idx]);
       currentQuestion++;
       loadQuestion();
@@ -136,9 +228,7 @@
 
     function showResult(){
       document.getElementById('question-container').classList.add('hidden');
-      const resultBox = document.getElementById('result-box');
-      resultBox.classList.remove('hidden');
-
+      document.getElementById('result-box').classList.remove('hidden');
       const traits = analyzeScores(scoreLog);
       renderCharts(traits);
       generateProfileText(traits);
@@ -146,31 +236,21 @@
     }
 
     function renderCharts(t){
-      const radarCtx = document.getElementById('radarChart').getContext('2d');
-      new Chart(radarCtx, {
+      new Chart(document.getElementById('radarChart').getContext('2d'),{
         type:'radar',
         data:{
           labels:['Leadership','Etica','Adattabilità','Creatività','Empatia'],
-          datasets:[{
-            label:'Profilo',
-            data:[t.leadership,t.etica,t.adattabilita,t.creativita,t.empatia],
-            backgroundColor:'rgba(24,99,195,0.2)',
-            borderColor:'#1863C3'
-          }]
+          datasets:[{label:'Profilo',data:[t.leadership,t.etica,t.adattabilita,t.creativita,t.empatia],
+            backgroundColor:'rgba(24,99,195,0.2)',borderColor:'#1863C3'}]
         },
         options:{responsive:true,scales:{r:{min:0,max:10}}}
       });
-
-      const barCtx = document.getElementById('barChart').getContext('2d');
-      new Chart(barCtx, {
+      new Chart(document.getElementById('barChart').getContext('2d'),{
         type:'bar',
         data:{
           labels:['Leadership','Etica','Adattabilità','Creatività','Empatia'],
-          datasets:[{
-            label:'Valore',
-            data:[t.leadership,t.etica,t.adattabilita,t.creativita,t.empatia],
-            backgroundColor:'#8D064A'
-          }]
+          datasets:[{label:'Valore',data:[t.leadership,t.etica,t.adattabilita,t.creativita,t.empatia],
+            backgroundColor:'#8D064A'}]
         },
         options:{responsive:true,scales:{y:{beginAtZero:true,max:10}}}
       });
@@ -185,7 +265,7 @@ Il tuo profilo psicologico evidenzia:
 - Creatività: ${t.creativita.toFixed(1)}/10
 - Empatia: ${t.empatia.toFixed(1)}/10
 
-Questi punteggi descrivono un individuo capace di integrare analisi razionale ed empatia, con spiccata flessibilità mentale e gusto per l’innovazione. La tua leadership si esprime in contesti di forte complessità, mentre l’approccio etico e adattivo indica una solida consapevolezza dei valori organizzativi. Psi­cologicamente possiedi risorse di resilienza e creatività che ti rendono adatto a guidare team in situazioni di incertezza, bilanciando risultato e benessere collettivo.
+Questi punteggi descrivono un individuo capace di integrare analisi razionale ed empatia, con spiccata flessibilità mentale e gusto per l’innovazione. La tua leadership si esprime in contesti di forte complessità, mentre l’approccio etico e adattivo indica una solida consapevolezza dei valori organizzativi. Psicologicamente possiedi risorse di resilienza e creatività che ti rendono adatto a guidare team in situazioni di incertezza, bilanciando risultato e benessere collettivo.
 `;
       document.getElementById('profile-text').innerText = text.trim();
     }
@@ -196,24 +276,24 @@ Questi punteggi descrivono un individuo capace di integrare analisi razionale ed
       localStorage.setItem('testHistory', JSON.stringify(history));
       const div = document.getElementById('history');
       div.innerHTML = '<h3>Storico Test</h3>' +
-        history.map(h=>`<div class="history-item">${h.date}</div>`).join('');
+        history.map(r=>`<div class="history-item">${r.date}: L${r.traits.leadership.toFixed(1)}, E${r.traits.etica.toFixed(1)}, A${r.traits.adattabilita.toFixed(1)}, C${r.traits.creativita.toFixed(1)}, Emp${r.traits.empatia.toFixed(1)}</div>`).join('');
     }
 
     document.getElementById('restart').onclick = ()=>location.reload();
     document.getElementById('savePdf').onclick = ()=>{
       const { jsPDF } = window.jspdf;
       const doc = new jsPDF({unit:'mm',format:'a4'});
-      const left=20, top=20, width=170;
+      const left = 20, top = 20, width = 170;
       doc.setFontSize(18);
       doc.text('Profilo Psicologico Avanzato', left, top);
       doc.setFontSize(12);
-      const text = document.getElementById('profile-text').innerText;
-      const lines = doc.splitTextToSize(text, width);
-      let y=top+10;
-      lines.forEach(line=>{
-        if(y>280){ doc.addPage(); y=20; }
+      const txt = document.getElementById('profile-text').innerText;
+      const lines = doc.splitTextToSize(txt, width);
+      let y = top + 10;
+      lines.forEach(line => {
+        if(y > 280){ doc.addPage(); y = 20; }
         doc.text(line, left, y);
-        y+=6;
+        y += 6;
       });
       doc.save('profilo_psicologico.pdf');
     };
