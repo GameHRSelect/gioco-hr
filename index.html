@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Scenario HR Avanzato</title>
   <style>
     :root {
@@ -13,111 +13,24 @@
       --text: #06283F;
       --white: #fff;
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      display: flex;
-      justify-content: center;
-      padding: 20px;
-    }
-    .container {
-      width: 100%;
-      max-width: 900px;
-      background: var(--white);
-      border-radius: 10px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-      padding: 20px;
-    }
-    h1 {
-      text-align: center;
-      margin-bottom: 20px;
-      color: var(--secondary);
-      font-size: 1.8rem;
-    }
-    .card-list {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      gap: 15px;
-      margin-bottom: 30px;
-    }
-    .candidate-card {
-      flex: 1 1 calc(33% - 10px);
-      background: #f9f9f9;
-      border-radius: 10px;
-      padding: 15px;
-      text-align: center;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-      transition: transform 0.2s;
-    }
-    .candidate-card:hover { transform: scale(1.03); }
-    .candidate-card img {
-      width: 80px;
-      height: 80px;
-      border-radius: 50%;
-      margin-bottom: 10px;
-    }
-    .candidate-card h3 {
-      font-size: 1.2rem;
-      color: var(--primary);
-      margin-bottom: 8px;
-    }
-    .candidate-card p {
-      font-size: 0.9rem;
-      color: #555;
-      margin-bottom: 15px;
-    }
-    .candidate-card button {
-      background: var(--primary);
-      color: var(--white);
-      padding: 8px 14px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-    .candidate-card button:hover { background: var(--text); }
-    .question {
-      text-align: center;
-      font-size: 1.3rem;
-      margin-bottom: 20px;
-    }
-    .options button {
-      width: 100%;
-      padding: 12px;
-      font-size: 1rem;
-      margin-bottom: 10px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      background: var(--primary);
-      color: var(--white);
-      transition: background 0.3s;
-    }
-    .options button:hover { background: var(--text); }
-    .result-card {
-      margin-top: 30px;
-      background: #f4f4f4;
-      padding: 20px;
-      border-left: 5px solid var(--accent);
-      border-radius: 8px;
-    }
-    .btn-reset {
-      margin-top: 20px;
-      background: var(--secondary);
-      color: var(--white);
-      padding: 10px 20px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-    .btn-reset:hover { background: var(--accent); }
-    @media (max-width: 768px) {
-      .card-list { flex-direction: column; align-items: center; }
-      .candidate-card { flex: none; width: 90%; }
-      h1 { font-size: 1.5rem; }
-    }
+    * {box-sizing: border-box; margin:0; padding:0; font-family: 'Segoe UI', sans-serif;}
+    body {background: var(--bg); padding:20px; display:flex; justify-content:center;}
+    .container {max-width:900px; width:100%; background:var(--white); border-radius:10px; padding:20px; box-shadow:0 4px 15px rgba(0,0,0,0.1);}
+    h1{text-align:center; color:var(--secondary); margin-bottom:20px;}
+    .card-list{display:flex; flex-wrap:wrap; justify-content:space-around; gap:15px; margin-bottom:30px;}
+    .candidate-card{flex:1 1 30%; min-width:250px; background:#f9f9f9; padding:15px; border-radius:10px; text-align:center; box-shadow:0 2px 8px rgba(0,0,0,0.08);}
+    .candidate-card img{width:80px; height:80px; border-radius:50%; margin-bottom:10px;}
+    .candidate-card h3{color:var(--primary); margin-bottom:8px;}
+    .candidate-card p{font-size:0.9rem; margin-bottom:15px; color:#555;}
+    .candidate-card button{background:var(--primary); color:var(--white); border:none; padding:8px 14px; border-radius:5px; cursor:pointer;}
+    .candidate-card button:hover{background:var(--text);}
+    .question{text-align:center; font-size:1.3rem; margin-bottom:20px;}
+    .options button{width:100%; padding:12px; font-size:1rem; margin-bottom:10px; border:none; border-radius:6px; cursor:pointer; background:var(--primary); color:var(--white);}
+    .options button:hover{background:var(--text);}
+    .result-card{margin-top:30px; background:#f4f4f4; padding:20px; border-left:5px solid var(--accent); border-radius:8px;}
+    .btn-reset{margin-top:20px; background:var(--secondary); color:var(--white); padding:10px 20px; border:none; border-radius:6px; cursor:pointer;}
+    .btn-reset:hover{background:var(--accent);}
+    @media (max-width:768px){.card-list{flex-direction:column; align-items:center;} .candidate-card{width:90%;}}
   </style>
 </head>
 <body>
@@ -136,106 +49,178 @@
 
   <script>
     const candidates = [
-      { name: "Giulia Rossi", role: "Innovatrice", avatar: "https://randomuser.me/api/portraits/women/44.jpg", desc: "Giovane con idee fuori dagli schemi, ma inesperta nella gestione di team.", score: {vision:3, prudence:1} },
-      { name: "Marco Bianchi", role: "Tradizionalista", avatar: "https://randomuser.me/api/portraits/men/32.jpg", desc: "Manager esperto e affidabile, con approccio prudente e consolidato.", score: {vision:1, prudence:3} },
-      { name: "Sara Verdi", role: "Talento emergente", avatar: "https://randomuser.me/api/portraits/women/68.jpg", desc: "Leader naturale, in crescita, energica e motivata.", score: {vision:2, prudence:2} }
-    ];
-
-    const steps = [
       {
-        question: "Il team è diviso su una strategia di espansione: cosa fai?",
-        options: [
-          { text: "Spingi per innovazione e rischio calcolato", score: {vision:3, prudence:1} },
-          { text: "Approccio conservativo e sicuro", score: {vision:1, prudence:3} },
-          { text: "Soluzione intermedia e bilanciata", score: {vision:2, prudence:2} }
-        ]
+        key:"innovatrice",
+        name:"Giulia Rossi",
+        role:"Innovatrice",
+        avatar:"https://randomuser.me/api/portraits/women/44.jpg",
+        desc:"Giovane con idee fuori dagli schemi, ma inesperta nella gestione di team.",
+        questions:[
+          {q:"Un membro senior ostacola una nuova idea, cosa fai?",opts:[
+            {text:"Spingi l'idea con determinazione",score:3},
+            {text:"Cerchi compromesso",score:2},
+            {text:"Accetti la posizione del senior",score:1}
+          ]},
+          {q:"Budget ridotto: come lo gestisci?",opts:[
+            {text:"Tagli ovunque tranne innovazione",score:3},
+            {text:"Bilanci tagli e R&D",score:2},
+            {text:"Blocchi progetti rischiosi",score:1}
+          ]},
+          {q:"Team inesperto ma creativo, come guidi?",opts:[
+            {text:"Lasci libertà completa",score:3},
+            {text:"Imposti linee guida",score:2},
+            {text:"Segui solo metodi collaudati",score:1}
+          ]},
+          {q:"Scadenza anticipata, che fai?",opts:[
+            {text:"Riduci controlli, focus su consegna",score:3},
+            {text:"Aumenti ore del team",score:2},
+            {text:"Rinegozi la deadline",score:1}
+          ]},
+          {q:"Cliente richiede funzione non testata",opts:[
+            {text:"Accetti e sperimenti",score:3},
+            {text:"Analizzi e valuti rischi",score:2},
+            {text:"Rifiuti subito",score:1}
+          ]}
+        ],
+        results:{high:"Visionaria estrema",medium:"Innovatrice bilanciata",low:"Innovatrice prudente"}
       },
       {
-        question: "Si verifica una crisi improvvisa: il team è spaccato. Cosa fai?",
-        options: [
-          { text: "Mediazione soft e rafforzamento del morale", score: {vision:1, prudence:3} },
-          { text: "Cambio immediato del leader", score: {vision:2, prudence:2} },
-          { text: "Ristrutturazione totale e pivot del progetto", score: {vision:3, prudence:1} }
-        ]
+        key:"tradizionalista",
+        name:"Marco Bianchi",
+        role:"Tradizionalista",
+        avatar:"https://randomuser.me/api/portraits/men/32.jpg",
+        desc:"Manager esperto e affidabile, con approccio prudente e consolidato.",
+        questions:[
+          {q:"Nuovo software sconosciuto, che fai?",opts:[
+            {text:"Lo eviti finché non certificato",score:1},
+            {text:"Valuti con prove limitate",score:2},
+            {text:"Adotti subito",score:3}
+          ]},
+          {q:"Rischio di mercato elevato, come reagisci?",opts:[
+            {text:"Riduci investimenti",score:1},
+            {text:"Diversifichi portafoglio",score:2},
+            {text:"Aumenti innovazione",score:3}
+          ]},
+          {q:"Assunzione di un giovane leader",opts:[
+            {text:"Preferisci senior affidabile",score:1},
+            {text:"Dai fiducia con tutoraggio",score:2},
+            {text:"Lasci leadership al giovane",score:3}
+          ]},
+          {q:"Cambio improvviso nel regolamento",opts:[
+            {text:"Aspetti linee guida ufficiali",score:1},
+            {text:"Prepari scenari multipli",score:2},
+            {text:"Agisci subito con nuove regole",score:3}
+          ]},
+          {q:"Azienda competitor lancia prodotto innovativo",opts:[
+            {text:"Mantieni strategia attuale",score:1},
+            {text:"Analizzi e valuti risposta",score:2},
+            {text:"Ristrutturi strategia",score:3}
+          ]}
+        ],
+        results:{high:"Tradizionalista innovativo",medium:"Tradizionalista adattivo",low:"Tradizionalista conservatore"}
+      },
+      {
+        key:"talento",
+        name:"Sara Verdi",
+        role:"Talento emergente",
+        avatar:"https://randomuser.me/api/portraits/women/68.jpg",
+        desc:"Leader naturale, in crescita, energica e motivata.",
+        questions:[
+          {q:"Team diviso tra due visioni",opts:[
+            {text:"Imponi la tua scelta",score:3},
+            {text:"Cerchi sintesi condivisa",score:2},
+            {text:"Delego la decisione",score:1}
+          ]},
+          {q:"Nuova opportunità internazionale",opts:[
+            {text:"Parti subito con entusiasmo",score:3},
+            {text:"Valuti condizioni",score:2},
+            {text:"Aspetti stabilità",score:1}
+          ]},
+          {q:"Un senior contesta le tue capacità",opts:[
+            {text:"Confronto diretto",score:3},
+            {text:"Mediazione HR",score:2},
+            {text:"Ignori la questione",score:1}
+          ]},
+          {q:"Budget extra inatteso",opts:[
+            {text:"Investe in formazione",score:3},
+            {text:"Risparmia per sicurezza",score:2},
+            {text:"Lo lascia inutilizzato",score:1}
+          ]},
+          {q:"Team richiede smart working completo",opts:[
+            {text:"Accetti subito",score:3},
+            {text:"Parziale flessibilità",score:2},
+            {text:"Nessun cambiamento",score:1}
+          ]}
+        ],
+        results:{high:"Leader carismatico",medium:"Leader collaborativo",low:"Leader prudente"}
       }
     ];
 
-    let scores = { vision: 0, prudence: 0 };
-    let currentStep = 0;
+    let currentProfile=null, step=0, score=0;
 
-    const candidateList = document.getElementById('candidate-list');
-    const questionSection = document.getElementById('question-section');
-    const questionEl = document.getElementById('question');
-    const optionsEl = document.getElementById('options');
-    const resultEl = document.getElementById('result');
-    const resetBtn = document.getElementById('reset');
+    const candidateList=document.getElementById('candidate-list');
+    const questionSection=document.getElementById('question-section');
+    const questionEl=document.getElementById('question');
+    const optionsEl=document.getElementById('options');
+    const resultEl=document.getElementById('result');
+    const resetBtn=document.getElementById('reset');
 
-    function showCandidates() {
-      candidateList.innerHTML = '';
-      candidates.forEach(c => {
-        const card = document.createElement('div');
-        card.className = 'candidate-card';
-        card.innerHTML = `
-          <img src="${c.avatar}" alt="${c.name}" />
-          <h3>${c.name} - ${c.role}</h3>
-          <p>${c.desc}</p>
-          <button>Seleziona</button>
-        `;
-        card.querySelector('button').onclick = () => {
-          scores.vision += c.score.vision;
-          scores.prudence += c.score.prudence;
-          candidateList.style.display = 'none';
-          showStep();
-        };
-        candidateList.appendChild(card);
-      });
+    function startGame(profileKey){
+      currentProfile=candidates.find(c=>c.key===profileKey);
+      candidateList.style.display='none';
+      questionSection.style.display='block';
+      step=0; score=0;
+      showQuestion();
     }
 
-    function showStep() {
-      questionSection.style.display = 'block';
-      const step = steps[currentStep];
-      questionEl.textContent = step.question;
-      optionsEl.innerHTML = '';
-      step.options.forEach(opt => {
-        const btn = document.createElement('button');
-        btn.textContent = opt.text;
-        btn.onclick = () => {
-          scores.vision += opt.score.vision;
-          scores.prudence += opt.score.prudence;
-          currentStep++;
-          if (currentStep < steps.length) showStep();
-          else showResult();
-        };
+    function showQuestion(){
+      const q=currentProfile.questions[step];
+      questionEl.textContent=q.q;
+      optionsEl.innerHTML='';
+      q.opts.forEach(opt=>{
+        const btn=document.createElement('button');
+        btn.textContent=opt.text;
+        btn.onclick=()=>{score+=opt.score; nextStep();};
         optionsEl.appendChild(btn);
       });
     }
 
-    function showResult() {
-      questionSection.style.display = 'none';
-      const profile = determineProfile();
-      resultEl.innerHTML = `<h2>${profile.title}</h2><p>${profile.text}</p>`;
-      resultEl.style.display = 'block';
-      resetBtn.style.display = 'inline-block';
+    function nextStep(){
+      step++;
+      if(step<currentProfile.questions.length){showQuestion();}
+      else{showResult();}
     }
 
-    function determineProfile() {
-      if (scores.vision > scores.prudence + 2)
-        return { title: "HR Visionario", text: "Spingi verso il cambiamento con decisione e coraggio." };
-      if (scores.prudence > scores.vision + 2)
-        return { title: "HR Prudente", text: "Privilegi la stabilità e riduci al minimo i rischi." };
-      return { title: "HR Bilanciato", text: "Sai unire sicurezza e innovazione con giudizio." };
+    function showResult(){
+      questionSection.style.display='none';
+      let resKey=score>=12?'high':score>=8?'medium':'low';
+      resultEl.innerHTML=`<h2>${currentProfile.results[resKey]}</h2><p>Hai completato il percorso con un punteggio di ${score}.</p>`;
+      resultEl.style.display='block';
+      resetBtn.style.display='inline-block';
     }
 
-    resetBtn.onclick = () => {
-      scores = {vision:0, prudence:0};
-      currentStep = 0;
-      resultEl.style.display = 'none';
-      resetBtn.style.display = 'none';
-      candidateList.style.display = 'flex';
-      questionSection.style.display = 'none';
+    resetBtn.onclick=()=>{
+      resultEl.style.display='none';
+      resetBtn.style.display='none';
+      candidateList.style.display='flex';
+      questionSection.style.display='none';
     };
 
-    showCandidates();
+    function renderCandidates(){
+      candidates.forEach(c=>{
+        const card=document.createElement('div');
+        card.className='candidate-card';
+        card.innerHTML=`
+          <img src="${c.avatar}" alt="${c.name}" />
+          <h3>${c.name} - ${c.role}</h3>
+          <p>${c.desc}</p>
+          <button onclick="startGame('${c.key}')">Seleziona</button>
+        `;
+        candidateList.appendChild(card);
+      });
+    }
+
+    renderCandidates();
   </script>
 </body>
 </html>
