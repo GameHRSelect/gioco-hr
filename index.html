@@ -3,49 +3,87 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Scenario HR - Mini Assessment</title>
+  <title>Scenario HR Avanzato</title>
   <style>
-    body { font-family: 'Segoe UI', sans-serif; background: #f1e5d7; margin: 0; padding: 0; color: #06283F; }
-    .container { max-width: 800px; margin: 0 auto; padding: 40px; text-align: center; }
-    h1 { color: #8D064A; }
-    .question { font-size: 1.3rem; margin-bottom: 30px; }
-    .options button { 
-      display: block; 
-      width: 100%; 
-      padding: 15px; 
-      margin: 10px 0; 
-      font-size: 1rem; 
-      border: none; 
-      border-radius: 8px; 
-      cursor: pointer; 
-      transition: all 0.3s ease; 
-      background: #1B65A5; 
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(120deg, #F1E5D7, #4AAFD8);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      color: #06283F;
+    }
+    .container {
+      background: white;
+      padding: 40px;
+      border-radius: 12px;
+      max-width: 900px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.8s ease;
+    }
+    .container.show { opacity: 1; transform: translateY(0); }
+    h1 { color: #8D064A; margin-bottom: 20px; }
+    .question { font-size: 1.4rem; margin-bottom: 30px; }
+    .options button {
+      width: 100%;
+      padding: 15px;
+      margin: 10px 0;
+      font-size: 1.1rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      background: #1B65A5;
       color: white;
+      transition: background 0.3s, transform 0.2s;
     }
-    .options button:hover { background: #06283F; }
-    .result { font-size: 1.4rem; margin-top: 40px; }
-    .hidden { display: none; }
-    .btn-reset { 
-      background: #D80D32; 
-      padding: 10px 20px; 
-      border: none; 
-      border-radius: 6px; 
-      color: #fff; 
-      cursor: pointer; 
-      font-size: 1rem;
+    .options button:hover {
+      background: #06283F;
+      transform: scale(1.02);
+    }
+    .result {
+      font-size: 1.3rem;
       margin-top: 30px;
+      color: #D80D32;
+      font-weight: bold;
     }
-    .btn-reset:hover { background: #8D064A; }
+    .btn-reset {
+      margin-top: 25px;
+      padding: 12px 25px;
+      font-size: 1rem;
+      border: none;
+      background: #8D064A;
+      color: white;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .btn-reset:hover { background: #D80D32; }
+    .fade-out { opacity: 0; transform: translateY(20px); transition: all 0.5s ease; }
+    img.bg {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      z-index: -1;
+      opacity: 0.08;
+    }
   </style>
 </head>
 <body>
-  <div class="container">
+  <img class="bg" src="https://images.unsplash.com/photo-1522071820081-009f0129c71c" alt="Background">
+  <div class="container" id="container">
     <h1>Scenario HR Avanzato</h1>
     <div id="game">
-      <div id="step"></div>
+      <div id="step" class="question"></div>
       <div class="options" id="options"></div>
     </div>
-    <div id="result" class="hidden"></div>
+    <div id="result" class="result hidden"></div>
     <button id="reset" class="btn-reset hidden">Rigioca</button>
   </div>
 
@@ -54,9 +92,9 @@
       {
         question: "Devi scegliere il leader per un progetto strategico ad alta pressione:",
         options: [
-          { text: "Un giovane innovatore senza esperienza manageriale", score: 3, next: 1 },
-          { text: "Un manager esperto ma molto tradizionalista", score: 1, next: 1 },
-          { text: "Un talento emergente con leadership naturale ma poca tecnica", score: 2, next: 1 }
+          { text: "Giovane innovatore senza esperienza manageriale", score: 3, next: 1 },
+          { text: "Manager esperto ma tradizionalista", score: 1, next: 1 },
+          { text: "Talento emergente con leadership naturale", score: 2, next: 1 }
         ]
       },
       {
@@ -71,15 +109,15 @@
         question: "Si verifica una crisi improvvisa: il team è spaccato. Cosa fai?",
         options: [
           { text: "Mediazione soft e rafforzamento del morale", score: 1, next: null },
-          { text: "Cambio immediato del leader per ristabilire ordine", score: 2, next: null },
+          { text: "Cambio immediato del leader", score: 2, next: null },
           { text: "Ristrutturazione totale e pivot del progetto", score: 3, next: null }
         ]
       }
     ];
 
     const profiles = [
-      { range: [0,3], text: "Sei un HR Prudente e Tradizionalista: preferisci sicurezza e stabilità alle innovazioni radicali." },
-      { range: [4,5], text: "Sei un HR Bilanciato: sai unire sicurezza e innovazione quando serve." },
+      { range: [0,3], text: "Sei un HR Prudente e Tradizionalista: privilegi la stabilità e riduci al minimo i rischi." },
+      { range: [4,5], text: "Sei un HR Bilanciato: sai unire sicurezza e innovazione con giudizio." },
       { range: [6,7], text: "Sei un HR Visionario: spingi verso il cambiamento con decisione e coraggio." },
       { range: [8,9], text: "Sei un HR Disruptive: rivoluzioni ogni schema e accetti rischi elevati." }
     ];
@@ -91,32 +129,37 @@
     const optionsEl = document.getElementById('options');
     const resultEl = document.getElementById('result');
     const resetBtn = document.getElementById('reset');
+    const container = document.getElementById('container');
 
     function showStep(index) {
-      stepEl.textContent = steps[index].question;
-      optionsEl.innerHTML = '';
-      steps[index].options.forEach((opt, i) => {
-        const btn = document.createElement('button');
-        btn.textContent = opt.text;
-        btn.onclick = () => {
-          score += opt.score;
-          if (opt.next !== null) {
-            currentStep = opt.next;
-            showStep(currentStep);
-          } else {
-            showResult();
-          }
-        };
-        optionsEl.appendChild(btn);
-      });
+      container.classList.remove('show');
+      setTimeout(() => {
+        stepEl.textContent = steps[index].question;
+        optionsEl.innerHTML = '';
+        steps[index].options.forEach(opt => {
+          const btn = document.createElement('button');
+          btn.textContent = opt.text;
+          btn.onclick = () => {
+            score += opt.score;
+            if (opt.next !== null) {
+              currentStep = opt.next;
+              showStep(currentStep);
+            } else {
+              showResult();
+            }
+          };
+          optionsEl.appendChild(btn);
+        });
+        container.classList.add('show');
+      }, 300);
     }
 
     function showResult() {
       let profile = profiles.find(p => score >= p.range[0] && score <= p.range[1]);
-      resultEl.textContent = "Risultato: " + profile.text;
+      stepEl.textContent = "";
+      optionsEl.innerHTML = "";
+      resultEl.textContent = profile.text;
       resultEl.classList.remove('hidden');
-      optionsEl.innerHTML = '';
-      stepEl.textContent = '';
       resetBtn.classList.remove('hidden');
     }
 
@@ -128,6 +171,8 @@
       showStep(currentStep);
     };
 
+    // Start game
+    setTimeout(() => container.classList.add('show'), 100);
     showStep(currentStep);
   </script>
 </body>
