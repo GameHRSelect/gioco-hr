@@ -1,240 +1,280 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Scenario HR Avanzato</title>
-<style>
-  :root {
-    --primary: #1B65A5;
-    --secondary: #8D064A;
-    --accent: #D80D32;
-    --bg-light: #F1E5D7;
-    --bg-dark: #1E1E1E;
-    --text-light: #06283F;
-    --text-dark: #EAEAEA;
-    --white: #fff;
-  }
-  body { margin:0; font-family:'Segoe UI',sans-serif; background:var(--bg-light); color:var(--text-light); transition:background 0.3s,color 0.3s; }
-  body.dark { background:var(--bg-dark); color:var(--text-dark); }
-  .container { max-width:900px; margin:20px auto; background:var(--white); padding:20px; border-radius:10px; box-shadow:0 4px 15px rgba(0,0,0,0.1); transition:background 0.3s; }
-  body.dark .container { background:#2A2A2A; }
-  h1 { text-align:center; color:var(--secondary); cursor:pointer; user-select:none; }
-  .theme-switch { position:absolute; top:20px; right:20px; cursor:pointer; padding:5px 10px; border-radius:5px; background:var(--primary); color:white; }
-  .card-list { display:flex; flex-wrap:wrap; gap:15px; justify-content:center; animation:fadeIn 1s ease; }
-  .candidate-card { flex:1 1 30%; min-width:250px; background:#f9f9f9; padding:15px; border-radius:10px; text-align:center; transition:transform .3s; box-shadow:0 2px 8px rgba(0,0,0,0.08); }
-  .candidate-card:hover { transform:translateY(-5px); }
-  .candidate-card img { width:80px; height:80px; border-radius:50%; margin-bottom:10px; }
-  .candidate-card h3 { color:var(--primary); margin-bottom:8px; }
-  .candidate-card p { font-size:0.9rem; margin-bottom:15px; }
-  .candidate-card button { background:var(--primary); color:white; border:none; padding:8px 14px; border-radius:5px; cursor:pointer; }
-  .candidate-card button:hover { background:var(--accent); }
-  .question-section { animation:fadeIn .7s ease; }
-  .question-image { width:100%; border-radius:10px; margin-bottom:15px; }
-  .question { font-size:1.2rem; margin-bottom:20px; text-align:center; }
-  .options button { width:100%; padding:12px; font-size:1rem; margin-bottom:10px; border:none; border-radius:6px; cursor:pointer; background:var(--primary); color:white; transition:background .3s; }
-  .options button:hover { background:var(--accent); }
-  .progress-bar { background:#e0e0e0; height:8px; border-radius:5px; margin-bottom:20px; overflow:hidden; }
-  .progress-fill { background:var(--accent); height:100%; width:0%; transition:width 0.4s ease; }
-  .progress-text { text-align:right; font-size:0.8rem; margin-bottom:10px; }
-  .result-card { margin-top:30px; background:#f4f4f4; padding:20px; border-left:5px solid var(--accent); border-radius:8px; animation:fadeIn 1s ease; }
-  .stars { font-size:1.5rem; color:gold; margin-bottom:10px; }
-  .btn { margin:10px 5px 0 0; background:var(--secondary); color:white; padding:10px 20px; border:none; border-radius:6px; cursor:pointer; }
-  .btn:hover { background:var(--accent); }
-  .btn-linkedin { background:#0077b5; text-decoration:none; padding:10px 20px; border-radius:6px; display:inline-block; color:white; }
-  .btn-linkedin:hover { background:#005983; }
-  .ranking { margin-top:20px; font-size:0.9rem; }
-  .easter-egg { display:none; font-size:1.1rem; color:var(--accent); text-align:center; margin-top:20px; }
-  @keyframes fadeIn { from{opacity:0;} to{opacity:1;} }
-  @keyframes slideIn { from{opacity:0; transform:translateX(50px);} to{opacity:1; transform:translateX(0);} }
-  @media(max-width:768px) { .card-list{flex-direction:column; align-items:center;} .candidate-card{width:90%;} }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Scenario HR Avanzato</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f4f4f4;
+    }
+    header {
+      background: #8D064A;
+      color: white;
+      padding: 1rem;
+      text-align: center;
+    }
+    h1 {
+      margin: 0;
+      font-size: 1.8rem;
+    }
+    .container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      padding: 20px;
+      max-width: 1200px;
+      margin: auto;
+    }
+    .candidate-card {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 320px;
+      transition: transform 0.2s ease-in-out;
+    }
+    .candidate-card:hover {
+      transform: translateY(-5px);
+    }
+    .candidate-card img {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      margin-bottom: 10px;
+      object-fit: cover;
+    }
+    .candidate-card h3 {
+      color: #1B65A5;
+      margin-bottom: 10px;
+    }
+    .candidate-card p {
+      flex-grow: 1;
+      color: #444;
+      font-size: 0.95rem;
+      margin-bottom: 15px;
+    }
+    .candidate-card button {
+      background: #1B65A5;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: background 0.2s;
+    }
+    .candidate-card button:hover {
+      background: #154d7d;
+    }
+    .quiz-section, .result-section {
+      display: none;
+      padding: 20px;
+      max-width: 600px;
+      margin: auto;
+    }
+    .quiz-section.active, .result-section.active {
+      display: block;
+    }
+    .quiz-question {
+      margin-bottom: 20px;
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+    .quiz-options button {
+      display: block;
+      width: 100%;
+      margin-bottom: 10px;
+      background: #1B65A5;
+      color: white;
+      border: none;
+      padding: 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+    .quiz-options button:hover {
+      background: #154d7d;
+    }
+    .result-section h2 {
+      color: #8D064A;
+    }
+    .history {
+      margin-top: 30px;
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    .history h3 { margin-top: 0; }
+    .history ul { padding-left: 20px; }
+    .history li { margin-bottom: 5px; }
+    @media (max-width: 600px) {
+      h1 { font-size: 1.4rem; }
+      .candidate-card { min-height: auto; }
+    }
+  </style>
 </head>
 <body>
-<div class="theme-switch" id="themeSwitch">🌙</div>
-<div class="container">
-  <h1 id="mainTitle">Scenario HR Avanzato</h1>
-  <div id="game">
-    <div class="card-list" id="candidate-list"></div>
-    <div class="question-section" id="question-section" style="display:none;">
-      <img id="candidate-img" class="question-image" alt="Candidato">
-      <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
-      <div class="progress-text" id="progressText"></div>
-      <div class="question" id="question"></div>
-      <div class="options" id="options"></div>
-    </div>
-    <div class="result-card" id="result" style="display:none;"></div>
-    <button id="reset" class="btn" style="display:none;">Rigioca</button>
-    <button id="pdf" class="btn" style="display:none;">Scarica PDF</button>
-    <a id="share-linkedin" href="#" class="btn-linkedin" target="_blank" style="display:none;">Condividi su LinkedIn</a>
-    <div class="ranking" id="ranking"></div>
-    <div class="easter-egg" id="easterEgg">✨ Easter Egg sbloccato! Sei un vero esploratore HR! ✨</div>
-  </div>
-</div>
 
-<!-- Libreria PDF -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<header>
+  <h1>Scenario HR Avanzato</h1>
+</header>
+
+<div class="container" id="candidate-list"></div>
+
+<section class="quiz-section" id="quiz-section">
+  <div class="quiz-question" id="quiz-question"></div>
+  <div class="quiz-options" id="quiz-options"></div>
+</section>
+
+<section class="result-section" id="result-section">
+  <h2 id="result-title"></h2>
+  <p id="result-description"></p>
+  <button onclick="restartGame()">Rigioca</button>
+  <div class="history">
+    <h3>Storico giocate</h3>
+    <ul id="history-list"></ul>
+  </div>
+</section>
+
 <script>
-/* =====================
-   DATI CANDIDATI
-===================== */
 const candidates = [
-  { key:"innovatrice", name:"Giulia Rossi", role:"Innovatrice", avatar:"https://randomuser.me/api/portraits/women/44.jpg", bigImage:"https://images.unsplash.com/photo-1522202176988-66273c2fd55f?fit=crop&w=900&q=80", desc:"Giovane con idee fuori dagli schemi, ma inesperta nella gestione di team.", 
-    questions:[
-      {q:"Un membro senior ostacola una nuova idea, cosa fai?", opts:[{text:"Spingi l'idea con determinazione",score:3},{text:"Cerchi compromesso",score:2},{text:"Accetti la posizione del senior",score:1}]},
-      {q:"Budget ridotto: come lo gestisci?", opts:[{text:"Tagli ovunque tranne innovazione",score:3},{text:"Bilanci tagli e R&D",score:2},{text:"Blocchi progetti rischiosi",score:1}]},
-      {q:"Team inesperto ma creativo, come guidi?", opts:[{text:"Lasci libertà completa",score:3},{text:"Imposti linee guida",score:2},{text:"Segui solo metodi collaudati",score:1}]},
-      {q:"Scadenza anticipata, che fai?", opts:[{text:"Riduci controlli, focus su consegna",score:3},{text:"Aumenti ore del team",score:2},{text:"Rinegozi la deadline",score:1}]},
-      {q:"Cliente richiede funzione non testata", opts:[{text:"Accetti e sperimenti",score:3},{text:"Analizzi e valuti rischi",score:2},{text:"Rifiuti subito",score:1}]}
+  {
+    key: 'rossi',
+    name: 'Giulia Rossi',
+    role: 'Innovatrice',
+    avatar: 'https://randomuser.me/api/portraits/women/44.jpg',
+    desc: 'Giovane con idee fuori dagli schemi, ma inesperta nella gestione di team.',
+    questions: [
+      "Come gestiresti un conflitto tra due team creativi?",
+      "Qual è la tua strategia per introdurre innovazione in un ambiente tradizionale?",
+      "Come reagisci a un rifiuto di un’idea da parte del board?",
+      "Quali strumenti digitali utilizzeresti per ottimizzare i flussi di lavoro?",
+      "Come bilanci creatività e rispetto delle scadenze?"
     ],
-    results:{ high:{title:"Visionaria estrema",desc:"Approccio radicale orientato all'innovazione."}, medium:{title:"Innovatrice bilanciata",desc:"Idee nuove senza perdere di vista le regole."}, low:{title:"Innovatrice prudente",desc:"Creativa ma cauta nei rischi."}}
+    profile: "Visionaria e pronta a sfidare le regole, ma richiede supporto nella gestione operativa e nel consolidamento del team."
   },
-  { key:"tradizionalista", name:"Marco Bianchi", role:"Tradizionalista", avatar:"https://randomuser.me/api/portraits/men/32.jpg", bigImage:"https://images.unsplash.com/photo-1504384308090-c894fdcc538d?fit=crop&w=900&q=80", desc:"Manager esperto e affidabile, con approccio prudente e consolidato.", 
-    questions:[
-      {q:"Nuovo software sconosciuto, che fai?", opts:[{text:"Lo eviti finché non certificato",score:1},{text:"Valuti con prove limitate",score:2},{text:"Adotti subito",score:3}]},
-      {q:"Rischio di mercato elevato, come reagisci?", opts:[{text:"Riduci investimenti",score:1},{text:"Diversifichi portafoglio",score:2},{text:"Aumenti innovazione",score:3}]},
-      {q:"Assunzione di un giovane leader", opts:[{text:"Preferisci senior affidabile",score:1},{text:"Dai fiducia con tutoraggio",score:2},{text:"Lasci leadership al giovane",score:3}]},
-      {q:"Cambio improvviso nel regolamento", opts:[{text:"Aspetti linee guida ufficiali",score:1},{text:"Prepari scenari multipli",score:2},{text:"Agisci subito",score:3}]},
-      {q:"Azienda competitor lancia prodotto innovativo", opts:[{text:"Mantieni strategia attuale",score:1},{text:"Analizzi e valuti risposta",score:2},{text:"Ristrutturi strategia",score:3}]}
+  {
+    key: 'bianchi',
+    name: 'Marco Bianchi',
+    role: 'Tradizionalista',
+    avatar: 'https://randomuser.me/api/portraits/men/32.jpg',
+    desc: 'Manager esperto e affidabile, con approccio prudente e consolidato.',
+    questions: [
+      "Come affronteresti un cambio improvviso del regolamento aziendale?",
+      "Qual è il tuo metodo per garantire stabilità nei momenti di crisi?",
+      "Come ti rapporti con team multigenerazionali?",
+      "Che ruolo dai alla digitalizzazione in processi consolidati?",
+      "Come garantisci l’allineamento con le policy aziendali?"
     ],
-    results:{ high:{title:"Tradizionalista innovativo",desc:"Stabilità con apertura alle novità."}, medium:{title:"Tradizionalista adattivo",desc:"Prudente ma flessibile."}, low:{title:"Tradizionalista conservatore",desc:"Sicurezza sopra ogni cosa."}}
+    profile: "Solido e affidabile, ottimo per contesti strutturati, ma talvolta poco incline al cambiamento rapido."
   },
-  { key:"talento", name:"Sara Verdi", role:"Talento emergente", avatar:"https://randomuser.me/api/portraits/women/68.jpg", bigImage:"https://images.unsplash.com/photo-1524504388940-b1c1722653e1?fit=crop&w=900&q=80", desc:"Leader naturale, in crescita, energica e motivata.", 
-    questions:[
-      {q:"Team diviso tra due visioni", opts:[{text:"Imponi la tua scelta",score:3},{text:"Cerchi sintesi condivisa",score:2},{text:"Delego la decisione",score:1}]},
-      {q:"Nuova opportunità internazionale", opts:[{text:"Parti subito con entusiasmo",score:3},{text:"Valuti condizioni",score:2},{text:"Aspetti stabilità",score:1}]},
-      {q:"Un senior contesta le tue capacità", opts:[{text:"Confronto diretto",score:3},{text:"Mediazione HR",score:2},{text:"Ignori la questione",score:1}]},
-      {q:"Budget extra inatteso", opts:[{text:"Investe in formazione",score:3},{text:"Risparmia per sicurezza",score:2},{text:"Lo lascia inutilizzato",score:1}]},
-      {q:"Team richiede smart working completo", opts:[{text:"Accetti subito",score:3},{text:"Parziale flessibilità",score:2},{text:"Nessun cambiamento",score:1}]}
+  {
+    key: 'verdi',
+    name: 'Sara Verdi',
+    role: 'Talento emergente',
+    avatar: 'https://randomuser.me/api/portraits/women/68.jpg',
+    desc: 'Leader naturale, in crescita, energica e motivata.',
+    questions: [
+      "Come gestiresti la tua prima responsabilità di budget?",
+      "Qual è il tuo approccio alla gestione di colleghi più esperti di te?",
+      "Come costruisci autorevolezza con un team nuovo?",
+      "Come trasformi un feedback negativo in opportunità?",
+      "Qual è la tua strategia di crescita personale nei prossimi 3 anni?"
     ],
-    results:{ high:{title:"Leader carismatico",desc:"Leadership naturale e orientata all'empowerment."}, medium:{title:"Leader collaborativo",desc:"Ascolto e valorizzazione delle persone."}, low:{title:"Leader prudente",desc:"Potenziale ma gestione attenta."}}
+    profile: "Carismatica e orientata alla crescita, porta energia e nuove prospettive, ma necessita di mentoring per ruoli complessi."
   }
 ];
 
-/* =====================
-   VARIABILI GLOBALI
-===================== */
-let currentProfile=null, step=0, score=0, answers=[];
-const candidateList=document.getElementById('candidate-list');
-const questionSection=document.getElementById('question-section');
-const questionEl=document.getElementById('question');
-const optionsEl=document.getElementById('options');
-const resultEl=document.getElementById('result');
-const resetBtn=document.getElementById('reset');
-const pdfBtn=document.getElementById('pdf');
-const linkedinBtn=document.getElementById('share-linkedin');
-const candidateImg=document.getElementById('candidate-img');
-const progressFill=document.getElementById('progress');
-const progressText=document.getElementById('progressText');
-const rankingEl=document.getElementById('ranking');
-const themeSwitch=document.getElementById('themeSwitch');
-const easterEgg=document.getElementById('easterEgg');
-const mainTitle=document.getElementById('mainTitle');
+let currentCandidate = null;
+let currentQuestion = 0;
+let history = [];
 
-/* =====================
-   EASTER EGG
-===================== */
-let clickCount=0;
-mainTitle.addEventListener('click',()=>{ clickCount++; if(clickCount>=5){easterEgg.style.display='block';} });
+function renderCandidates() {
+  const list = document.getElementById('candidate-list');
+  list.innerHTML = '';
+  candidates.forEach(c => {
+    const card = document.createElement('div');
+    card.className = 'candidate-card';
+    card.innerHTML = `
+      <img src="${c.avatar}" alt="${c.name}">
+      <h3>${c.name} - ${c.role}</h3>
+      <p>${c.desc}</p>
+      <button onclick="startGame('${c.key}')">Seleziona</button>
+    `;
+    list.appendChild(card);
+  });
+}
 
-/* =====================
-   THEME SWITCH
-===================== */
-themeSwitch.addEventListener('click',()=>{
-  document.body.classList.toggle('dark');
-  themeSwitch.textContent=document.body.classList.contains('dark')?"☀️":"🌙";
-});
-
-/* =====================
-   GESTIONE DOMANDE
-===================== */
-function startGame(key){
-  currentProfile=candidates.find(c=>c.key===key);
-  candidateImg.src=currentProfile.bigImage;
-  candidateList.style.display='none';
-  questionSection.style.display='block';
-  step=0;score=0;answers=[];
+function startGame(key) {
+  currentCandidate = candidates.find(c => c.key === key);
+  currentQuestion = 0;
+  document.getElementById('quiz-section').classList.add('active');
+  document.getElementById('candidate-list').style.display = 'none';
+  document.getElementById('result-section').classList.remove('active');
   showQuestion();
 }
 
-function showQuestion(){
-  const q=currentProfile.questions[step];
-  questionEl.className='question slide-enter';
-  questionEl.textContent=q.q;
-  optionsEl.innerHTML='';
-  progressFill.style.width=((step/currentProfile.questions.length)*100)+'%';
-  progressText.textContent=`Domanda ${step+1} di ${currentProfile.questions.length}`;
-  q.opts.forEach(opt=>{
-    const btn=document.createElement('button');
-    btn.textContent=opt.text;
-    btn.onclick=()=>{score+=opt.score; answers.push({question:q.q, answer:opt.text}); nextStep();};
-    optionsEl.appendChild(btn);
+function showQuestion() {
+  const q = currentCandidate.questions[currentQuestion];
+  document.getElementById('quiz-question').textContent = q;
+  const options = document.getElementById('quiz-options');
+  options.innerHTML = '';
+  ['Opzione A','Opzione B','Opzione C'].forEach(opt => {
+    const btn = document.createElement('button');
+    btn.textContent = opt;
+    btn.onclick = nextQuestion;
+    options.appendChild(btn);
   });
 }
 
-function nextStep(){
-  step++;
-  (step<currentProfile.questions.length)?showQuestion():showResult();
+function nextQuestion() {
+  currentQuestion++;
+  if (currentQuestion < currentCandidate.questions.length) {
+    showQuestion();
+  } else {
+    finishGame();
+  }
 }
 
-function showResult(){
-  questionSection.style.display='none';
-  progressFill.style.width='100%';
-  progressText.textContent='Completato!';
-  const resKey=score>=12?'high':score>=8?'medium':'low';
-  const res=currentProfile.results[resKey];
-  const stars=score>=12?'⭐⭐⭐':score>=8?'⭐⭐':'⭐';
-  const answersHTML=answers.map(a=>`<li><b>${a.question}</b><br><i>${a.answer}</i></li>`).join('');
-  resultEl.innerHTML=`<div class="stars">${stars}</div><h2>${res.title}</h2><p>${res.desc}</p><h3>Le tue scelte:</h3><ul>${answersHTML}</ul>`;
-  resultEl.style.display='block';
-  resetBtn.style.display='inline-block';
-  pdfBtn.style.display='inline-block';
-  linkedinBtn.style.display='inline-block';
-  linkedinBtn.href=`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(window.location.href)}&summary=${encodeURIComponent(res.title+' - '+res.desc)}`;
-  saveRanking(res.title,score);
-  renderRanking();
-}
-
-/* =====================
-   RANKING (LocalStorage)
-===================== */
-function saveRanking(title,score){
-  const history=JSON.parse(localStorage.getItem('ranking')||'[]');
-  history.push({date:new Date().toLocaleString(),title,score});
-  localStorage.setItem('ranking',JSON.stringify(history));
-}
-
-function renderRanking(){
-  const history=JSON.parse(localStorage.getItem('ranking')||'[]');
-  if(!history.length){rankingEl.innerHTML='';return;}
-  rankingEl.innerHTML='<h3>Storico giocate</h3><ul>'+history.map(h=>`<li>${h.date}: <b>${h.title}</b> (${h.score} punti)</li>`).join('')+'</ul>';
-}
-
-/* =====================
-   RESET & PDF
-===================== */
-resetBtn.onclick=()=>{resultEl.style.display='none';resetBtn.style.display='none';pdfBtn.style.display='none';linkedinBtn.style.display='none';candidateList.style.display='flex';questionSection.style.display='none';progressFill.style.width='0%';progressText.textContent='';};
-pdfBtn.onclick=()=>{
-  const { jsPDF }=window.jspdf; const doc=new jsPDF();
-  doc.setFontSize(18); doc.text("Risultato Gioco HR",10,20);
-  doc.addImage(candidateImg.src,'JPEG',10,30,60,40);
-  doc.setFontSize(12); doc.text(`Profilo: ${currentProfile.name}`,10,80);
-  answers.forEach((a,i)=>{doc.text(`${i+1}. ${a.question}`,10,95+(i*10));doc.text(`Risposta: ${a.answer}`,10,100+(i*10));});
-  doc.save("risultato.pdf");
-};
-
-/* =====================
-   RENDER CANDIDATI
-===================== */
-(function renderCandidates(){
-  candidates.forEach(c=>{
-    const card=document.createElement('div');
-    card.className='candidate-card';
-    card.innerHTML=`<img src="${c.avatar}" alt="${c.name}" /><h3>${c.name} - ${c.role}</h3><p>${c.desc}</p><button onclick="startGame('${c.key}')">Seleziona</button>`;
-    candidateList.appendChild(card);
+function finishGame() {
+  document.getElementById('quiz-section').classList.remove('active');
+  document.getElementById('result-section').classList.add('active');
+  document.getElementById('result-title').textContent = `${currentCandidate.name} - ${currentCandidate.role}`;
+  document.getElementById('result-description').textContent = currentCandidate.profile;
+  history.push({ 
+    date: new Date().toLocaleString(),
+    profile: `${currentCandidate.name} - ${currentCandidate.role}`
   });
-})();
-renderRanking();
+  renderHistory();
+}
+
+function renderHistory() {
+  const ul = document.getElementById('history-list');
+  ul.innerHTML = '';
+  history.forEach(h => {
+    const li = document.createElement('li');
+    li.textContent = `${h.date}: ${h.profile}`;
+    ul.appendChild(li);
+  });
+}
+
+function restartGame() {
+  document.getElementById('candidate-list').style.display = 'grid';
+  document.getElementById('quiz-section').classList.remove('active');
+  document.getElementById('result-section').classList.remove('active');
+}
+
+renderCandidates();
 </script>
+
 </body>
 </html>
