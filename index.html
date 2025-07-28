@@ -1,280 +1,326 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Scenario HR Avanzato</title>
-  <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      margin: 0;
-      padding: 0;
-      background: #f4f4f4;
-    }
-    header {
-      background: #8D064A;
-      color: white;
-      padding: 1rem;
-      text-align: center;
-    }
-    h1 {
-      margin: 0;
-      font-size: 1.8rem;
-    }
-    .container {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 20px;
-      padding: 20px;
-      max-width: 1200px;
-      margin: auto;
-    }
-    .candidate-card {
-      background: white;
-      border-radius: 12px;
-      padding: 20px;
-      text-align: center;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      min-height: 320px;
-      transition: transform 0.2s ease-in-out;
-    }
-    .candidate-card:hover {
-      transform: translateY(-5px);
-    }
-    .candidate-card img {
-      width: 100px;
-      height: 100px;
-      border-radius: 50%;
-      margin-bottom: 10px;
-      object-fit: cover;
-    }
-    .candidate-card h3 {
-      color: #1B65A5;
-      margin-bottom: 10px;
-    }
-    .candidate-card p {
-      flex-grow: 1;
-      color: #444;
-      font-size: 0.95rem;
-      margin-bottom: 15px;
-    }
-    .candidate-card button {
-      background: #1B65A5;
-      color: white;
-      border: none;
-      padding: 10px 15px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 1rem;
-      transition: background 0.2s;
-    }
-    .candidate-card button:hover {
-      background: #154d7d;
-    }
-    .quiz-section, .result-section {
-      display: none;
-      padding: 20px;
-      max-width: 600px;
-      margin: auto;
-    }
-    .quiz-section.active, .result-section.active {
-      display: block;
-    }
-    .quiz-question {
-      margin-bottom: 20px;
-      font-size: 1.2rem;
-      font-weight: bold;
-    }
-    .quiz-options button {
-      display: block;
-      width: 100%;
-      margin-bottom: 10px;
-      background: #1B65A5;
-      color: white;
-      border: none;
-      padding: 10px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 1rem;
-    }
-    .quiz-options button:hover {
-      background: #154d7d;
-    }
-    .result-section h2 {
-      color: #8D064A;
-    }
-    .history {
-      margin-top: 30px;
-      background: white;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    }
-    .history h3 { margin-top: 0; }
-    .history ul { padding-left: 20px; }
-    .history li { margin-bottom: 5px; }
-    @media (max-width: 600px) {
-      h1 { font-size: 1.4rem; }
-      .candidate-card { min-height: auto; }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scenario HR Avanzato</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            background: #f7f7f7;
+            color: #222;
+        }
+        header {
+            background: #8D064A;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        .profiles {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            justify-content: center;
+        }
+        .profile-card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            flex: 1 1 300px;
+            max-width: 350px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        .profile-card:hover {
+            transform: translateY(-5px);
+        }
+        .profile-card img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 1rem;
+        }
+        .profile-card h3 {
+            margin: 0.5rem 0;
+            color: #1B65A5;
+        }
+        .profile-card p {
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+        }
+        button {
+            background: #1B65A5;
+            color: white;
+            border: none;
+            padding: 0.7rem 1.2rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        button:hover {
+            background: #06283F;
+        }
+        .question-section {
+            display: none;
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            margin-top: 2rem;
+            animation: fadeIn 0.4s ease forwards;
+        }
+        .question {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 1.5rem;
+        }
+        .answers {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .answers button {
+            font-size: 1rem;
+            padding: 1rem;
+            text-align: left;
+            white-space: normal;
+        }
+        .result-section {
+            display: none;
+            background: white;
+            padding: 2rem;
+            margin-top: 2rem;
+            border-radius: 10px;
+            animation: fadeIn 0.4s ease forwards;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        @keyframes fadeIn {
+            from {opacity: 0; transform: translateY(10px);}
+            to {opacity: 1; transform: translateY(0);}
+        }
+        @media screen and (max-width: 768px) {
+            .profiles {
+                flex-direction: column;
+                align-items: center;
+            }
+            .question {
+                font-size: 1rem;
+            }
+        }
+    </style>
 </head>
 <body>
+<header>Scenario HR Avanzato</header>
+<div class="container">
 
-<header>
-  <h1>Scenario HR Avanzato</h1>
-</header>
+    <!-- SELEZIONE PROFILI -->
+    <div id="profileSelection" class="profiles">
+        <div class="profile-card">
+            <img src="https://i.ibb.co/WvS5GzH/giulia.jpg" alt="Giulia Rossi">
+            <h3>Giulia Rossi - Innovatrice</h3>
+            <p>Giovane con idee fuori dagli schemi, ma inesperta nella gestione di team.</p>
+            <button onclick="startTest('giulia')">Seleziona</button>
+        </div>
+        <div class="profile-card">
+            <img src="https://i.ibb.co/0rF5YcN/marco.jpg" alt="Marco Bianchi">
+            <h3>Marco Bianchi - Tradizionalista</h3>
+            <p>Manager esperto e affidabile, con approccio prudente e consolidato.</p>
+            <button onclick="startTest('marco')">Seleziona</button>
+        </div>
+        <div class="profile-card">
+            <img src="https://i.ibb.co/fM6ngRF/sara.jpg" alt="Sara Verdi">
+            <h3>Sara Verdi - Talento emergente</h3>
+            <p>Leader naturale, in crescita, energica e motivata.</p>
+            <button onclick="startTest('sara')">Seleziona</button>
+        </div>
+    </div>
 
-<div class="container" id="candidate-list"></div>
+    <!-- DOMANDE -->
+    <div id="questionSection" class="question-section">
+        <div class="question" id="questionText"></div>
+        <div class="answers" id="answers"></div>
+    </div>
 
-<section class="quiz-section" id="quiz-section">
-  <div class="quiz-question" id="quiz-question"></div>
-  <div class="quiz-options" id="quiz-options"></div>
-</section>
-
-<section class="result-section" id="result-section">
-  <h2 id="result-title"></h2>
-  <p id="result-description"></p>
-  <button onclick="restartGame()">Rigioca</button>
-  <div class="history">
-    <h3>Storico giocate</h3>
-    <ul id="history-list"></ul>
-  </div>
-</section>
+    <!-- RISULTATO -->
+    <div id="resultSection" class="result-section">
+        <h2>Risultato del tuo percorso</h2>
+        <p id="resultText"></p>
+        <button onclick="location.reload()">Ricomincia</button>
+    </div>
+</div>
 
 <script>
-const candidates = [
-  {
-    key: 'rossi',
-    name: 'Giulia Rossi',
-    role: 'Innovatrice',
-    avatar: 'https://randomuser.me/api/portraits/women/44.jpg',
-    desc: 'Giovane con idee fuori dagli schemi, ma inesperta nella gestione di team.',
-    questions: [
-      "Come gestiresti un conflitto tra due team creativi?",
-      "Qual è la tua strategia per introdurre innovazione in un ambiente tradizionale?",
-      "Come reagisci a un rifiuto di un’idea da parte del board?",
-      "Quali strumenti digitali utilizzeresti per ottimizzare i flussi di lavoro?",
-      "Come bilanci creatività e rispetto delle scadenze?"
-    ],
-    profile: "Visionaria e pronta a sfidare le regole, ma richiede supporto nella gestione operativa e nel consolidamento del team."
-  },
-  {
-    key: 'bianchi',
-    name: 'Marco Bianchi',
-    role: 'Tradizionalista',
-    avatar: 'https://randomuser.me/api/portraits/men/32.jpg',
-    desc: 'Manager esperto e affidabile, con approccio prudente e consolidato.',
-    questions: [
-      "Come affronteresti un cambio improvviso del regolamento aziendale?",
-      "Qual è il tuo metodo per garantire stabilità nei momenti di crisi?",
-      "Come ti rapporti con team multigenerazionali?",
-      "Che ruolo dai alla digitalizzazione in processi consolidati?",
-      "Come garantisci l’allineamento con le policy aziendali?"
-    ],
-    profile: "Solido e affidabile, ottimo per contesti strutturati, ma talvolta poco incline al cambiamento rapido."
-  },
-  {
-    key: 'verdi',
-    name: 'Sara Verdi',
-    role: 'Talento emergente',
-    avatar: 'https://randomuser.me/api/portraits/women/68.jpg',
-    desc: 'Leader naturale, in crescita, energica e motivata.',
-    questions: [
-      "Come gestiresti la tua prima responsabilità di budget?",
-      "Qual è il tuo approccio alla gestione di colleghi più esperti di te?",
-      "Come costruisci autorevolezza con un team nuovo?",
-      "Come trasformi un feedback negativo in opportunità?",
-      "Qual è la tua strategia di crescita personale nei prossimi 3 anni?"
-    ],
-    profile: "Carismatica e orientata alla crescita, porta energia e nuove prospettive, ma necessita di mentoring per ruoli complessi."
-  }
-];
+const profiles = {
+    giulia: {
+        questions: [
+            { q: "Come gestiresti un conflitto tra due team creativi?",
+              a: [
+                "Mediazione diretta, favorendo un brainstorming congiunto per trovare soluzioni comuni.",
+                "Separazione temporanea dei team per ridurre tensioni, con revisione processi in seguito.",
+                "Coinvolgerei un facilitatore esterno per garantire neutralità e visione innovativa."
+              ]
+            },
+            { q: "Qual è la tua strategia per introdurre innovazione in un ambiente tradizionale?",
+              a: [
+                "Inserire progetti pilota a basso rischio per mostrare i benefici del cambiamento.",
+                "Organizzare workshop formativi per ridurre resistenze interne.",
+                "Creare una task force multidisciplinare dedicata all’innovazione."
+              ]
+            },
+            { q: "Come reagisci a un rifiuto di un’idea da parte del board?",
+              a: [
+                "Cerco feedback dettagliato e riformulo l’idea per allinearla alle priorità.",
+                "Propongo un test rapido per validarne almeno un aspetto.",
+                "Accetto il rifiuto ma continuo a proporre nuove soluzioni alternative."
+              ]
+            },
+            { q: "Quali strumenti digitali utilizzeresti per ottimizzare i flussi di lavoro?",
+              a: [
+                "Implementerei un ERP integrato con dashboard in tempo reale.",
+                "Utilizzerei strumenti collaborativi (es. Notion, Asana) per trasparenza totale.",
+                "Svilupperei un’app proprietaria personalizzata per la nostra realtà."
+              ]
+            },
+            { q: "Come bilanci creatività e rispetto delle scadenze?",
+              a: [
+                "Calendarizzando revisioni settimanali per ridurre imprevisti.",
+                "Creando un team guardiano delle deadline.",
+                "Incentivando creatività solo nelle fasi iniziali, poi rigida esecuzione."
+              ]
+            }
+        ],
+        result: "Profilo Innovativo: pensi fuori dagli schemi, cerchi sempre soluzioni nuove e non ti fermi davanti agli ostacoli. La tua capacità di adattarti rapidamente ti rende un agente di cambiamento, ma richiede maggiore esperienza di coordinamento per evitare dispersione."
+    },
+    marco: {
+        questions: [
+            { q: "Come affronteresti un cambio improvviso del regolamento aziendale?",
+              a: [
+                "Applicazione immediata con comunicazione chiara a tutti i team.",
+                "Richiesta di un periodo di transizione per ridurre stress organizzativo.",
+                "Analisi legale approfondita prima di implementare ogni cambiamento."
+              ]
+            },
+            { q: "Qual è il tuo metodo per garantire stabilità nei momenti di crisi?",
+              a: [
+                "Focalizzarmi sulle procedure consolidate per minimizzare errori.",
+                "Comunicazioni frequenti e rassicuranti a tutti i livelli.",
+                "Delegare la gestione operativa per concentrarmi sulle decisioni strategiche."
+              ]
+            },
+            { q: "Come ti rapporti con team multigenerazionali?",
+              a: [
+                "Programmi di mentoring reciproco per scambio di esperienze.",
+                "Focus su regole uguali per tutti per evitare favoritismi.",
+                "Attenzione particolare ai più giovani per integrarli rapidamente."
+              ]
+            },
+            { q: "Che ruolo dai alla digitalizzazione in processi consolidati?",
+              a: [
+                "Introdurre tecnologia solo dove strettamente necessario.",
+                "Monitorare l’impatto con KPI precisi prima di ogni investimento.",
+                "Delegare a consulenti esterni l’implementazione per non distrarre il team."
+              ]
+            },
+            { q: "Come garantisci l’allineamento con le policy aziendali?",
+              a: [
+                "Audit periodici e controlli interni stringenti.",
+                "Incentivi economici legati al rispetto delle policy.",
+                "Formazione obbligatoria per tutti i dipendenti ogni trimestre."
+              ]
+            }
+        ],
+        result: "Profilo Tradizionalista: preferisci stabilità e affidabilità, riducendo i rischi al minimo. La tua forza è nella coerenza e nel rispetto delle regole, ma potresti trarre vantaggio da un approccio più aperto all’innovazione."
+    },
+    sara: {
+        questions: [
+            { q: "Come gestiresti la tua prima responsabilità di budget?",
+              a: [
+                "Analizzerei i dati storici per costruire una pianificazione prudente.",
+                "Mi farei affiancare da un senior per i primi mesi.",
+                "Investirei subito in strumenti di controllo di spesa digitali."
+              ]
+            },
+            { q: "Qual è il tuo approccio alla gestione di colleghi più esperti di te?",
+              a: [
+                "Li coinvolgerei nelle decisioni chiave per valorizzare la loro esperienza.",
+                "Li osserverei inizialmente senza interferire, guadagnando fiducia con i fatti.",
+                "Imposterei regole chiare fin da subito per evitare fraintendimenti."
+              ]
+            },
+            { q: "Come costruisci autorevolezza con un team nuovo?",
+              a: [
+                "Essendo trasparente sulle mie competenze e limiti.",
+                "Ascoltando attivamente i bisogni del team nelle prime settimane.",
+                "Lavorando più di tutti per dare l’esempio."
+              ]
+            },
+            { q: "Come trasformi un feedback negativo in opportunità?",
+              a: [
+                "Analizzando subito la causa e creando un piano di miglioramento.",
+                "Confrontandomi apertamente con chi l’ha espresso.",
+                "Trasformandolo in obiettivo di sviluppo per il team."
+              ]
+            },
+            { q: "Qual è la tua strategia di crescita personale nei prossimi 3 anni?",
+              a: [
+                "Investire su formazione manageriale certificata.",
+                "Creare un network di mentor.",
+                "Accettare incarichi sfidanti anche fuori comfort zone."
+              ]
+            }
+        ],
+        result: "Profilo Emergente: energia, curiosità e desiderio di crescita sono i tuoi punti forti. La tua leadership naturale è evidente, ma richiede consolidamento con esperienza sul campo e pianificazione strategica."
+    }
+};
 
-let currentCandidate = null;
-let currentQuestion = 0;
-let history = [];
+let currentProfile = null;
+let currentQuestionIndex = 0;
 
-function renderCandidates() {
-  const list = document.getElementById('candidate-list');
-  list.innerHTML = '';
-  candidates.forEach(c => {
-    const card = document.createElement('div');
-    card.className = 'candidate-card';
-    card.innerHTML = `
-      <img src="${c.avatar}" alt="${c.name}">
-      <h3>${c.name} - ${c.role}</h3>
-      <p>${c.desc}</p>
-      <button onclick="startGame('${c.key}')">Seleziona</button>
-    `;
-    list.appendChild(card);
-  });
+function startTest(profileKey) {
+    currentProfile = profiles[profileKey];
+    currentQuestionIndex = 0;
+    document.getElementById("profileSelection").style.display = "none";
+    document.getElementById("questionSection").style.display = "block";
+    loadQuestion();
 }
 
-function startGame(key) {
-  currentCandidate = candidates.find(c => c.key === key);
-  currentQuestion = 0;
-  document.getElementById('quiz-section').classList.add('active');
-  document.getElementById('candidate-list').style.display = 'none';
-  document.getElementById('result-section').classList.remove('active');
-  showQuestion();
-}
-
-function showQuestion() {
-  const q = currentCandidate.questions[currentQuestion];
-  document.getElementById('quiz-question').textContent = q;
-  const options = document.getElementById('quiz-options');
-  options.innerHTML = '';
-  ['Opzione A','Opzione B','Opzione C'].forEach(opt => {
-    const btn = document.createElement('button');
-    btn.textContent = opt;
-    btn.onclick = nextQuestion;
-    options.appendChild(btn);
-  });
+function loadQuestion() {
+    const q = currentProfile.questions[currentQuestionIndex];
+    document.getElementById("questionText").innerText = q.q;
+    const answersDiv = document.getElementById("answers");
+    answersDiv.innerHTML = "";
+    q.a.forEach(answer => {
+        const btn = document.createElement("button");
+        btn.textContent = answer;
+        btn.onclick = nextQuestion;
+        answersDiv.appendChild(btn);
+    });
 }
 
 function nextQuestion() {
-  currentQuestion++;
-  if (currentQuestion < currentCandidate.questions.length) {
-    showQuestion();
-  } else {
-    finishGame();
-  }
+    currentQuestionIndex++;
+    if (currentQuestionIndex < currentProfile.questions.length) {
+        loadQuestion();
+    } else {
+        showResult();
+    }
 }
 
-function finishGame() {
-  document.getElementById('quiz-section').classList.remove('active');
-  document.getElementById('result-section').classList.add('active');
-  document.getElementById('result-title').textContent = `${currentCandidate.name} - ${currentCandidate.role}`;
-  document.getElementById('result-description').textContent = currentCandidate.profile;
-  history.push({ 
-    date: new Date().toLocaleString(),
-    profile: `${currentCandidate.name} - ${currentCandidate.role}`
-  });
-  renderHistory();
+function showResult() {
+    document.getElementById("questionSection").style.display = "none";
+    document.getElementById("resultSection").style.display = "block";
+    document.getElementById("resultText").innerText = currentProfile.result;
 }
-
-function renderHistory() {
-  const ul = document.getElementById('history-list');
-  ul.innerHTML = '';
-  history.forEach(h => {
-    const li = document.createElement('li');
-    li.textContent = `${h.date}: ${h.profile}`;
-    ul.appendChild(li);
-  });
-}
-
-function restartGame() {
-  document.getElementById('candidate-list').style.display = 'grid';
-  document.getElementById('quiz-section').classList.remove('active');
-  document.getElementById('result-section').classList.remove('active');
-}
-
-renderCandidates();
 </script>
-
 </body>
 </html>
