@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chi assumeresti?</title>
+  <style>
+    body { font-family: Arial, sans-serif; text-align: center; background: #f1f1f1; padding: 20px; }
+    .card-container { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin-top: 40px; }
+    .card { background: #fff; padding: 20px; width: 250px; border-radius: 12px; box-shadow: 0 0 10px rgba(0,0,0,0.1); cursor: pointer; transition: transform 0.2s; }
+    .card:hover { transform: scale(1.05); }
+    img { width: 100%; border-radius: 8px; }
+    .result { font-size: 1.5rem; margin-top: 40px; display: none; }
+    button { margin-top: 30px; padding: 12px 20px; font-size: 1rem; border: none; background: #1B65A5; color: white; border-radius: 8px; cursor: pointer; }
+    button:hover { background: #06283F; }
+  </style>
+</head>
+<body>
+  <h1>Chi assumeresti per il tuo team?</h1>
+  <p>Scegli uno dei 3 candidati. Solo uno è la scelta migliore!</p>
+  <div class="card-container">
+    <div class="card" onclick="checkChoice(1)">
+      <img src="https://picsum.photos/250?random=1" alt="Candidato 1">
+      <h3>Candidato A</h3>
+      <p>10 anni di esperienza in vendite B2B</p>
+    </div>
+    <div class="card" onclick="checkChoice(2)">
+      <img src="https://picsum.photos/250?random=2" alt="Candidato 2">
+      <h3>Candidato B</h3>
+      <p>Neo laureato con ottima energia</p>
+    </div>
+    <div class="card" onclick="checkChoice(3)">
+      <img src="https://picsum.photos/250?random=3" alt="Candidato 3">
+      <h3>Candidato C</h3>
+      <p>Esperto in strategie digitali</p>
+    </div>
+  </div>
+  <div class="result" id="result"></div>
+  <button onclick="resetGame()">Rigioca</button>
+
+  <script>
+    let correctChoice = Math.floor(Math.random() * 3) + 1;
+
+    function checkChoice(choice) {
+      const result = document.getElementById("result");
+      if (choice === correctChoice) {
+        result.textContent = "🎉 Scelta giusta! Questo candidato è perfetto.";
+      } else {
+        result.textContent = "❌ Non è la scelta migliore, prova ancora!";
+      }
+      result.style.display = "block";
+    }
+
+    function resetGame() {
+      document.getElementById("result").style.display = "none";
+      correctChoice = Math.floor(Math.random() * 3) + 1;
+    }
+  </script>
+</body>
+</html>
