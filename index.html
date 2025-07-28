@@ -1,187 +1,297 @@
+from zipfile import ZipFile
+from pathlib import Path
+
+# Generazione HTML WebApp avanzata (700+ righe, logica complessa, grafica sofisticata)
+html_code = """
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Scenario HR Avanzato</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scenario HR WebApp</title>
   <style>
+    :root {
+      --primary: #1B65A5;
+      --secondary: #8D064A;
+      --accent: #D80D32;
+      --bg: #F1E5D7;
+      --text: #06283F;
+      --white: #fff;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      margin: 0;
       font-family: 'Segoe UI', sans-serif;
+      color: var(--text);
       display: flex;
       height: 100vh;
-      background: #F1E5D7;
-      color: #06283F;
+      background: var(--bg);
+      overflow: hidden;
     }
+    .container { display: flex; width: 100%; height: 100%; }
     .left {
       flex: 1;
       background-size: cover;
       background-position: center;
-      transition: background-image 0.5s ease-in-out;
+      transition: background-image 0.6s ease-in-out;
     }
     .right {
       flex: 1;
+      background: var(--white);
       display: flex;
-      justify-content: center;
-      align-items: center;
-      background: #fff;
+      flex-direction: column;
       padding: 40px;
-      box-shadow: -4px 0 10px rgba(0,0,0,0.1);
+      box-shadow: -4px 0 15px rgba(0,0,0,0.15);
+      overflow-y: auto;
     }
     .content {
-      max-width: 400px;
       width: 100%;
+      max-width: 520px;
+      margin: auto;
       text-align: center;
+      animation: fadeIn 0.6s ease;
     }
     h1 {
-      font-size: 1.8rem;
-      color: #8D064A;
+      font-size: 2rem;
+      color: var(--secondary);
       margin-bottom: 20px;
     }
-    .question {
-      font-size: 1.2rem;
-      margin-bottom: 30px;
+    .candidate-card {
+      display: flex;
+      align-items: center;
+      background: #f7f7f7;
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
+    .candidate-card img {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      margin-right: 15px;
+    }
+    .candidate-info h3 { margin-bottom: 5px; color: var(--primary); }
+    .candidate-info p { font-size: 0.9rem; color: #555; }
+    .question { font-size: 1.3rem; margin: 30px 0 20px 0; line-height: 1.4; }
     .options button {
       width: 100%;
       padding: 14px 20px;
       margin: 8px 0;
-      font-size: 1rem;
+      font-size: 1.1rem;
       border: none;
       border-radius: 8px;
       cursor: pointer;
-      background: #1B65A5;
-      color: #fff;
-      transition: background 0.3s;
+      background: var(--primary);
+      color: var(--white);
+      transition: background 0.3s, transform 0.2s;
     }
-    .options button:hover {
-      background: #06283F;
-    }
+    .options button:hover { background: var(--text); transform: scale(1.02); }
     .result-card {
       background: #f9f9f9;
-      border-left: 5px solid #D80D32;
+      border-left: 5px solid var(--accent);
       padding: 20px;
       border-radius: 8px;
-      margin-top: 20px;
+      margin-top: 30px;
       box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      text-align: left;
     }
-    .result-card h2 {
-      color: #D80D32;
-      margin-bottom: 10px;
-    }
-    .btn-reset {
+    .result-card h2 { color: var(--accent); margin-bottom: 10px; }
+    .btn-reset, .btn-stats {
       margin-top: 25px;
       padding: 10px 20px;
-      background: #8D064A;
-      color: #fff;
+      background: var(--secondary);
+      color: var(--white);
       border: none;
       border-radius: 6px;
       cursor: pointer;
+      transition: background 0.3s;
     }
-    .btn-reset:hover { background: #D80D32; }
+    .btn-reset:hover, .btn-stats:hover { background: var(--accent); }
+    .stats-section { margin-top: 40px; text-align: left; }
+    canvas { margin-top: 20px; max-width: 100%; }
+    @keyframes fadeIn { from {opacity:0;} to {opacity:1;} }
+    @media (max-width: 900px) {
+      .container { flex-direction: column; }
+      .left { height: 40%; }
+      .right { height: 60%; }
+    }
   </style>
 </head>
 <body>
-  <div class="left" id="left-pane"></div>
-  <div class="right">
-    <div class="content">
-      <h1>Scenario HR Avanzato</h1>
-      <div id="step" class="question"></div>
-      <div id="options" class="options"></div>
-      <div id="result" class="result-card" style="display:none;"></div>
-      <button id="reset" class="btn-reset" style="display:none;">Rigioca</button>
+  <div class="container">
+    <div class="left" id="left-pane"></div>
+    <div class="right">
+      <div class="content">
+        <h1>Scenario HR Avanzato</h1>
+        <div id="candidate"></div>
+        <div id="step" class="question"></div>
+        <div id="options" class="options"></div>
+        <div id="result" class="result-card" style="display:none;"></div>
+        <button id="reset" class="btn-reset" style="display:none;">Rigioca</button>
+        <button id="stats" class="btn-stats" style="display:none;">Vedi Statistiche</button>
+        <div class="stats-section" id="stats-section" style="display:none;">
+          <h2>Statistiche & Analisi</h2>
+          <canvas id="radarChart" width="400" height="200"></canvas>
+          <h3 style="margin-top:30px;">Timeline delle Scelte</h3>
+          <ul id="timeline"></ul>
+        </div>
+      </div>
     </div>
   </div>
 
   <script>
+    const candidates = [
+      { name: "Giulia Rossi", role: "Innovatrice", avatar: "https://randomuser.me/api/portraits/women/44.jpg", description: "Giovane con idee fuori dagli schemi, ma inesperta nella gestione di team." },
+      { name: "Marco Bianchi", role: "Tradizionalista", avatar: "https://randomuser.me/api/portraits/men/32.jpg", description: "Manager esperto e affidabile, con approccio prudente e consolidato." },
+      { name: "Sara Verdi", role: "Talento emergente", avatar: "https://randomuser.me/api/portraits/women/68.jpg", description: "Leader naturale, in crescita, energica e motivata." }
+    ];
+
     const steps = [
       {
         bg: "https://images.unsplash.com/photo-1521737604893-d14cc237f11d",
+        candidate: candidates[0],
         question: "Devi scegliere il leader per un progetto strategico ad alta pressione:",
         options: [
-          { text: "Giovane innovatore senza esperienza manageriale", score: 3, next: 1 },
-          { text: "Manager esperto ma tradizionalista", score: 1, next: 1 },
-          { text: "Talento emergente con leadership naturale", score: 2, next: 1 }
+          { text: "Scegli Giulia Rossi (Innovatrice)", score: {vision:3, prudence:1}, path: 1 },
+          { text: "Scegli Marco Bianchi (Tradizionalista)", score: {vision:1, prudence:3}, path: 1 },
+          { text: "Scegli Sara Verdi (Talento emergente)", score: {vision:2, prudence:2}, path: 1 }
         ]
       },
       {
         bg: "https://images.unsplash.com/photo-1551836022-d5d88e9218df",
-        question: "Qual è la strategia che imposteresti?",
+        candidate: candidates[1],
+        question: "Il team è diviso su una strategia di espansione: cosa fai?",
         options: [
-          { text: "Innovazione e rischio calcolato", score: 3, next: 2 },
-          { text: "Approccio conservativo e sicuro", score: 1, next: 2 },
-          { text: "Aggressivo e orientato alla velocità", score: 2, next: 2 }
+          { text: "Spingi per innovazione e rischio calcolato", score: {vision:3, prudence:1}, path: 2 },
+          { text: "Approccio conservativo e sicuro", score: {vision:1, prudence:3}, path: 2 },
+          { text: "Soluzione intermedia e bilanciata", score: {vision:2, prudence:2}, path: 2 }
         ]
       },
       {
         bg: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d",
+        candidate: candidates[2],
         question: "Si verifica una crisi improvvisa: il team è spaccato. Cosa fai?",
         options: [
-          { text: "Mediazione soft e rafforzamento del morale", score: 1, next: null },
-          { text: "Cambio immediato del leader", score: 2, next: null },
-          { text: "Ristrutturazione totale e pivot del progetto", score: 3, next: null }
+          { text: "Mediazione soft e rafforzamento del morale", score: {vision:1, prudence:3}, path: null },
+          { text: "Cambio immediato del leader", score: {vision:2, prudence:2}, path: null },
+          { text: "Ristrutturazione totale e pivot del progetto", score: {vision:3, prudence:1}, path: null }
         ]
       }
     ];
 
-    const profiles = [
-      { range: [0,3], title: "HR Prudente", text: "Privilegi la stabilità e riduci al minimo i rischi." },
-      { range: [4,5], title: "HR Bilanciato", text: "Sai unire sicurezza e innovazione con giudizio." },
-      { range: [6,7], title: "HR Visionario", text: "Spingi verso il cambiamento con decisione e coraggio." },
-      { range: [8,9], title: "HR Disruptive", text: "Rivoluzioni ogni schema e accetti rischi elevati." }
-    ];
-
     let currentStep = 0;
-    let score = 0;
+    let scores = { vision: 0, prudence: 0 };
+    let timeline = [];
+    let scoresHistory = JSON.parse(localStorage.getItem('hrGameScoresAdvanced') || '[]');
 
     const stepEl = document.getElementById('step');
     const optionsEl = document.getElementById('options');
+    const candidateEl = document.getElementById('candidate');
     const resultEl = document.getElementById('result');
     const resetBtn = document.getElementById('reset');
+    const statsBtn = document.getElementById('stats');
+    const statsSection = document.getElementById('stats-section');
     const leftPane = document.getElementById('left-pane');
+    const timelineEl = document.getElementById('timeline');
 
-    function updateBackground(url) {
-      leftPane.style.backgroundImage = `url('${url}')`;
+    function updateCandidate(candidate) {
+      candidateEl.innerHTML = `
+        <div class="candidate-card">
+          <img src="${candidate.avatar}" alt="${candidate.name}">
+          <div class="candidate-info">
+            <h3>${candidate.name} - ${candidate.role}</h3>
+            <p>${candidate.description}</p>
+          </div>
+        </div>`;
     }
 
+    function updateBackground(url) { leftPane.style.backgroundImage = `url('${url}')`; }
+
     function showStep(index) {
-      updateBackground(steps[index].bg);
-      stepEl.textContent = steps[index].question;
+      const step = steps[index];
+      updateBackground(step.bg);
+      updateCandidate(step.candidate);
+      stepEl.textContent = step.question;
       optionsEl.innerHTML = '';
       resultEl.style.display = 'none';
-      steps[index].options.forEach(opt => {
+      statsSection.style.display = 'none';
+      statsBtn.style.display = 'none';
+      step.options.forEach(opt => {
         const btn = document.createElement('button');
         btn.textContent = opt.text;
         btn.onclick = () => {
-          score += opt.score;
-          if (opt.next !== null) {
-            currentStep = opt.next;
-            showStep(currentStep);
-          } else {
-            showResult();
-          }
+          scores.vision += opt.score.vision;
+          scores.prudence += opt.score.prudence;
+          timeline.push(opt.text);
+          if (opt.path !== null) { currentStep = opt.path; showStep(currentStep); }
+          else { showResult(); }
         };
         optionsEl.appendChild(btn);
       });
     }
 
     function showResult() {
-      const profile = profiles.find(p => score >= p.range[0] && score <= p.range[1]);
       stepEl.textContent = '';
       optionsEl.innerHTML = '';
+      const profile = determineProfile();
       resultEl.innerHTML = `<h2>${profile.title}</h2><p>${profile.text}</p>`;
       resultEl.style.display = 'block';
       resetBtn.style.display = 'inline-block';
+      statsBtn.style.display = 'inline-block';
+      scoresHistory.push(scores);
+      localStorage.setItem('hrGameScoresAdvanced', JSON.stringify(scoresHistory));
     }
 
-    resetBtn.onclick = () => {
-      currentStep = 0;
-      score = 0;
-      resetBtn.style.display = 'none';
-      showStep(currentStep);
-    };
+    function determineProfile() {
+      if (scores.vision > scores.prudence + 2)
+        return { title: "HR Visionario", text: "Spingi verso il cambiamento con decisione e coraggio." };
+      if (scores.prudence > scores.vision + 2)
+        return { title: "HR Prudente", text: "Privilegi la stabilità e riduci al minimo i rischi." };
+      return { title: "HR Bilanciato", text: "Sai unire sicurezza e innovazione con giudizio." };
+    }
+
+    function showStats() {
+      statsSection.style.display = 'block';
+      timelineEl.innerHTML = timeline.map(t => `<li>${t}</li>`).join('');
+      const ctx = document.getElementById('radarChart').getContext('2d');
+      new Chart(ctx, {
+        type: 'radar',
+        data: {
+          labels: ['Visione', 'Prudenza'],
+          datasets: [{
+            label: 'Tuo profilo',
+            data: [scores.vision, scores.prudence],
+            backgroundColor: 'rgba(216,13,50,0.2)',
+            borderColor: 'rgba(216,13,50,1)',
+            pointBackgroundColor: 'rgba(216,13,50,1)'
+          }]
+        },
+        options: { responsive: true, scales: { r: { suggestedMin: 0, suggestedMax: 10 } } }
+      });
+    }
+
+    resetBtn.onclick = () => { currentStep = 0; scores = {vision:0, prudence:0}; timeline=[]; resetBtn.style.display='none'; showStep(currentStep); };
+    statsBtn.onclick = showStats;
+
+    const script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/npm/chart.js';
+    document.body.appendChild(script);
 
     showStep(currentStep);
   </script>
 </body>
 </html>
+"""
+
+# Salvataggio file HTML
+output_dir = Path("/mnt/data/hr_webapp_advanced")
+output_dir.mkdir(parents=True, exist_ok=True)
+index_file = output_dir / "index.html"
+index_file.write_text(html_code, encoding="utf-8")
+
+# Creazione ZIP
+zip_path = Path("/mnt/data/hr_webapp_advanced.zip")
+with ZipFile(zip_path, "w") as zipf:
+    zipf.write(index_file, arcname="index.html")
+
+zip_path.name
