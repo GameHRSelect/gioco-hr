@@ -1,8 +1,3 @@
-from zipfile import ZipFile
-from pathlib import Path
-
-# HTML aggiornato con layout diviso in due colonne: sinistra per immagine, destra per test
-html_code = '''
 <!DOCTYPE html>
 <html lang="it">
 <head>
@@ -10,104 +5,89 @@ html_code = '''
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Scenario HR Avanzato</title>
   <style>
-    * {
-      box-sizing: border-box;
-    }
     body {
       margin: 0;
       font-family: 'Segoe UI', sans-serif;
-      background: #F1E5D7;
       display: flex;
-      justify-content: center;
-      align-items: center;
       height: 100vh;
+      background: #F1E5D7;
       color: #06283F;
     }
-    .wrapper {
-      display: flex;
-      width: 90%;
-      max-width: 1200px;
-      height: 90vh;
-      background: white;
-      box-shadow: 0 8px 30px rgba(0,0,0,0.15);
-      border-radius: 16px;
-      overflow: hidden;
-    }
     .left {
-      width: 50%;
+      flex: 1;
       background-size: cover;
       background-position: center;
       transition: background-image 0.5s ease-in-out;
     }
     .right {
-      width: 50%;
-      padding: 40px;
+      flex: 1;
       display: flex;
-      flex-direction: column;
       justify-content: center;
-      text-align: left;
+      align-items: center;
+      background: #fff;
+      padding: 40px;
+      box-shadow: -4px 0 10px rgba(0,0,0,0.1);
+    }
+    .content {
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
     }
     h1 {
+      font-size: 1.8rem;
       color: #8D064A;
-      font-size: 2rem;
       margin-bottom: 20px;
     }
     .question {
       font-size: 1.2rem;
-      margin-bottom: 25px;
+      margin-bottom: 30px;
     }
     .options button {
-      display: block;
       width: 100%;
-      padding: 12px 16px;
-      margin-bottom: 10px;
+      padding: 14px 20px;
+      margin: 8px 0;
       font-size: 1rem;
-      background: #1B65A5;
-      color: white;
       border: none;
       border-radius: 8px;
       cursor: pointer;
+      background: #1B65A5;
+      color: #fff;
       transition: background 0.3s;
     }
     .options button:hover {
       background: #06283F;
     }
     .result-card {
-      background: #fff;
+      background: #f9f9f9;
       border-left: 5px solid #D80D32;
       padding: 20px;
       border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+      margin-top: 20px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
     }
     .result-card h2 {
       color: #D80D32;
-      margin: 0 0 10px 0;
-    }
-    .result-card p {
-      margin: 0;
+      margin-bottom: 10px;
     }
     .btn-reset {
-      margin-top: 30px;
-      background: #8D064A;
-      color: white;
-      border: none;
+      margin-top: 25px;
       padding: 10px 20px;
-      border-radius: 8px;
-      font-size: 1rem;
+      background: #8D064A;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
       cursor: pointer;
     }
-    .btn-reset:hover {
-      background: #D80D32;
-    }
+    .btn-reset:hover { background: #D80D32; }
   </style>
 </head>
 <body>
-  <div class="wrapper">
-    <div class="left" id="left-pane"></div>
-    <div class="right">
+  <div class="left" id="left-pane"></div>
+  <div class="right">
+    <div class="content">
       <h1>Scenario HR Avanzato</h1>
       <div id="step" class="question"></div>
-      <div class="options" id="options"></div>
+      <div id="options" class="options"></div>
       <div id="result" class="result-card" style="display:none;"></div>
       <button id="reset" class="btn-reset" style="display:none;">Rigioca</button>
     </div>
@@ -201,23 +181,7 @@ html_code = '''
       showStep(currentStep);
     };
 
-    // init
     showStep(currentStep);
   </script>
 </body>
 </html>
-'''
-
-# Scriviamo il file HTML in una cartella temporanea
-output_dir = Path("/mnt/data/hr_game_final")
-output_dir.mkdir(parents=True, exist_ok=True)
-index_file = output_dir / "index.html"
-index_file.write_text(html_code, encoding="utf-8")
-
-# Comprimi tutto in uno ZIP
-zip_path = Path("/mnt/data/hr_game_final.zip")
-with ZipFile(zip_path, "w") as zipf:
-    zipf.write(index_file, arcname="index.html")
-
-zip_path.name  # Nome del file ZIP generato per il download
-
