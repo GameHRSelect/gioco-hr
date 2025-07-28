@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Scenario HR WebApp</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Scenario HR Avanzato</title>
   <style>
     :root {
       --primary: #1B65A5;
@@ -16,208 +16,206 @@
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       font-family: 'Segoe UI', sans-serif;
-      color: var(--text);
       background: var(--bg);
-      height: 100vh;
+      color: var(--text);
       display: flex;
-      flex-direction: column;
+      justify-content: center;
+      padding: 20px;
     }
-    .container { display: flex; flex: 1; flex-direction: row; }
-    .left {
-      flex: 1;
-      background-size: cover;
-      background-position: center;
-      transition: background-image 0.6s ease-in-out;
-    }
-    .right {
-      flex: 1;
-      background: var(--white);
-      display: flex;
-      flex-direction: column;
-      padding: 40px;
-      box-shadow: -4px 0 15px rgba(0,0,0,0.15);
-      overflow-y: auto;
-    }
-    .content {
+    .container {
       width: 100%;
-      max-width: 520px;
-      margin: auto;
+      max-width: 900px;
+      background: var(--white);
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      padding: 20px;
+    }
+    h1 {
       text-align: center;
-      animation: fadeIn 0.6s ease;
+      margin-bottom: 20px;
+      color: var(--secondary);
+      font-size: 1.8rem;
     }
-    h1 { font-size: 2rem; color: var(--secondary); margin-bottom: 20px; }
+    .card-list {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 15px;
+      margin-bottom: 30px;
+    }
     .candidate-card {
-      display: flex; align-items: center; background: #f7f7f7;
-      padding: 15px; border-radius: 10px; margin-bottom: 20px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      flex: 1 1 calc(33% - 10px);
+      background: #f9f9f9;
+      border-radius: 10px;
+      padding: 15px;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      transition: transform 0.2s;
     }
+    .candidate-card:hover { transform: scale(1.03); }
     .candidate-card img {
-      width: 60px; height: 60px; border-radius: 50%; margin-right: 15px;
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      margin-bottom: 10px;
     }
-    .candidate-info h3 { margin-bottom: 5px; color: var(--primary); }
-    .candidate-info p { font-size: 0.9rem; color: #555; }
-    .question { font-size: 1.3rem; margin: 30px 0 20px 0; line-height: 1.4; }
+    .candidate-card h3 {
+      font-size: 1.2rem;
+      color: var(--primary);
+      margin-bottom: 8px;
+    }
+    .candidate-card p {
+      font-size: 0.9rem;
+      color: #555;
+      margin-bottom: 15px;
+    }
+    .candidate-card button {
+      background: var(--primary);
+      color: var(--white);
+      padding: 8px 14px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .candidate-card button:hover { background: var(--text); }
+    .question {
+      text-align: center;
+      font-size: 1.3rem;
+      margin-bottom: 20px;
+    }
     .options button {
-      width: 100%; padding: 14px 20px; margin: 8px 0; font-size: 1.1rem;
-      border: none; border-radius: 8px; cursor: pointer;
-      background: var(--primary); color: var(--white);
-      transition: background 0.3s, transform 0.2s;
-    }
-    .options button:hover { background: var(--text); transform: scale(1.02); }
-    .result-card {
-      background: #f9f9f9; border-left: 5px solid var(--accent);
-      padding: 20px; border-radius: 8px; margin-top: 30px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.05); text-align: left;
-    }
-    .result-card h2 { color: var(--accent); margin-bottom: 10px; }
-    .btn-reset, .btn-stats {
-      margin-top: 25px; padding: 10px 20px; background: var(--secondary);
-      color: var(--white); border: none; border-radius: 6px; cursor: pointer;
+      width: 100%;
+      padding: 12px;
+      font-size: 1rem;
+      margin-bottom: 10px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      background: var(--primary);
+      color: var(--white);
       transition: background 0.3s;
     }
-    .btn-reset:hover, .btn-stats:hover { background: var(--accent); }
-    .stats-section { margin-top: 40px; text-align: left; }
-    canvas { margin-top: 20px; max-width: 100%; }
-    @keyframes fadeIn { from {opacity:0;} to {opacity:1;} }
-
-    /* --- MOBILE --- */
+    .options button:hover { background: var(--text); }
+    .result-card {
+      margin-top: 30px;
+      background: #f4f4f4;
+      padding: 20px;
+      border-left: 5px solid var(--accent);
+      border-radius: 8px;
+    }
+    .btn-reset {
+      margin-top: 20px;
+      background: var(--secondary);
+      color: var(--white);
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .btn-reset:hover { background: var(--accent); }
     @media (max-width: 768px) {
-      .container { flex-direction: column; }
-      .left { height: 40vh; flex: none; }
-      .right { height: 60vh; padding: 20px; box-shadow: none; }
-      .candidate-card {
-        flex-direction: column; text-align: center; padding: 20px;
-      }
-      .candidate-card img { margin: 0 0 10px 0; }
-      .question { font-size: 1.1rem; margin: 20px 0; }
-      .options button { font-size: 1rem; padding: 12px 16px; }
+      .card-list { flex-direction: column; align-items: center; }
+      .candidate-card { flex: none; width: 90%; }
       h1 { font-size: 1.5rem; }
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <div class="left" id="left-pane"></div>
-    <div class="right">
-      <div class="content">
-        <h1>Scenario HR Avanzato</h1>
-        <div id="candidate"></div>
-        <div id="step" class="question"></div>
-        <div id="options" class="options"></div>
-        <div id="result" class="result-card" style="display:none;"></div>
-        <button id="reset" class="btn-reset" style="display:none;">Rigioca</button>
-        <button id="stats" class="btn-stats" style="display:none;">Vedi Statistiche</button>
-        <div class="stats-section" id="stats-section" style="display:none;">
-          <h2>Statistiche & Analisi</h2>
-          <canvas id="radarChart" width="400" height="200"></canvas>
-          <h3 style="margin-top:30px;">Timeline delle Scelte</h3>
-          <ul id="timeline"></ul>
-        </div>
+    <h1>Scenario HR Avanzato</h1>
+    <div id="game">
+      <div class="card-list" id="candidate-list"></div>
+      <div id="question-section" style="display:none;">
+        <div class="question" id="question"></div>
+        <div class="options" id="options"></div>
       </div>
+      <div class="result-card" id="result" style="display:none;"></div>
+      <button id="reset" class="btn-reset" style="display:none;">Rigioca</button>
     </div>
   </div>
 
   <script>
     const candidates = [
-      { name: "Giulia Rossi", role: "Innovatrice", avatar: "https://randomuser.me/api/portraits/women/44.jpg", description: "Giovane con idee fuori dagli schemi, ma inesperta nella gestione di team." },
-      { name: "Marco Bianchi", role: "Tradizionalista", avatar: "https://randomuser.me/api/portraits/men/32.jpg", description: "Manager esperto e affidabile, con approccio prudente e consolidato." },
-      { name: "Sara Verdi", role: "Talento emergente", avatar: "https://randomuser.me/api/portraits/women/68.jpg", description: "Leader naturale, in crescita, energica e motivata." }
+      { name: "Giulia Rossi", role: "Innovatrice", avatar: "https://randomuser.me/api/portraits/women/44.jpg", desc: "Giovane con idee fuori dagli schemi, ma inesperta nella gestione di team.", score: {vision:3, prudence:1} },
+      { name: "Marco Bianchi", role: "Tradizionalista", avatar: "https://randomuser.me/api/portraits/men/32.jpg", desc: "Manager esperto e affidabile, con approccio prudente e consolidato.", score: {vision:1, prudence:3} },
+      { name: "Sara Verdi", role: "Talento emergente", avatar: "https://randomuser.me/api/portraits/women/68.jpg", desc: "Leader naturale, in crescita, energica e motivata.", score: {vision:2, prudence:2} }
     ];
 
     const steps = [
       {
-        bg: "https://images.unsplash.com/photo-1521737604893-d14cc237f11d",
-        candidate: candidates[0],
-        question: "Devi scegliere il leader per un progetto strategico ad alta pressione:",
-        options: [
-          { text: "Scegli Giulia Rossi (Innovatrice)", score: {vision:3, prudence:1}, path: 1 },
-          { text: "Scegli Marco Bianchi (Tradizionalista)", score: {vision:1, prudence:3}, path: 1 },
-          { text: "Scegli Sara Verdi (Talento emergente)", score: {vision:2, prudence:2}, path: 1 }
-        ]
-      },
-      {
-        bg: "https://images.unsplash.com/photo-1551836022-d5d88e9218df",
-        candidate: candidates[1],
         question: "Il team è diviso su una strategia di espansione: cosa fai?",
         options: [
-          { text: "Spingi per innovazione e rischio calcolato", score: {vision:3, prudence:1}, path: 2 },
-          { text: "Approccio conservativo e sicuro", score: {vision:1, prudence:3}, path: 2 },
-          { text: "Soluzione intermedia e bilanciata", score: {vision:2, prudence:2}, path: 2 }
+          { text: "Spingi per innovazione e rischio calcolato", score: {vision:3, prudence:1} },
+          { text: "Approccio conservativo e sicuro", score: {vision:1, prudence:3} },
+          { text: "Soluzione intermedia e bilanciata", score: {vision:2, prudence:2} }
         ]
       },
       {
-        bg: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d",
-        candidate: candidates[2],
         question: "Si verifica una crisi improvvisa: il team è spaccato. Cosa fai?",
         options: [
-          { text: "Mediazione soft e rafforzamento del morale", score: {vision:1, prudence:3}, path: null },
-          { text: "Cambio immediato del leader", score: {vision:2, prudence:2}, path: null },
-          { text: "Ristrutturazione totale e pivot del progetto", score: {vision:3, prudence:1}, path: null }
+          { text: "Mediazione soft e rafforzamento del morale", score: {vision:1, prudence:3} },
+          { text: "Cambio immediato del leader", score: {vision:2, prudence:2} },
+          { text: "Ristrutturazione totale e pivot del progetto", score: {vision:3, prudence:1} }
         ]
       }
     ];
 
-    let currentStep = 0;
     let scores = { vision: 0, prudence: 0 };
-    let timeline = [];
-    let scoresHistory = JSON.parse(localStorage.getItem('hrGameScoresAdvanced') || '[]');
+    let currentStep = 0;
 
-    const stepEl = document.getElementById('step');
+    const candidateList = document.getElementById('candidate-list');
+    const questionSection = document.getElementById('question-section');
+    const questionEl = document.getElementById('question');
     const optionsEl = document.getElementById('options');
-    const candidateEl = document.getElementById('candidate');
     const resultEl = document.getElementById('result');
     const resetBtn = document.getElementById('reset');
-    const statsBtn = document.getElementById('stats');
-    const statsSection = document.getElementById('stats-section');
-    const leftPane = document.getElementById('left-pane');
-    const timelineEl = document.getElementById('timeline');
 
-    function updateCandidate(candidate) {
-      candidateEl.innerHTML = `
-        <div class="candidate-card">
-          <img src="${candidate.avatar}" alt="${candidate.name}">
-          <div class="candidate-info">
-            <h3>${candidate.name} - ${candidate.role}</h3>
-            <p>${candidate.description}</p>
-          </div>
-        </div>`;
+    function showCandidates() {
+      candidateList.innerHTML = '';
+      candidates.forEach(c => {
+        const card = document.createElement('div');
+        card.className = 'candidate-card';
+        card.innerHTML = `
+          <img src="${c.avatar}" alt="${c.name}" />
+          <h3>${c.name} - ${c.role}</h3>
+          <p>${c.desc}</p>
+          <button>Seleziona</button>
+        `;
+        card.querySelector('button').onclick = () => {
+          scores.vision += c.score.vision;
+          scores.prudence += c.score.prudence;
+          candidateList.style.display = 'none';
+          showStep();
+        };
+        candidateList.appendChild(card);
+      });
     }
 
-    function updateBackground(url) { leftPane.style.backgroundImage = `url('${url}')`; }
-
-    function showStep(index) {
-      const step = steps[index];
-      updateBackground(step.bg);
-      updateCandidate(step.candidate);
-      stepEl.textContent = step.question;
+    function showStep() {
+      questionSection.style.display = 'block';
+      const step = steps[currentStep];
+      questionEl.textContent = step.question;
       optionsEl.innerHTML = '';
-      resultEl.style.display = 'none';
-      statsSection.style.display = 'none';
-      statsBtn.style.display = 'none';
       step.options.forEach(opt => {
         const btn = document.createElement('button');
         btn.textContent = opt.text;
         btn.onclick = () => {
           scores.vision += opt.score.vision;
           scores.prudence += opt.score.prudence;
-          timeline.push(opt.text);
-          if (opt.path !== null) { currentStep = opt.path; showStep(currentStep); }
-          else { showResult(); }
+          currentStep++;
+          if (currentStep < steps.length) showStep();
+          else showResult();
         };
         optionsEl.appendChild(btn);
       });
     }
 
     function showResult() {
-      stepEl.textContent = '';
-      optionsEl.innerHTML = '';
+      questionSection.style.display = 'none';
       const profile = determineProfile();
       resultEl.innerHTML = `<h2>${profile.title}</h2><p>${profile.text}</p>`;
       resultEl.style.display = 'block';
       resetBtn.style.display = 'inline-block';
-      statsBtn.style.display = 'inline-block';
-      scoresHistory.push(scores);
-      localStorage.setItem('hrGameScoresAdvanced', JSON.stringify(scoresHistory));
     }
 
     function determineProfile() {
@@ -228,34 +226,16 @@
       return { title: "HR Bilanciato", text: "Sai unire sicurezza e innovazione con giudizio." };
     }
 
-    function showStats() {
-      statsSection.style.display = 'block';
-      timelineEl.innerHTML = timeline.map(t => `<li>${t}</li>`).join('');
-      const ctx = document.getElementById('radarChart').getContext('2d');
-      new Chart(ctx, {
-        type: 'radar',
-        data: {
-          labels: ['Visione', 'Prudenza'],
-          datasets: [{
-            label: 'Tuo profilo',
-            data: [scores.vision, scores.prudence],
-            backgroundColor: 'rgba(216,13,50,0.2)',
-            borderColor: 'rgba(216,13,50,1)',
-            pointBackgroundColor: 'rgba(216,13,50,1)'
-          }]
-        },
-        options: { responsive: true, scales: { r: { suggestedMin: 0, suggestedMax: 10 } } }
-      });
-    }
+    resetBtn.onclick = () => {
+      scores = {vision:0, prudence:0};
+      currentStep = 0;
+      resultEl.style.display = 'none';
+      resetBtn.style.display = 'none';
+      candidateList.style.display = 'flex';
+      questionSection.style.display = 'none';
+    };
 
-    resetBtn.onclick = () => { currentStep = 0; scores = {vision:0, prudence:0}; timeline=[]; resetBtn.style.display='none'; showStep(currentStep); };
-    statsBtn.onclick = showStats;
-
-    const script = document.createElement('script');
-    script.src = 'https://cdn.jsdelivr.net/npm/chart.js';
-    document.body.appendChild(script);
-
-    showStep(currentStep);
+    showCandidates();
   </script>
 </body>
 </html>
