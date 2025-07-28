@@ -8,21 +8,31 @@
     body {
       margin: 0;
       font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(120deg, #F1E5D7, #4AAFD8);
+      background: #F1E5D7;
       display: flex;
       justify-content: center;
       align-items: center;
-      min-height: 100vh;
+      height: 100vh;
+      overflow: hidden;
       color: #06283F;
     }
+    .background {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      z-index: -1;
+      transition: opacity 1s ease-in-out;
+      opacity: 0.25;
+    }
     .container {
-      background: white;
+      background: rgba(255,255,255,0.9);
       padding: 40px;
-      border-radius: 12px;
+      border-radius: 16px;
       max-width: 900px;
-      width: 100%;
+      width: 90%;
       text-align: center;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.25);
       opacity: 0;
       transform: translateY(20px);
       transition: all 0.8s ease;
@@ -46,11 +56,17 @@
       background: #06283F;
       transform: scale(1.02);
     }
-    .result {
-      font-size: 1.3rem;
+    .result-card {
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
       margin-top: 30px;
-      color: #D80D32;
-      font-weight: bold;
+    }
+    .result-card h2 { color: #D80D32; }
+    .result-card img {
+      width: 80px; height: 80px;
+      margin-bottom: 20px;
     }
     .btn-reset {
       margin-top: 25px;
@@ -64,32 +80,24 @@
       transition: background 0.3s;
     }
     .btn-reset:hover { background: #D80D32; }
-    .fade-out { opacity: 0; transform: translateY(20px); transition: all 0.5s ease; }
-    img.bg {
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      object-fit: cover;
-      z-index: -1;
-      opacity: 0.08;
-    }
   </style>
 </head>
 <body>
-  <img class="bg" src="https://images.unsplash.com/photo-1522071820081-009f0129c71c" alt="Background">
+  <img id="bg" class="background" src="" alt="Background">
   <div class="container" id="container">
     <h1>Scenario HR Avanzato</h1>
     <div id="game">
       <div id="step" class="question"></div>
       <div class="options" id="options"></div>
     </div>
-    <div id="result" class="result hidden"></div>
+    <div id="result" class="hidden"></div>
     <button id="reset" class="btn-reset hidden">Rigioca</button>
   </div>
 
   <script>
     const steps = [
       {
+        bg: "https://images.unsplash.com/photo-1521737604893-d14cc237f11d",
         question: "Devi scegliere il leader per un progetto strategico ad alta pressione:",
         options: [
           { text: "Giovane innovatore senza esperienza manageriale", score: 3, next: 1 },
@@ -98,6 +106,7 @@
         ]
       },
       {
+        bg: "https://images.unsplash.com/photo-1551836022-d5d88e9218df",
         question: "Qual è la strategia che imposteresti?",
         options: [
           { text: "Innovazione e rischio calcolato", score: 3, next: 2 },
@@ -106,6 +115,7 @@
         ]
       },
       {
+        bg: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d",
         question: "Si verifica una crisi improvvisa: il team è spaccato. Cosa fai?",
         options: [
           { text: "Mediazione soft e rafforzamento del morale", score: 1, next: null },
@@ -116,22 +126,32 @@
     ];
 
     const profiles = [
-      { range: [0,3], text: "Sei un HR Prudente e Tradizionalista: privilegi la stabilità e riduci al minimo i rischi." },
-      { range: [4,5], text: "Sei un HR Bilanciato: sai unire sicurezza e innovazione con giudizio." },
-      { range: [6,7], text: "Sei un HR Visionario: spingi verso il cambiamento con decisione e coraggio." },
-      { range: [8,9], text: "Sei un HR Disruptive: rivoluzioni ogni schema e accetti rischi elevati." }
+      { range: [0,3], title: "HR Prudente", text: "Privilegi la stabilità e riduci al minimo i rischi.", icon: "https://img.icons8.com/color/96/000000/safe.png" },
+      { range: [4,5], title: "HR Bilanciato", text: "Sai unire sicurezza e innovazione con giudizio.", icon: "https://img.icons8.com/color/96/000000/balance.png" },
+      { range: [6,7], title: "HR Visionario", text: "Spingi verso il cambiamento con decisione e coraggio.", icon: "https://img.icons8.com/color/96/000000/idea.png" },
+      { range: [8,9], title: "HR Disruptive", text: "Rivoluzioni ogni schema e accetti rischi elevati.", icon: "https://img.icons8.com/color/96/000000/rocket.png" }
     ];
 
     let currentStep = 0;
     let score = 0;
 
+    const bg = document.getElementById('bg');
     const stepEl = document.getElementById('step');
     const optionsEl = document.getElementById('options');
     const resultEl = document.getElementById('result');
     const resetBtn = document.getElementById('reset');
     const container = document.getElementById('container');
 
+    function updateBackground(url) {
+      bg.style.opacity = 0;
+      setTimeout(() => {
+        bg.src = url;
+        bg.style.opacity = 0.25;
+      }, 500);
+    }
+
     function showStep(index) {
+      updateBackground(steps[index].bg);
       container.classList.remove('show');
       setTimeout(() => {
         stepEl.textContent = steps[index].question;
@@ -157,21 +177,23 @@
     function showResult() {
       let profile = profiles.find(p => score >= p.range[0] && score <= p.range[1]);
       stepEl.textContent = "";
-      optionsEl.innerHTML = "";
-      resultEl.textContent = profile.text;
-      resultEl.classList.remove('hidden');
+      optionsEl.innerHTML = `
+        <div class="result-card">
+          <img src="${profile.icon}" alt="Icona Profilo">
+          <h2>${profile.title}</h2>
+          <p>${profile.text}</p>
+        </div>
+      `;
       resetBtn.classList.remove('hidden');
     }
 
     resetBtn.onclick = () => {
       currentStep = 0;
       score = 0;
-      resultEl.classList.add('hidden');
       resetBtn.classList.add('hidden');
       showStep(currentStep);
     };
 
-    // Start game
     setTimeout(() => container.classList.add('show'), 100);
     showStep(currentStep);
   </script>
