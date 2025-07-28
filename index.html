@@ -1,189 +1,248 @@
-// ------- 10 DOMANDE DEFINITIVE -------
-const questions = [
-  { 
-    q: "Come reagisci quando un’idea innovativa incontra resistenze interne?", 
-    opts: [
-      "Mi affido a dati e numeri per convincere", 
-      "Organizzo workshop collaborativi", 
-      "Adotto compromessi per avanzare"
-    ], 
-    vals: [8, 10, 6] 
-  },
-  { 
-    q: "In condizioni di stress elevato, cosa fai?", 
-    opts: [
-      "Pianifico passo-passo", 
-      "Agisco di istinto", 
-      "Motivo il team emotivamente"
-    ], 
-    vals: [9, 7, 8] 
-  },
-  { 
-    q: "Un collega aggira una regola per urgenza: come reagisci?", 
-    opts: [
-      "Applico la regola senza eccezioni", 
-      "Chiedo spiegazioni e formo il collega", 
-      "Rivedo il processo per eliminare il problema"
-    ], 
-    vals: [7, 10, 9] 
-  },
-  { 
-    q: "Come motivi un team dopo un fallimento?", 
-    opts: [
-      "Analizzo errori e imposto correzioni", 
-      "Conduco debrief emotivi", 
-      "Propongo nuove sfide stimolanti"
-    ], 
-    vals: [8, 9, 10] 
-  },
-  { 
-    q: "Quale stile di leadership prediligi?", 
-    opts: [
-      "Gerarchico e strutturato", 
-      "Partecipativo e inclusivo", 
-      "Distribuito e delegante"
-    ], 
-    vals: [6, 9, 10] 
-  },
-  { 
-    q: "Come gestisci una scadenza impossibile?", 
-    opts: [
-      "Controllo ogni fase", 
-      "Sperimentazione veloce", 
-      "Chiedo supporto esterno"
-    ], 
-    vals: [8, 7, 10] 
-  },
-  { 
-    q: "Quanto conta l’empatia nelle decisioni?", 
-    opts: [
-      "Minimamente, conta solo il risultato", 
-      "Importante ma bilanciata", 
-      "È centrale"
-    ], 
-    vals: [5, 9, 10] 
-  },
-  { 
-    q: "Come affronti critiche ingiuste?", 
-    opts: [
-      "Rispondo con fatti", 
-      "Accolgo il feedback e rifletto", 
-      "Mantengo distacco emotivo"
-    ], 
-    vals: [7, 9, 8] 
-  },
-  { 
-    q: "Bilanci creatività e budget?", 
-    opts: [
-      "Solo se ROI elevato", 
-      "Con margini di fallback", 
-      "Investimento low‑cost"
-    ], 
-    vals: [6, 10, 8] 
-  },
-  { 
-    q: "Qual è la tua prima azione in un conflitto di team?", 
-    opts: [
-      "Mediazione neutrale", 
-      "Ascolto empatico", 
-      "Ridefinizione workflow"
-    ], 
-    vals: [8, 10, 9] 
-  }
-];
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Psicologico Avanzato</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f5f5f5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
 
-let idx = 0, answers = [];
+        header {
+            width: 100%;
+            background-color: #8D064A;
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
 
-// Carica la domanda
-function loadQuestion() {
-  const c = document.getElementById('question-container');
-  c.innerHTML = '';
-  if (idx < questions.length) {
-    const { q, opts } = questions[idx];
-    const box = document.createElement('div');
-    box.className = 'question-box';
-    let html = `<div class="question-text">${q}</div>`;
-    opts.forEach((t,i) => {
-      html += `<button class="option" onclick="choose(${i})">${t}</button>`;
-    });
-    box.innerHTML = html;
-    c.appendChild(box);
-  } else {
-    showResult();
-  }
-}
+        main {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            width: 100%;
+            max-width: 1200px;
+            margin-top: 20px;
+            padding: 20px;
+            box-sizing: border-box;
+        }
 
-// Gestisce la scelta e sfoca
-function choose(i) {
-  document.activeElement.blur();
-  answers.push(questions[idx].vals[i]);
-  idx++;
-  loadQuestion();
-}
+        .left-column {
+            flex: 1;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
 
-// Analizza punteggi
-function analyze(a) {
-  const avg = arr => arr.reduce((x,y)=>x+y,0)/arr.length;
-  return {
-    leadership:   avg([a[0],a[2],a[4]]),
-    empatia:      avg([a[1],a[3],a[5]]),
-    adattabilita: avg([a[6],a[8]]),
-    creativita:   avg([a[7],a[9]])
-  };
-}
+        .left-column img {
+            width: 100%;
+            border-radius: 12px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+            object-fit: cover;
+        }
 
-// Mostra i risultati
-function showResult() {
-  document.getElementById('question-container').classList.add('hidden');
-  const res = document.getElementById('result-box');
-  res.classList.remove('hidden');
-  const t = analyze(answers);
-  drawCharts(t);
-  fillProfile(t);
-  saveHist(t);
-}
+        .right-column {
+            flex: 1;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: stretch;
+        }
 
-// Disegna i grafici
-function drawCharts(t) {
-  new Chart(document.getElementById('radarChart'),{
-    type:'radar',
-    data:{labels:['Leadership','Empatia','Adattabilità','Creatività'],
-      datasets:[{label:'Profilo',
-        data:[t.leadership,t.empatia,t.adattabilita,t.creativita],
-        backgroundColor:'rgba(24,99,195,0.2)',borderColor:'#1863C3'}]}
-  });
-  new Chart(document.getElementById('barChart'),{
-    type:'bar',
-    data:{labels:['Leadership','Empatia','Adattabilità','Creatività'],
-      datasets:[{label:'Valori',
-        data:[t.leadership,t.empatia,t.adattabilita,t.creativita],
-        backgroundColor:'#8D064A'}]},
-    options:{scales:{y:{beginAtZero:true,max:10}}}
-  });
-}
+        h2 {
+            color: #8D064A;
+            margin-bottom: 20px;
+        }
 
-// Popola il testo
-function fillProfile(t) {
-  document.getElementById('profile-text').innerText = `
-Leadership: ${t.leadership.toFixed(1)}/10
-Empatia: ${t.empatia.toFixed(1)}/10
-Adattabilità: ${t.adattabilita.toFixed(1)}/10
-Creatività: ${t.creativita.toFixed(1)}/10
+        .question-box {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
 
-Equilibrio tra razionalità e sensibilità: ottimo per ambienti complessi e team diversificati.`;
-}
+        .question-box button {
+            padding: 15px;
+            border: none;
+            border-radius: 6px;
+            background-color: #1B65A5;
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
 
-// Salva lo storico
-function saveHist(t){
-  const h = JSON.parse(localStorage.getItem('hist')||'[]');
-  h.push({ d:new Date().toLocaleString(), v:t });
-  localStorage.setItem('hist', JSON.stringify(h));
-  document.getElementById('history').innerHTML =
-    '<h3>Storico</h3>'+h.map(x=>`<div class="history-item">${x.d}</div>`).join('');
-}
+        .question-box button:hover {
+            background-color: #4AAFD8;
+        }
 
-// Restart
-document.getElementById('restart').onclick = ()=>location.reload();
+        .question-box button.selected {
+            background-color: #4AAFD8;
+        }
 
-// Avvia
-loadQuestion();
+        .result-box {
+            display: none;
+            flex-direction: column;
+            gap: 20px;
+            text-align: justify;
+            font-size: 1rem;
+            line-height: 1.6rem;
+        }
+
+        .restart-button {
+            background-color: #8D064A;
+            color: white;
+            padding: 15px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        @media screen and (max-width: 900px) {
+            main {
+                flex-direction: column;
+                align-items: center;
+            }
+            .left-column, .right-column {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>Test Psicologico Avanzato</header>
+    <main>
+        <div class="left-column">
+            <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f" alt="Team Work">
+            <img src="https://images.unsplash.com/photo-1508830524289-0adcbe822b40" alt="Brainstorming">
+            <img src="https://images.unsplash.com/photo-1485217988980-11786ced9454" alt="Leadership">
+        </div>
+        <div class="right-column">
+            <h2 id="question-title">Domanda</h2>
+            <div id="question-container" class="question-box"></div>
+            <div id="result-box" class="result-box">
+                <h2>Risultato del tuo profilo psicologico</h2>
+                <p id="profile-text"></p>
+                <button class="restart-button" onclick="restartTest()">Ricomincia</button>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const questions = [
+            { q: "Come reagisci quando un'idea innovativa incontra resistenze interne?",
+              opts: ["Mi affido a dati e numeri per convincere", "Organizzo workshop collaborativi", "Adotto compromessi per avanzare"],
+              values: [8, 6, 5] },
+            { q: "In condizioni di stress elevato, cosa fai?",
+              opts: ["Pianifico passo-passo", "Agisco di istinto", "Motivo il team emotivamente"],
+              values: [7, 5, 8] },
+            { q: "Un collega aggira una regola per urgenza: come reagisci?",
+              opts: ["Applico la regola senza eccezioni", "Chiedo spiegazioni e formo il team", "Rivedo il processo per eliminare il problema"],
+              values: [6, 8, 7] },
+            { q: "Come motivi un team dopo un fallimento?",
+              opts: ["Analizzo errori e imposto correzioni", "Conduco debrief emotivi", "Propongo nuove sfide stimolanti"],
+              values: [7, 8, 9] },
+            { q: "Quale stile di leadership prediligi?",
+              opts: ["Gerarchico e strutturato", "Partecipativo e inclusivo", "Distributivo e delegante"],
+              values: [5, 9, 7] },
+            { q: "Come gestisci una scadenza impossibile?",
+              opts: ["Controllo ogni fase", "Sperimentazione veloce", "Chiedo supporto esterno"],
+              values: [8, 6, 5] },
+            { q: "Quanto conta l’empatia nelle decisioni?",
+              opts: ["Minimamente, conta solo il risultato", "Importante ma bilanciata", "È centrale"],
+              values: [4, 7, 9] },
+            { q: "Come affronti critiche ingiuste?",
+              opts: ["Rispondo con fatti", "Accolgo il feedback e rifletto", "Mantengo distacco emotivo"],
+              values: [7, 8, 6] },
+            { q: "Bilanci creatività e budget?",
+              opts: ["Solo se ROI elevato", "Con margini di fallback", "Investimento low-cost"],
+              values: [6, 7, 8] },
+            { q: "Qual è la tua prima azione in un conflitto di team?",
+              opts: ["Mediazione neutrale", "Ascolto empatico", "Ridefinizione workflow"],
+              values: [7, 9, 8] }
+        ];
+
+        let currentQuestion = 0;
+        let answers = [];
+
+        function loadQuestion() {
+            if (currentQuestion < questions.length) {
+                const q = questions[currentQuestion];
+                document.getElementById('question-title').innerText = q.q;
+                const container = document.getElementById('question-container');
+                container.innerHTML = "";
+                q.opts.forEach((opt, index) => {
+                    const btn = document.createElement('button');
+                    btn.innerText = opt;
+                    btn.onclick = () => selectAnswer(index);
+                    container.appendChild(btn);
+                });
+            } else {
+                showResult();
+            }
+        }
+
+        function selectAnswer(index) {
+            answers.push({ question: currentQuestion, choice: index });
+            currentQuestion++;
+            loadQuestion();
+        }
+
+        function showResult() {
+            document.getElementById('question-title').style.display = 'none';
+            document.getElementById('question-container').style.display = 'none';
+            const profile = generateProfile();
+            document.getElementById('profile-text').innerText = profile;
+            document.getElementById('result-box').style.display = 'flex';
+        }
+
+        function generateProfile() {
+            let leadership = 0, empatia = 0, adattabilita = 0, creativita = 0;
+            answers.forEach(a => {
+                const v = questions[a.question].values[a.choice];
+                leadership += v * (a.question % 2 === 0 ? 1.2 : 1);
+                empatia += v * (a.question % 3 === 0 ? 1.5 : 1);
+                adattabilita += v * (a.question % 4 === 0 ? 1.1 : 1);
+                creativita += v * (a.choice === 2 ? 1.4 : 1);
+            });
+            const text = `
+            Il tuo profilo psicologico rivela una personalità complessa con tratti distintivi in leadership e 
+            gestione emotiva. Sei capace di affrontare situazioni di conflitto mantenendo un equilibrio tra logica 
+            e sensibilità, con una spiccata propensione all’ascolto empatico. La tua adattabilità ti consente di 
+            operare in ambienti incerti senza perdere la visione strategica, mentre la creatività emerge come un 
+            fattore determinante nelle decisioni innovative. Mostri un orientamento al risultato supportato da 
+            solide capacità di analisi, ma anche apertura al confronto e alla co-creazione. Questo mix suggerisce 
+            un leader adatto a contesti dinamici, capace di ispirare fiducia, innovazione e inclusione, con una 
+            notevole resilienza personale e sociale.
+            `;
+            return text.trim();
+        }
+
+        function restartTest() {
+            currentQuestion = 0;
+            answers = [];
+            document.getElementById('question-title').style.display = 'block';
+            document.getElementById('question-container').style.display = 'flex';
+            document.getElementById('result-box').style.display = 'none';
+            loadQuestion();
+        }
+
+        loadQuestion();
+    </script>
+</body>
+</html>
