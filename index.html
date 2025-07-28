@@ -10,36 +10,44 @@
       font-family: 'Segoe UI', sans-serif;
       background: #F1E5D7;
       display: flex;
-      justify-content: center;
-      align-items: center;
       height: 100vh;
       overflow: hidden;
       color: #06283F;
     }
-    .background {
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      object-fit: cover;
-      z-index: -1;
-      transition: opacity 1s ease-in-out;
-      opacity: 0.25;
+    .left-pane {
+      width: 50%;
+      height: 100%;
+      overflow: hidden;
     }
-    .container {
-      background: rgba(255,255,255,0.9);
+    .left-pane img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: opacity 1s ease-in-out;
+    }
+    .right-pane {
+      width: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
       padding: 40px;
+      background: white;
+      box-shadow: -5px 0 20px rgba(0,0,0,0.15);
+    }
+    .card {
+      width: 100%;
+      max-width: 450px;
+      background: #fff;
       border-radius: 16px;
-      max-width: 900px;
-      width: 90%;
-      text-align: center;
-      box-shadow: 0 8px 30px rgba(0,0,0,0.25);
+      padding: 40px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
       opacity: 0;
       transform: translateY(20px);
-      transition: all 0.8s ease;
+      transition: all 0.6s ease;
     }
-    .container.show { opacity: 1; transform: translateY(0); }
-    h1 { color: #8D064A; margin-bottom: 20px; }
-    .question { font-size: 1.4rem; margin-bottom: 30px; }
+    .card.show { opacity: 1; transform: translateY(0); }
+    h1 { color: #8D064A; font-size: 2rem; margin-bottom: 20px; }
+    .question { font-size: 1.3rem; margin-bottom: 25px; }
     .options button {
       width: 100%;
       padding: 15px;
@@ -52,22 +60,20 @@
       color: white;
       transition: background 0.3s, transform 0.2s;
     }
-    .options button:hover {
-      background: #06283F;
-      transform: scale(1.02);
-    }
+    .options button:hover { background: #06283F; transform: scale(1.02); }
     .result-card {
       background: white;
       padding: 30px;
       border-radius: 12px;
       box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-      margin-top: 30px;
+      margin-top: 20px;
+      text-align: center;
     }
-    .result-card h2 { color: #D80D32; }
     .result-card img {
       width: 80px; height: 80px;
       margin-bottom: 20px;
     }
+    .result-card h2 { color: #D80D32; margin-bottom: 15px; }
     .btn-reset {
       margin-top: 25px;
       padding: 12px 25px;
@@ -83,15 +89,17 @@
   </style>
 </head>
 <body>
-  <img id="bg" class="background" src="" alt="Background">
-  <div class="container" id="container">
-    <h1>Scenario HR Avanzato</h1>
-    <div id="game">
+  <div class="left-pane">
+    <img id="bg" src="" alt="Scenario">
+  </div>
+  <div class="right-pane">
+    <div class="card" id="card">
+      <h1>Scenario HR Avanzato</h1>
       <div id="step" class="question"></div>
       <div class="options" id="options"></div>
+      <div id="result"></div>
+      <button id="reset" class="btn-reset hidden">Rigioca</button>
     </div>
-    <div id="result" class="hidden"></div>
-    <button id="reset" class="btn-reset hidden">Rigioca</button>
   </div>
 
   <script>
@@ -140,22 +148,23 @@
     const optionsEl = document.getElementById('options');
     const resultEl = document.getElementById('result');
     const resetBtn = document.getElementById('reset');
-    const container = document.getElementById('container');
+    const card = document.getElementById('card');
 
     function updateBackground(url) {
       bg.style.opacity = 0;
       setTimeout(() => {
         bg.src = url;
-        bg.style.opacity = 0.25;
-      }, 500);
+        bg.style.opacity = 1;
+      }, 300);
     }
 
     function showStep(index) {
       updateBackground(steps[index].bg);
-      container.classList.remove('show');
+      card.classList.remove('show');
       setTimeout(() => {
         stepEl.textContent = steps[index].question;
         optionsEl.innerHTML = '';
+        resultEl.innerHTML = '';
         steps[index].options.forEach(opt => {
           const btn = document.createElement('button');
           btn.textContent = opt.text;
@@ -170,14 +179,14 @@
           };
           optionsEl.appendChild(btn);
         });
-        container.classList.add('show');
-      }, 300);
+        card.classList.add('show');
+      }, 200);
     }
 
     function showResult() {
       let profile = profiles.find(p => score >= p.range[0] && score <= p.range[1]);
-      stepEl.textContent = "";
-      optionsEl.innerHTML = `
+      optionsEl.innerHTML = '';
+      resultEl.innerHTML = `
         <div class="result-card">
           <img src="${profile.icon}" alt="Icona Profilo">
           <h2>${profile.title}</h2>
@@ -194,7 +203,6 @@
       showStep(currentStep);
     };
 
-    setTimeout(() => container.classList.add('show'), 100);
     showStep(currentStep);
   </script>
 </body>
