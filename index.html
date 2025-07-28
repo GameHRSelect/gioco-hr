@@ -1,237 +1,214 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Scenario HR Avanzato</title>
-    <style>
-        body {
-            margin: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #f5f5f5;
-            color: #222;
-        }
-        header {
-            background: #8D064A;
-            color: #fff;
-            padding: 1.5rem;
-            text-align: center;
-            font-size: 1.5rem;
-            font-weight: bold;
-        }
-        .container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            padding: 2rem 1rem;
-            max-width: 1200px;
-            margin: auto;
-        }
-        .card {
-            background: #fff;
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            margin: 1rem;
-            padding: 1.5rem;
-            width: 300px;
-            text-align: center;
-            transition: transform 0.3s ease;
-        }
-        .card:hover {
-            transform: translateY(-5px);
-        }
-        .card img {
-            width: 120px;
-            height: 120px;
-            object-fit: cover;
-            border-radius: 50%;
-            margin-bottom: 1rem;
-        }
-        .card h3 {
-            margin: 0.5rem 0;
-            color: #06283F;
-        }
-        .card p {
-            font-size: 0.9rem;
-            color: #333;
-            min-height: 50px;
-        }
-        .card button {
-            margin-top: 1rem;
-            padding: 0.7rem 1.2rem;
-            background: #1B65A5;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 0.95rem;
-        }
-        .card button:hover {
-            background: #0f4c7f;
-        }
-        #quiz-section {
-            display: none;
-            max-width: 700px;
-            margin: auto;
-            padding: 2rem 1rem;
-            text-align: center;
-            background: #fff;
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
-        #quiz-section h2 {
-            color: #8D064A;
-            margin-bottom: 1rem;
-        }
-        .answer-btn {
-            display: block;
-            width: 100%;
-            margin: 0.5rem auto;
-            padding: 0.8rem;
-            background: #1B65A5;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 1rem;
-        }
-        .answer-btn:hover {
-            background: #0f4c7f;
-        }
-        #result-section {
-            display: none;
-            max-width: 700px;
-            margin: auto;
-            padding: 2rem 1rem;
-            text-align: center;
-            background: #fff;
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
-        #result-section h2 {
-            color: #8D064A;
-        }
-        #result-section p {
-            font-size: 1rem;
-            line-height: 1.4;
-        }
-        @media(max-width:768px){
-            .container {flex-direction: column; align-items:center;}
-            .card {width: 90%;}
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Test Psicologico Avanzato</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+/* ---------- BASE STYLES ---------- */
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Roboto',sans-serif;}
+body{background:#f5f6fa;color:#333;}
+.container{max-width:1000px;margin:auto;padding:20px;}
+h1{text-align:center;margin-bottom:30px;color:#8D064A;font-size:2em;}
+.hidden{display:none;}
+button{cursor:pointer;transition:all .3s ease;}
+/* ---------- QUESTION BOX ---------- */
+.question-box{background:white;padding:30px;border-radius:12px;box-shadow:0 4px 15px rgba(0,0,0,0.1);margin-bottom:20px;animation:fadeIn .6s ease-in-out;}
+.question-text{font-size:1.4em;margin-bottom:20px;font-weight:700;}
+.option{background:#1B65A5;color:white;border:none;width:100%;padding:15px;margin:10px 0;border-radius:8px;font-size:1.1em;}
+.option:hover{background:#4AAFD8;transform:scale(1.03);}
+/* ---------- RESULT BOX ---------- */
+.result-box{background:white;padding:30px;border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,0.2);animation:fadeIn .6s ease-in-out;}
+.result-box h2{color:#8D064A;margin-bottom:20px;}
+.profile-text{font-size:1.1em;line-height:1.6;margin-top:20px;white-space:pre-line;}
+#radarChart,#barChart{width:100%;max-width:600px;margin:40px auto;}
+.buttons{display:flex;flex-wrap:wrap;justify-content:space-between;margin-top:20px;}
+.btn{background:#8D064A;color:white;padding:12px 20px;border:none;border-radius:8px;font-size:1em;margin-top:10px;}
+.btn:hover{background:#D80D32;}
+/* ---------- HISTORY ---------- */
+.history{margin-top:40px;}
+.history h3{margin-bottom:10px;}
+.history-item{padding:10px;border-bottom:1px solid #eee;}
+/* ---------- ANIMATIONS ---------- */
+@keyframes fadeIn{from{opacity:0;transform:translateY(15px);}to{opacity:1;transform:translateY(0);}}
+/* ---------- RESPONSIVE ---------- */
+@media(max-width:768px){
+  .option{font-size:1em;padding:12px;}
+  .question-text{font-size:1.2em;}
+  .buttons{flex-direction:column;}
+}
+</style>
 </head>
 <body>
-
-<header>Scenario HR Avanzato</header>
-
-<div id="selection-section" class="container">
-    <div class="card">
-        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOE..." alt="Giulia Rossi">
-        <h3>Giulia Rossi - Innovatrice</h3>
-        <p>Giovane con idee fuori dagli schemi, ma inesperta nella gestione di team.</p>
-        <button onclick="startQuiz('innovatrice')">Seleziona</button>
+<div class="container">
+  <h1>Test Psicologico Avanzato</h1>
+  <!-- CONTAINER DOMANDE -->
+  <div id="question-container"></div>
+  <!-- RISULTATO -->
+  <div class="result-box hidden" id="result-box">
+    <h2>Risultato del tuo profilo psicologico</h2>
+    <canvas id="radarChart"></canvas>
+    <canvas id="barChart"></canvas>
+    <div class="profile-text" id="profile-text"></div>
+    <div class="buttons">
+      <button class="btn" id="restart">Ricomincia</button>
+      <button class="btn" id="savePdf">Scarica PDF</button>
     </div>
-    <div class="card">
-        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOE..." alt="Marco Bianchi">
-        <h3>Marco Bianchi - Tradizionalista</h3>
-        <p>Manager esperto e affidabile, con approccio prudente e consolidato.</p>
-        <button onclick="startQuiz('tradizionalista')">Seleziona</button>
-    </div>
-    <div class="card">
-        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOE..." alt="Sara Verdi">
-        <h3>Sara Verdi - Talento emergente</h3>
-        <p>Leader naturale, in crescita, energica e motivata.</p>
-        <button onclick="startQuiz('talento')">Seleziona</button>
-    </div>
+    <div class="history" id="history"></div>
+  </div>
 </div>
 
-<div id="quiz-section">
-    <h2 id="quiz-title"></h2>
-    <p id="quiz-question"></p>
-    <div id="answers"></div>
-</div>
-
-<div id="result-section">
-    <h2>Risultato finale</h2>
-    <p id="profile-analysis"></p>
-    <button onclick="window.location.reload()">Ricomincia</button>
-</div>
-
+<!-- LIBRERIE -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
-    const questions = {
-        innovatrice: [
-            { q: "Come gestiresti un team multiculturale con metodi non convenzionali?", a: ["Cercherei di integrare culture diverse innovando processi", "Applicherei regole classiche di team building", "Ignorerei le differenze e punterei solo agli obiettivi"] },
-            { q: "Se ti offrissero un budget ridotto per un progetto innovativo, cosa faresti?", a: ["Troverei sponsor alternativi", "Ridurrei la portata dell'idea", "Rinuncerei per evitare rischi"] },
-            { q: "Come affronteresti un leader senior contrario alle tue idee?", a: ["Dialogo costante e dati a supporto", "Segui il suo approccio per sicurezza", "Ignorerei i suoi feedback"] },
-            { q: "Preferisci sperimentare o pianificare rigidamente?", a: ["Sperimentare con margini di rischio", "Pianificazione strutturata", "No innovazione, solo routine"] },
-            { q: "Come gestisci fallimenti di progetti innovativi?", a: ["Lezione appresa e nuovo tentativo", "Analisi e blocco di iniziative simili", "Scaricare la responsabilità"] }
-        ],
-        tradizionalista: [
-            { q: "Come reagisci a una crisi improvvisa?", a: ["Seguo protocolli standard", "Chiedo nuove soluzioni fuori schema", "Ignoro temporaneamente"] },
-            { q: "Come assegni ruoli in un team?", a: ["Basandomi su esperienza e anzianità", "Facendo rotazioni frequenti", "Scelta casuale"] },
-            { q: "Preferisci modelli noti o innovativi?", a: ["Modelli consolidati", "Mix tra tradizione e innovazione", "Solo innovazione estrema"] },
-            { q: "Come valuti le performance?", a: ["Con indicatori classici", "Con metriche sperimentali", "Senza misure precise"] },
-            { q: "Qual è il tuo approccio alla gestione del rischio?", a: ["Prudente e controllato", "Calcolo medio", "Altamente rischioso"] }
-        ],
-        talento: [
-            { q: "Come costruisci la fiducia di un team nuovo?", a: ["Relazioni personali forti", "Solo risultati tangibili", "Non mi interessa la fiducia"] },
-            { q: "Come reagisci a un feedback negativo?", a: ["Lo accetto e miglioro", "Mi difendo sempre", "Ignoro le critiche"] },
-            { q: "Sei posto davanti a un obiettivo impossibile, cosa fai?", a: ["Motivo il team e innovo", "Chiedo più risorse", "Lascio perdere"] },
-            { q: "Come sviluppi le tue competenze?", a: ["Formazione continua", "Solo sul campo", "Non serve formazione"] },
-            { q: "Come promuovi l'inclusione?", a: ["Attivamente", "In modo neutrale", "Non la considero prioritaria"] }
-        ]
-    };
+/* -------------------------
+   DOMANDE COMPLESSO TEST
+------------------------- */
+const questions = [
+  {text:"Come affronti un dilemma etico con conseguenze economiche significative?",
+   options:["Analizzo razionalmente ogni variabile e impatto","Valuto l'impatto umano prima di ogni altra cosa","Cerco un compromesso innovativo, anche se rischioso"], scores:[5,8,10]},
+  {text:"In condizioni di stress acuto, quale strategia adotti?",
+   options:["Pianificazione dettagliata e controllo dei processi","Creatività immediata anche senza dati completi","Ricerca di supporto e collaborazione collettiva"], scores:[7,10,8]},
+  {text:"Come reagisci quando il tuo lavoro viene criticato ingiustamente?",
+   options:["Difesa e argomentazione basata sui fatti","Ascolto, valutazione e autocritica costruttiva","Distacco emotivo e focus sugli obiettivi futuri"], scores:[6,8,9]},
+  {text:"Sei posto a guidare un team internazionale con culture diverse: come operi?",
+   options:["Uniformi regole e approccio standardizzato","Adotti una leadership flessibile e culturale-sensibile","Delego leadership locali per sinergia diretta"], scores:[5,9,10]},
+  {text:"Un collega viola le policy per accelerare un processo: reazione?",
+   options:["Applico subito sanzioni formali","Dialogo e formazione mirata","Analizzo l'impatto e ristrutturo il processo"], scores:[6,8,9]},
+  {text:"Come affronti un cambiamento improvviso del mercato?",
+   options:["Adatti le strategie seguendo dati storici","Sperimentazione aggressiva e pivot rapido","Pianificazione di scenari multipli"], scores:[7,10,9]},
+  {text:"Ti viene chiesto di ridurre un team del 30%: come decidi?",
+   options:["Analisi oggettiva delle performance individuali","Valutazione anche del potenziale umano e motivazionale","Ripensamento del modello organizzativo"], scores:[7,9,10]},
+  {text:"Quando ti trovi davanti a un fallimento importante?",
+   options:["Analizzo i dati e correggo la rotta","Rivedo valori e obiettivi profondi","Trasformo il fallimento in opportunità di innovazione"], scores:[7,8,10]},
+  {text:"Come percepisci il potere gerarchico?",
+   options:["Strumento di controllo necessario","Responsabilità condivisa per guidare","Qualcosa da decentralizzare al massimo"], scores:[6,8,10]},
+  {text:"Se devi affrontare un conflitto tra reparti?",
+   options:["Mediazione neutrale senza favoritismi","Empatia e ascolto per ogni parte","Ridefinizione dei processi per eliminare attriti"], scores:[7,8,10]},
+  {text:"Cosa rappresenta per te la vulnerabilità?",
+   options:["Un limite da contenere","Una forza relazionale che crea connessioni","Un'opportunità di apprendimento reciproco"], scores:[6,9,10]},
+  {text:"Come reagisci ai cambiamenti tecnologici dirompenti?",
+   options:["Prudenza e test lunghi","Adozione immediata e sperimentazione","Analisi rapida e implementazione controllata"], scores:[6,10,9]},
+  {text:"Se un subordinato è più competente di te in un ambito chiave?",
+   options:["Mantieni comunque la leadership decisionale","Deleghe e valorizzazione immediata","Trasformi il ruolo in co-leadership"], scores:[5,9,10]},
+  {text:"Cosa pensi dell'intuizione nelle decisioni?",
+   options:["Poco rilevante rispetto ai dati","Complementare alla razionalità","Fondamentale in contesti complessi"], scores:[6,8,10]},
+  {text:"Davanti a un obiettivo impossibile?",
+   options:["Ridimensioni target","Cerchi strategie creative","Trasformi completamente l'approccio"], scores:[7,9,10]},
+  {text:"Quando sei sotto osservazione di autorità superiori?",
+   options:["Segui rigidamente le regole","Adatti stile comunicativo e contenuti","Gestisci aspettative innovando sotto pressione"], scores:[7,8,10]},
+  {text:"Come affronti un progetto fuori dalla tua comfort zone?",
+   options:["Ti formi in autonomia prima di iniziare","Accetti e impari durante l'esecuzione","Coinvolgi esperti esterni subito"], scores:[7,9,10]},
+  {text:"Come valuti l'importanza dell'empatia?",
+   options:["Secondaria rispetto ai risultati","Fondamentale per il team","Base di ogni relazione lavorativa"], scores:[5,9,10]},
+  {text:"Cosa rappresenta per te la resilienza?",
+   options:["Resistenza pura alle difficoltà","Capacità di trasformare crisi in opportunità","Crescita personale costante"], scores:[7,9,10]},
+  {text:"Quale approccio prediligi alla leadership?",
+   options:["Gerarchico e direttivo","Partecipativo e flessibile","Distribuito e collaborativo"], scores:[6,8,10]}
+];
 
-    let currentProfile = "";
-    let currentQuestionIndex = 0;
-    let answersSelected = [];
+/* -------------------------
+   VARIABILI
+------------------------- */
+let currentQuestion=0;
+let scoreLog=[];
 
-    function startQuiz(profile) {
-        currentProfile = profile;
-        currentQuestionIndex = 0;
-        answersSelected = [];
-        document.getElementById("selection-section").style.display = "none";
-        document.getElementById("quiz-section").style.display = "block";
-        loadQuestion();
-    }
+/* -------------------------
+   FUNZIONI
+------------------------- */
+function loadQuestion(){
+  const container=document.getElementById('question-container');
+  container.innerHTML='';
+  if(currentQuestion<questions.length){
+    const q=questions[currentQuestion];
+    const div=document.createElement('div');
+    div.className="question-box";
+    div.innerHTML=`<div class="question-text">${q.text}</div>`+
+      q.options.map((o,i)=>`<button class="option" onclick="selectOption(${i})">${o}</button>`).join('');
+    container.appendChild(div);
+  }else{showResult();}
+}
 
-    function loadQuestion() {
-        const questionData = questions[currentProfile][currentQuestionIndex];
-        document.getElementById("quiz-title").innerText = "Domanda " + (currentQuestionIndex + 1);
-        document.getElementById("quiz-question").innerText = questionData.q;
-        const answersDiv = document.getElementById("answers");
-        answersDiv.innerHTML = "";
-        questionData.a.forEach(answer => {
-            const btn = document.createElement("button");
-            btn.innerText = answer;
-            btn.classList.add("answer-btn");
-            btn.onclick = () => nextQuestion(answer);
-            answersDiv.appendChild(btn);
-        });
-    }
+function selectOption(i){
+  scoreLog.push(questions[currentQuestion].scores[i]);
+  currentQuestion++;
+  loadQuestion();
+}
 
-    function nextQuestion(answer) {
-        answersSelected.push(answer);
-        currentQuestionIndex++;
-        if (currentQuestionIndex < questions[currentProfile].length) {
-            loadQuestion();
-        } else {
-            showResult();
-        }
-    }
+function analyzeScores(scores){
+  const total=scores.reduce((a,b)=>a+b,0);
+  return{
+    leadership:Math.min(10,(scores[0]+scores[6]+scores[19])/3),
+    etica:Math.min(10,(scores[1]+scores[4]+scores[7])/3),
+    adattabilita:Math.min(10,(scores[5]+scores[16]+scores[12])/3),
+    creativita:Math.min(10,(scores[2]+scores[13]+scores[14])/3),
+    empatia:Math.min(10,(scores[9]+scores[10]+scores[17])/3),
+    totale:total
+  };
+}
 
-    function showResult() {
-        document.getElementById("quiz-section").style.display = "none";
-        document.getElementById("result-section").style.display = "block";
-        const profileDescriptions = {
-            innovatrice: "Hai scelto un approccio innovativo, creativo e resiliente, capace di trasformare complessità in opportunità.",
-            tradizionalista: "La tua scelta denota stabilità, metodo e sicurezza: punti di forza in contesti complessi ma regolati.",
-            talento: "Hai mostrato una leadership naturale, dinamica e collaborativa, in crescita costante e orientata al futuro."
-        };
-        document.getElementById("profile-analysis").innerText = profileDescriptions[currentProfile];
-    }
+function showResult(){
+  document.getElementById('question-container').style.display="none";
+  const resultBox=document.getElementById('result-box');
+  resultBox.classList.remove('hidden');
+  const traits=analyzeScores(scoreLog);
+  generateProfile(traits);
+  drawCharts(traits);
+  saveHistory(traits);
+}
+
+function generateProfile(t){
+  const text=`Il tuo profilo psicologico rivela una struttura complessa: Leadership ${t.leadership.toFixed(1)}/10, Etica ${t.etica.toFixed(1)}/10, Adattabilità ${t.adattabilita.toFixed(1)}/10, Creatività ${t.creativita.toFixed(1)}/10, Empatia ${t.empatia.toFixed(1)}/10. 
+Questi dati indicano un individuo che non si limita a reagire agli eventi ma li interpreta, trasformandoli in opportunità. La combinazione di creatività ed empatia suggerisce capacità di innovazione relazionale, utile per ruoli in cui la gestione delle persone e la visione sistemica si incontrano. 
+Mostri un forte orientamento alla resilienza e un’attitudine alla comprensione delle dinamiche sociali, fattori chiave per contesti ad alta complessità e pressione. La tua leadership tende verso modelli partecipativi e trasformazionali, mentre l’etica elevata suggerisce una propensione alla correttezza e all'integrità decisionale. 
+Tuttavia, un profilo così dinamico richiede bilanciamento: la tendenza a privilegiare l’adattabilità può talvolta disperdere energie, mentre la spinta creativa deve essere ancorata a processi concreti. Psicologicamente, emergono tratti di apertura all’esperienza, capacità introspettiva e tolleranza alla frustrazione, indicatori tipici di individui capaci di apprendere dai fallimenti senza perdere motivazione. 
+In sintesi, possiedi risorse cognitive ed emotive superiori alla media per affrontare ambienti incerti, guidare cambiamenti complessi e sviluppare reti collaborative ad alta fiducia reciproca.`;
+  document.getElementById('profile-text').innerText=text;
+}
+
+function drawCharts(t){
+  const radarCtx=document.getElementById('radarChart').getContext('2d');
+  new Chart(radarCtx,{
+    type:'radar',
+    data:{labels:['Leadership','Etica','Adattabilità','Creatività','Empatia'],
+      datasets:[{label:'Profilo',data:[t.leadership,t.etica,t.adattabilita,t.creativita,t.empatia],
+        backgroundColor:'rgba(24,99,195,0.2)',borderColor:'#1863C3',pointBackgroundColor:'#1863C3'}]},
+    options:{responsive:true,scales:{r:{suggestedMin:0,suggestedMax:10}}}
+  });
+
+  const barCtx=document.getElementById('barChart').getContext('2d');
+  new Chart(barCtx,{
+    type:'bar',
+    data:{labels:['Leadership','Etica','Adattabilità','Creatività','Empatia'],
+      datasets:[{label:'Valore',data:[t.leadership,t.etica,t.adattabilita,t.creativita,t.empatia],
+        backgroundColor:'#8D064A'}]},
+    options:{responsive:true,scales:{y:{suggestedMax:10}}}
+  });
+}
+
+function saveHistory(t){
+  const history=JSON.parse(localStorage.getItem('testHistory')||"[]");
+  const record={date:new Date().toLocaleString(),traits:t};
+  history.push(record);
+  localStorage.setItem('testHistory',JSON.stringify(history));
+  const historyDiv=document.getElementById('history');
+  historyDiv.innerHTML="<h3>Storico Test</h3>"+history.map(h=>`<div class="history-item">${h.date}</div>`).join('');
+}
+
+/* ----- EVENTI ----- */
+document.getElementById("restart").onclick=()=>location.reload();
+document.getElementById("savePdf").onclick=()=>{
+  const { jsPDF } = window.jspdf;
+  const doc=new jsPDF();
+  doc.text("Risultato Test Psicologico",20,20);
+  doc.text(document.getElementById('profile-text').innerText,20,40);
+  doc.save("profilo_psicologico.pdf");
+};
+
+/* INIZIALIZZA */
+loadQuestion();
 </script>
-
 </body>
 </html>
