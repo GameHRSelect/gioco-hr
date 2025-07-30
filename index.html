@@ -1,303 +1,360 @@
 <!DOCTYPE html>
 <html lang="it">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Test Psicologico Avanzato</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #F8F9FA;
-            margin: 0;
-            padding: 20px;
-        }
-
-        h1 {
-            color: #8D064A;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: auto;
-            display: flex;
-            flex-wrap: wrap;
-        }
-
-        .left-col,
-        .right-col {
-            flex: 1;
-            padding: 20px;
-            min-width: 300px;
-        }
-
-        img {
-            width: 100%;
-            border-radius: 12px;
-            margin-bottom: 15px;
-            height: 350px;
-            object-fit: cover;
-        }
-
-        .btn-option {
-            width: 100%;
-            margin-bottom: 10px
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>Test Interattivo HR – Profilo Lacaniano</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    :root {
+      --color-a: #69b3a2;
+      --color-b: #4c78a8;
+      --color-c: #e07a5f;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 900px;
+      margin: 30px auto;
+      background: #fff;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .question-container {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 20px;
+      padding: 20px;
+    }
+    .question-image {
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+      object-fit: cover;
+    }
+    .answers {
+      display: flex;
+      flex-direction: column;
+    }
+    .answers label {
+      margin-bottom: 12px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.2s, border-color 0.2s;
+    }
+    .answers input[type="radio"] {
+      margin-right: 10px;
+    }
+    .answers label:hover {
+      background: #f9f9f9;
+      border-color: #aaa;
+    }
+    .navigation {
+      text-align: right;
+      padding: 0 20px 20px;
+    }
+    button {
+      background: #4c78a8;
+      color: #fff;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+    button:disabled {
+      background: #ccc;
+      cursor: default;
+    }
+    #result {
+      padding: 20px;
+      line-height: 1.6;
+    }
+    #histogram {
+      max-width: 600px;
+      margin: 30px auto;
+    }
+    #frequency-grid {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+    }
+    #frequency-grid th,
+    #frequency-grid td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: center;
+    }
+    #frequency-grid tr:nth-child(even) {
+      background: #f9f9f9;
+    }
+    #frequency-grid th {
+      background: #eee;
+    }
+  </style>
 </head>
-
 <body>
+  <div class="container">
+    <div id="quiz"></div>
+  </div>
 
-    <div class="container">
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    // Definizione delle 7 domande in ambito HR
+    const questions = [
+      {
+        img: 'images/q1.jpg',
+        text: 'Quando un collaboratore mostra segni di disimpegno, come reagisce?',
+        answers: [
+          'Offro un percorso di coaching individuale.',
+          'Rivedo gli obiettivi e definisco KPI più chiari.',
+          'Analizzo i processi organizzativi per individuare criticità.'
+        ]
+      },
+      {
+        img: 'images/q2.jpg',
+        text: 'Quale caratteristica ritiene più influente per un leader efficace?',
+        answers: [
+          'Empatia e ascolto attivo.',
+          'Visione strategica a lungo termine.',
+          'Capacità di adattamento e resilienza.'
+        ]
+      },
+      {
+        img: 'images/q3.jpg',
+        text: 'In caso di conflitto tra membri del team, quale approccio utilizza?',
+        answers: [
+          'Mediazione e supporto emotivo.',
+          'Implemento procedure formali di risoluzione.',
+          'Valuto fattori sistemici e culturali dell\'organizzazione.'
+        ]
+      },
+      {
+        img: 'images/q4.jpg',
+        text: 'Come gestisce la selezione dei candidati per posizioni chiave?',
+        answers: [
+          'Focalizzandomi sul fit culturale.',
+          'Valutando competenze tecniche e potenziale di crescita.',
+          'Analizzando la compatibilità con i processi esistenti.'
+        ]
+      },
+      {
+        img: 'images/q5.jpg',
+        text: 'Qual è la sua strategia per motivare il personale?',
+        answers: [
+          'Riconoscimento e feedback continuo.',
+          'Sviluppo di opportunità di carriera strutturate.',
+          'Ottimizzazione degli strumenti di lavoro e ambienti.'
+        ]
+      },
+      {
+        img: 'images/q6.jpg',
+        text: 'Quando definisce il ruolo di un collaboratore, cosa considera prioritario?',
+        answers: [
+          'Le sue aspirazioni e desideri professionali.',
+          'L’allineamento con la mission aziendale.',
+          'L\'efficienza operativa e l\'organizzazione del lavoro.'
+        ]
+      },
+      {
+        img: 'images/q7.jpg',
+        text: 'Come approccia la formazione continua in azienda?',
+        answers: [
+          'Percorsi personalizzati secondo le esigenze individuali.',
+          'Programmi formativi standardizzati e certificati.',
+          'Analisi dei bisogni formativi e adozione di e-learning flessibile.'
+        ]
+      }
+    ];
 
-        <div class="left-col">
-            <img id="question-img" src="" alt="Immagine Domanda">
-        </div>
+    let current = 0;
+    const responses = [];
 
-        <div class="right-col">
-            <h1>Test Psicologico Avanzato</h1>
-            <div id="question-container"></div>
-            <canvas id="radarChart" style="display:none;"></canvas>
-            <canvas id="barChart" style="display:none; margin-top:30px;"></canvas>
-            <p id="profile-text" class="mt-4"></p>
-            <button onclick="location.reload()" class="btn btn-danger mt-3">Ripeti test</button>
-        </div>
+    function renderQuestion() {
+      const quiz = document.getElementById('quiz');
+      quiz.innerHTML = '';
 
-    </div>
+      if (current < questions.length) {
+        // Creazione layout domanda
+        const container = document.createElement('div');
+        container.className = 'question-container';
 
-    <script>
-        const questions = [
-            { q: "Come affronti un dilemma etico con impatto economico?", opts: ["Analizzo tutte le variabili", "Coinvolgo il team", "Cerco equilibrio profitto-valori"], vals: [8, 7, 6], img: "https://images.unsplash.com/photo-1483389127117-b6a2102724ae" },
-            { q: "Come gestisci uno stress imprevisto nel team?", opts: ["Approccio strutturato", "Empatia e ascolto", "Adattabilità rapida"], vals: [7, 9, 8], img: "https://images.unsplash.com/photo-1497366754035-f200968a6e72" },
-            { q: "Decisioni rapide o meditate?", opts: ["Rapide", "Meditate", "Equilibrate"], vals: [6, 9, 8], img: "https://images.unsplash.com/photo-1519389950473-47ba0277781c" },
-            { q: "Come reagisci a critiche pubbliche?", opts: ["Razionalizzo", "Accetto e miglioro", "Difendo il team"], vals: [8, 9, 7], img: "https://images.unsplash.com/photo-1543269865-cbf427effbad" },
-            { q: "Gestione budget limitato?", opts: ["Ottimizzo risorse", "Creatività low-cost", "Investimento ponderato"], vals: [8, 9, 7], img: "https://images.unsplash.com/photo-1531379410502-63bfe8cdaf6f" },
-            { q: "Approccio a innovazione?", opts: ["Misurata e sicura", "Sperimentale", "Prudente ma aperto"], vals: [7, 9, 8], img: "https://images.unsplash.com/photo-1552664730-d307ca884978" },
-            { q: "Team conflittuale, cosa fai?", opts: ["Mediazione", "Ascolto empatico", "Ristrutturazione"], vals: [8, 9, 7], img: "https://images.unsplash.com/photo-1531538512164-e6c51ea63d20" },
-            { q: "Errore grave del team, reazione?", opts: ["Analisi fredda", "Supporto emotivo", "Riorganizzo procedure"], vals: [7, 9, 8], img: "https://images.unsplash.com/photo-1565720499574-48b22a6ae256" },
-            { q: "Priorità nel lavoro di squadra?", opts: ["Leadership", "Empatia", "Creatività"], vals: [8, 9, 7], img: "https://images.unsplash.com/photo-1560250056-07ba64664864" },
-            { q: "Visione strategica o operativa?", opts: ["Strategica", "Operativa", "Equilibrata"], vals: [9, 7, 8], img: "https://images.unsplash.com/photo-1551836022-deb4988cc6c0" }
-        ];
+        // Immagine domanda
+        const img = document.createElement('img');
+        img.src = questions[current].img;
+        img.alt = `Domanda ${current + 1}`;
+        img.className = 'question-image';
+        container.appendChild(img);
 
-        let answers = [], idx = 0;
+        // Sezione delle risposte
+        const right = document.createElement('div');
+        right.className = 'answers';
+        const qText = document.createElement('h3');
+        qText.textContent = `Domanda ${current + 1}: ${questions[current].text}`;
+        right.appendChild(qText);
 
-        function loadQuestion() {
-            if (idx < questions.length) {
-                let { q, opts, img } = questions[idx];
-                document.getElementById("question-img").src = img;
-                document.getElementById("question-container").innerHTML = `<h4>${q}</h4>` + opts.map((o, i) => `<button class='btn btn-primary btn-option' onclick='choose(${i})'>${o}</button>`).join('');
-            } else showResult();
+        questions[current].answers.forEach((ans, idx) => {
+          const label = document.createElement('label');
+          const radio = document.createElement('input');
+          radio.type = 'radio';
+          radio.name = 'answer';
+          radio.value = ['A','B','C'][idx];
+          radio.checked = (responses[current] === radio.value);
+          label.appendChild(radio);
+          label.append(ans);
+          right.appendChild(label);
+        });
+
+        // Navigazione
+        const nav = document.createElement('div');
+        nav.className = 'navigation';
+        const btnPrev = document.createElement('button');
+        btnPrev.textContent = 'Indietro';
+        btnPrev.disabled = current === 0;
+        btnPrev.onclick = () => {
+          saveResponse();
+          current--;
+          renderQuestion();
+        };
+        const btnNext = document.createElement('button');
+        btnNext.textContent = current === questions.length - 1 ? 'Vedi Profilo' : 'Avanti';
+        btnNext.disabled = !responses[current];
+        btnNext.onclick = () => {
+          saveResponse();
+          current++;
+          renderQuestion();
+        };
+        nav.appendChild(btnPrev);
+        nav.appendChild(btnNext);
+        right.appendChild(nav);
+
+        container.appendChild(right);
+        quiz.appendChild(container);
+
+        // Abilita bottone Next quando seleziono
+        right.querySelectorAll('input[name="answer"]').forEach(r => {
+          r.onchange = () => {
+            responses[current] = r.value;
+            btnNext.disabled = false;
+          };
+        });
+
+      } else {
+        showResult();
+      }
+    }
+
+    function saveResponse() {
+      const sel = document.querySelector('input[name="answer"]:checked');
+      if (sel) responses[current] = sel.value;
+    }
+
+    function showResult() {
+      const quiz = document.getElementById('quiz');
+      quiz.innerHTML = '';
+      const counts = { A:0, B:0, C:0 };
+      responses.forEach(r => counts[r]++);
+      const total = questions.length;
+
+      // Sezione risultati
+      const resDiv = document.createElement('div');
+      resDiv.id = 'result';
+
+      const title = document.createElement('h2');
+      title.textContent = 'Profilo Psicologico HR Stilizzato Lacaniano';
+      resDiv.appendChild(title);
+
+      // Determinazione profilo
+      const maxCount = Math.max(counts.A, counts.B, counts.C);
+      const dominanti = Object.keys(counts).filter(k => counts[k] === maxCount);
+      let profileText = '';
+
+      if (dominanti.length === 1) {
+        switch (dominanti[0]) {
+          case 'A':
+            profileText = `Il suo profilo si inscrive principalmente nel registro **immaginario**: l’Io si definisce attraverso l’identificazione con l’Altro, dove l’oggetto piccolo _a_ funge da elemento di coesione del desiderio. La sua tendenza è all’emergenza della **manipolazione dell’immagine collettiva**, in un dialogo costante tra soggetto e specchio`;
+            break;
+          case 'B':
+            profileText = `Predomina il registro **simbolico**, soggetto alle leggi del linguaggio e del significante. Il soggetto si struttura mediante la funzione paterna del simbolo, mettendo al centro la **struttura organizzativa** e il sistema di valori condivisi. Qui il desiderio emerge come effetto delle **catene di significati**`;
+            break;
+          case 'C':
+            profileText = `Il suo profilo riflette il registro **reale**, tensione verso l’ineffabile e l’inconscio al di là delle categorie simboliche. La mancanza e il trauma si collocano al cuore della sua strategia HR, cercando di affrontare ciò che resiste alla simbolizzazione, in un gioco dinamico di **resilienza organizzativa**`;
+            break;
         }
+      } else {
+        profileText = `Il suo profilo appare **ibrido**, oscillando tra più registri ( ${dominanti.join(' e ')} ), frutto di un soggetto che naviga simultaneamente tra **immaginario**, **simbolico** e **reale**, in un approccio HR duttile e polivoco.`;
+      }
 
-        function choose(i) {
-            answers.push(i);
-            idx++;
-            loadQuestion();
+      const p = document.createElement('p');
+      p.innerHTML = profileText;
+      resDiv.appendChild(p);
+
+      // Contesto Lacaniano esteso
+      const detail = document.createElement('p');
+      detail.textContent = 'Questo profilo complesso intreccia concetti lacaniani quali il desiderio, la mancanza e l’oggetto _petit a_, applicati alla dinamica delle risorse umane.';
+      resDiv.appendChild(detail);
+
+      // Istogramma
+      const canvas = document.createElement('canvas');
+      canvas.id = 'histogram';
+      resDiv.appendChild(canvas);
+
+      // Griglia frequenze
+      const table = document.createElement('table');
+      table.id = 'frequency-grid';
+      table.innerHTML = `
+        <thead>
+          <tr><th>Risposta</th><th>Frequenza</th><th>Percentuale</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>A</td><td>${counts.A}</td><td>${((counts.A/total)*100).toFixed(1)}%</td></tr>
+          <tr><td>B</td><td>${counts.B}</td><td>${((counts.B/total)*100).toFixed(1)}%</td></tr>
+          <tr><td>C</td><td>${counts.C}</td><td>${((counts.C/total)*100).toFixed(1)}%</td></tr>
+        </tbody>
+      `;
+      resDiv.appendChild(table);
+
+      quiz.appendChild(resDiv);
+
+      // Render Chart.js
+      const ctx = document.getElementById('histogram').getContext('2d');
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: ['A','B','C'],
+          datasets: [{
+            label: 'Frequenza risposte',
+            data: [counts.A, counts.B, counts.C],
+            backgroundColor: [
+              'var(--color-a)',
+              'var(--color-b)',
+              'var(--color-c)'
+            ]
+          }]
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true,
+              stepSize: 1
+            }
+          },
+          plugins: {
+            legend: { display: false }
+          }
         }
+      });
+    }
 
-        function showResult() {
-            document.getElementById('question-container').style.display = "none";
-            document.getElementById('radarChart').style.display = "block";
-            document.getElementById('barChart').style.display = "block";
-
-            let scores = { leadership: 0, empatia: 0, creativita: 0, adattabilita: 0 };
-            answers.forEach((a, j) => {
-                scores.leadership += questions[j].vals[a];
-                scores.empatia += questions[j].vals[a] * 1.1;
-                scores.creativita += questions[j].vals[a] * 1.2;
-                scores.adattabilita += questions[j].vals[a] * 1.3;
-            });
-
-            new Chart("radarChart", { type: "radar", data: { labels: ["Leadership", "Empatia", "Creatività", "Adattabilità"], datasets: [{ label: "Profilo", data: Object.values(scores), backgroundColor: "rgba(29,78,216,0.2)", borderColor: "#06283F" }] } });
-            new Chart("barChart", { type: "bar", data: { labels: ["Leadership", "Empatia", "Creatività", "Adattabilità"], datasets: [{ label: "Profilo", data: Object.values(scores), backgroundColor: ["#8D064A", "#06283F", "#1B65A5", "#4AAFD8"] }] } });
-        }
-
-        window.onload = loadQuestion;
-    </script>
-
+    // Inizializza quiz
+    document.addEventListener('DOMContentLoaded', renderQuestion);
+  </script>
 </body>
-
 </html>
-// CONTINUAZIONE E ARRICCHIMENTO CODICE PRECEDENTE (200 RIGHE)
-
-// Funzione animazione transizioni tra domande
-function animateTransition(container) {
-  container.style.opacity = '0';
-  container.style.transform = 'translateY(20px)';
-  setTimeout(() => {
-    container.style.opacity = '1';
-    container.style.transform = 'translateY(0)';
-  }, 300);
-}
-
-// Gestione transizioni con listener
-function setupTransitions() {
-  const questionContainer = document.getElementById('question-container');
-  const options = questionContainer.querySelectorAll('.option-btn');
-
-  options.forEach(btn => {
-    btn.addEventListener('click', () => animateTransition(questionContainer));
-  });
-}
-
-// Funzione per resettare animazioni a fine quiz
-function resetAnimations() {
-  const container = document.getElementById('result-box');
-  container.style.opacity = '0';
-  setTimeout(() => {
-    container.style.opacity = '1';
-  }, 500);
-}
-
-// Inizializza animazioni al caricamento pagina
-window.onload = setupTransitions;
-
-// Funzione feedback dinamico sui punteggi
-function generateDynamicFeedback(scores) {
-  const feedback = document.getElementById('dynamic-feedback');
-  let text = '';
-
-  if(scores.leadership > 8) {
-    text += "Hai eccellenti capacità di leadership e riesci sempre a guidare il tuo team verso gli obiettivi. ";
-  } else if(scores.leadership > 5) {
-    text += "La tua leadership è equilibrata e collaborativa, con margini di miglioramento nella decisionalità. ";
-  } else {
-    text += "Potresti lavorare sulla tua assertività e capacità decisionale. ";
-  }
-
-  if(scores.empatia > 8) {
-    text += "La tua empatia è straordinaria, sai sempre leggere e rispondere alle emozioni altrui. ";
-  } else if(scores.empatia > 5) {
-    text += "Hai una buona empatia, anche se a volte fatichi a gestire situazioni ad alta tensione emotiva. ";
-  } else {
-    text += "L'empatia è un'area da sviluppare per migliorare le relazioni interpersonali. ";
-  }
-
-  feedback.textContent = text;
-}
-
-// Aggiorna profilo psicologico con feedback dinamico
-function updateProfileWithFeedback(t) {
-  generateDynamicFeedback({
-    leadership: t.leadership,
-    empatia: t.empatia
-  });
-}
-
-// Funzione per mostrare statistiche globali
-function showGlobalStats() {
-  const statsBox = document.getElementById('global-stats');
-  const stats = JSON.parse(localStorage.getItem('globalStats')) || [];
-
-  if (stats.length === 0) {
-    statsBox.textContent = 'Nessun dato statistico globale disponibile.';
-    return;
-  }
-
-  let leadershipAvg = stats.reduce((a,b)=>a+b.leadership,0)/stats.length;
-  let empatiaAvg = stats.reduce((a,b)=>a+b.empatia,0)/stats.length;
-
-  statsBox.innerHTML = `
-    <h4>Statistiche Globali degli Utenti:</h4>
-    <p>Leadership media: ${leadershipAvg.toFixed(1)}</p>
-    <p>Empatia media: ${empatiaAvg.toFixed(1)}</p>
-  `;
-}
-
-// Aggiorna statistiche globali con nuovo risultato
-function updateGlobalStats(newResult) {
-  const stats = JSON.parse(localStorage.getItem('globalStats')) || [];
-  stats.push(newResult);
-  localStorage.setItem('globalStats', JSON.stringify(stats));
-  showGlobalStats();
-}
-
-// Inizializza statistiche globali all'avvio
-window.onload = showGlobalStats;
-
-// Funzione toggle modalità dark/light
-function toggleDarkMode() {
-  const body = document.body;
-  body.classList.toggle('dark-mode');
-  localStorage.setItem('darkMode', body.classList.contains('dark-mode'));
-}
-
-// Setup modalità tema alla partenza
-function setupTheme() {
-  if(localStorage.getItem('darkMode') === 'true') {
-    document.body.classList.add('dark-mode');
-  }
-
-  const toggleBtn = document.getElementById('theme-toggle-btn');
-  toggleBtn.addEventListener('click', toggleDarkMode);
-}
-
-window.onload = setupTheme;
-
-// Funzione aiuto tooltip per domande difficili
-function setupTooltips() {
-  const tooltips = document.querySelectorAll('.tooltip');
-
-  tooltips.forEach(tooltip => {
-    tooltip.addEventListener('mouseover', () => {
-      const tooltipText = document.createElement('span');
-      tooltipText.className = 'tooltip-text';
-      tooltipText.textContent = tooltip.getAttribute('data-tooltip');
-      tooltip.appendChild(tooltipText);
-    });
-
-    tooltip.addEventListener('mouseout', () => {
-      tooltip.removeChild(tooltip.querySelector('.tooltip-text'));
-    });
-  });
-}
-
-window.onload = setupTooltips;
-
-// Aggiunta opzioni per condividere il risultato
-function setupShareOptions() {
-  const shareBtn = document.getElementById('share-result-btn');
-  shareBtn.onclick = () => {
-    const text = encodeURIComponent("Guarda il mio profilo psicologico generato da questo test avanzato!");
-    const url = encodeURIComponent(window.location.href);
-
-    window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${url}&text=${text}`, '_blank');
-  };
-}
-
-window.onload = setupShareOptions;
-
-// Notifica di completamento
-function notifyCompletion() {
-  if(Notification.permission === "granted") {
-    new Notification("Complimenti!", { body: "Hai completato il test psicologico avanzato!" });
-  } else if(Notification.permission !== "denied") {
-    Notification.requestPermission().then(permission => {
-      if(permission === "granted") notifyCompletion();
-    });
-  }
-}
-
-// Trigger notifica a fine test
-function showResultAndNotify(){
-  showResult();
-  notifyCompletion();
-}
-
-// Finalizzazione del risultato con tutte le nuove funzioni integrate
-function finalizeResult(t){
-  updateProfileWithFeedback(t);
-  updateGlobalStats(t);
-  resetAnimations();
-  showResultAndNotify();
-}
-
-// Integrazione al flusso finale
-function showResult(){
-  const t = analyze(answers);
-  drawCharts(t);
-  fillProfile(t);
-  finalizeResult(t);
-}
