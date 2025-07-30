@@ -68,8 +68,7 @@
       background: var(--bg-light);
       border-color: var(--light-blue);
     }
-    .answers input:checked + span,
-    .answers input:checked ~ label {
+    .answers input:checked + span {
       border-color: var(--dark-magenta);
       background: var(--light-blue);
     }
@@ -138,7 +137,72 @@
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>
-    const questions = [ /* ... array delle 7 domande ... */ ];
+    const questions = [
+      {
+        img: 'images/q1.jpg',
+        text: 'Quando un collaboratore mostra segni di disimpegno, come reagisce?',
+        answers: [
+          'Offro un percorso di coaching individuale.',
+          'Rivedo gli obiettivi e definisco KPI più chiari.',
+          'Analizzo i processi organizzativi per individuare criticità.'
+        ]
+      },
+      {
+        img: 'images/q2.jpg',
+        text: 'Quale caratteristica ritiene più influente per un leader efficace?',
+        answers: [
+          'Empatia e ascolto attivo.',
+          'Visione strategica a lungo termine.',
+          'Capacità di adattamento e resilienza.'
+        ]
+      },
+      {
+        img: 'images/q3.jpg',
+        text: 'In caso di conflitto tra membri del team, quale approccio utilizza?',
+        answers: [
+          'Mediazione e supporto emotivo.',
+          'Implemento procedure formali di risoluzione.',
+          'Valuto fattori sistemici e culturali dell'organizzazione.'
+        ]
+      },
+      {
+        img: 'images/q4.jpg',
+        text: 'Come gestisce la selezione dei candidati per posizioni chiave?',
+        answers: [
+          'Focalizzandomi sul fit culturale.',
+          'Valutando competenze tecniche e potenziale di crescita.',
+          'Analizzando la compatibilità con i processi esistenti.'
+        ]
+      },
+      {
+        img: 'images/q5.jpg',
+        text: 'Qual è la sua strategia per motivare il personale?',
+        answers: [
+          'Riconoscimento e feedback continuo.',
+          'Sviluppo di opportunità di carriera strutturate.',
+          'Ottimizzazione degli strumenti di lavoro e ambienti.'
+        ]
+      },
+      {
+        img: 'images/q6.jpg',
+        text: 'Quando definisce il ruolo di un collaboratore, cosa considera prioritario?',
+        answers: [
+          'Le sue aspirazioni e desideri professionali.',
+          'L’allineamento con la mission aziendale.',
+          'L'efficienza operativa e l'organizzazione del lavoro.'
+        ]
+      },
+      {
+        img: 'images/q7.jpg',
+        text: 'Come approccia la formazione continua in azienda?',
+        answers: [
+          'Percorsi personalizzati secondo le esigenze individuali.',
+          'Programmi formativi standardizzati e certificati.',
+          'Analisi dei bisogni formativi e adozione di e-learning flessibile.'
+        ]
+      }
+    ];
+
     let current = 0;
     const responses = [];
 
@@ -183,7 +247,7 @@
         btnPrev.onclick = () => { saveResponse(); current--; renderQuestion(); };
         const btnNext = document.createElement('button');
         btnNext.textContent = current === questions.length - 1 ? 'Vedi Profilo' : 'Avanti';
-        btnNext.disabled = !responses[current];
+        btnNext.disabled = responses[current] === undefined;
         btnNext.onclick = () => { saveResponse(); current++; renderQuestion(); };
         nav.appendChild(btnPrev);
         nav.appendChild(btnNext);
@@ -219,7 +283,6 @@
       title.textContent = 'Profilo Psicologico HR';
       resDiv.appendChild(title);
 
-      // Testo narrativo e fluido, evocazione lacaniana senza nominarlo
       let narrative = '';
       const maxCount = Math.max(counts.A, counts.B, counts.C);
       const axis = Object.entries(counts).filter(([_, v]) => v === maxCount).map(([k]) => k);
@@ -244,12 +307,10 @@
       detail.textContent = 'Un intreccio di desiderio, mancanza e parola che riflette le tensioni nascoste in ogni organizzazione.';
       resDiv.appendChild(detail);
 
-      // Istogramma
       const canvas = document.createElement('canvas');
       canvas.id = 'histogram';
       resDiv.appendChild(canvas);
 
-      // Griglia frequenze
       const table = document.createElement('table');
       table.id = 'frequency-grid';
       table.innerHTML = `
@@ -271,19 +332,9 @@
         type: 'bar',
         data: {
           labels: ['A','B','C'],
-          datasets: [{
-            data: [counts.A, counts.B, counts.C],
-            backgroundColor: [
-              'var(--hist-a)',
-              'var(--hist-b)',
-              'var(--hist-c)'
-            ]
-          }]
+          datasets: [{ data: [counts.A, counts.B, counts.C], backgroundColor: [ 'var(--hist-a)', 'var(--hist-b)', 'var(--hist-c)' ] }]
         },
-        options: {
-          scales: { y: { beginAtZero: true, stepSize: 1 } },
-          plugins: { legend: { display: false } }
-        }
+        options: { scales: { y: { beginAtZero: true, stepSize: 1 } }, plugins: { legend: { display: false } } }
       });
     }
 
