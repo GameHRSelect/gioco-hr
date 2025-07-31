@@ -17,22 +17,28 @@
       --hist-b: var(--blue);
       --hist-c: var(--red);
     }
-    * { box-sizing: border-box; }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
     body {
       margin: 0;
       font-family: 'Georgia', serif;
       background: var(--bg-light);
       color: var(--dark-blue);
-      line-height: 1.5;
+      line-height: 1.6;
     }
+
     .container {
       max-width: 900px;
       margin: 40px auto;
       background: #fff;
       border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
       overflow: hidden;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
+
     .question-container {
       display: grid;
       grid-template-columns: 1fr 2fr;
@@ -40,17 +46,22 @@
       padding: 25px;
       border-bottom: 2px solid var(--light-blue);
     }
+
     .question-image {
       width: 100%;
+      min-height: 200px;
+      background: #eee;
       border-radius: 8px;
       border: 2px solid var(--blue);
       object-fit: cover;
     }
+
     .answers h3 {
       margin-bottom: 15px;
       color: var(--dark-magenta);
       font-size: 1.25rem;
     }
+
     .answers label {
       display: flex;
       align-items: center;
@@ -63,23 +74,28 @@
       transition: background 0.2s, border-color 0.2s;
       font-size: 1rem;
     }
+
     .answers input[type="radio"] {
-      margin-right: 12px;
+      margin-right: 10px;
     }
+
     .answers label:hover {
       background: var(--bg-light);
       border-color: var(--light-blue);
     }
+
     .answers input[type="radio"]:checked + span {
       background: var(--light-blue);
       border-radius: 4px;
       padding: 6px 10px;
       border: 2px solid var(--dark-magenta);
     }
+
     .navigation {
-      padding: 0 25px 25px;
       text-align: right;
+      padding: 0 25px 25px;
     }
+
     .navigation button {
       background: var(--dark-magenta);
       color: #fff;
@@ -91,124 +107,320 @@
       margin-left: 10px;
       transition: background 0.2s;
     }
-    .navigation button:hover:not(:disabled) {
-      background: var(--red);
-    }
+
     .navigation button:disabled {
       background: #ccc;
       cursor: not-allowed;
     }
+
+    .navigation button:not(:disabled):hover {
+      background: var(--red);
+    }
+
     #result {
       padding: 30px;
     }
+
     #result h2 {
       margin-bottom: 20px;
       color: var(--blue);
       font-size: 1.8rem;
     }
+
     #result p {
       margin-bottom: 16px;
     }
+
     #histogram {
       display: block;
       margin: 30px auto;
       max-width: 600px;
     }
+
     #frequency-grid {
       width: 100%;
       border-collapse: collapse;
       margin: 20px 0;
     }
+
     #frequency-grid th,
     #frequency-grid td {
       border: 1px solid var(--light-blue);
       padding: 12px;
       text-align: center;
     }
+
     #frequency-grid th {
       background: var(--dark-blue);
       color: #fff;
     }
+
     #frequency-grid tr:nth-child(even) {
       background: var(--bg-light);
     }
   </style>
 </head>
 <body>
+
   <div class="container">
     <div id="quiz"></div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>
+
+    // Array di domande e risposte
     const questions = [
-      { img: 'images/q1.jpg', text: 'Quando un collaboratore mostra segni di disimpegno, come reagisce?', answers: ['Offro un percorso di coaching individuale.', 'Rivedo gli obiettivi e definisco KPI più chiari.', 'Analizzo i processi organizzativi per individuare criticità.'] },
-      { img: 'images/q2.jpg', text: 'Quale caratteristica ritiene più influente per un leader efficace?', answers: ['Empatia e ascolto attivo.', 'Visione strategica a lungo termine.', 'Capacità di adattamento e resilienza.'] },
-      { img: 'images/q3.jpg', text: 'In caso di conflitto tra membri del team, quale approccio utilizza?', answers: ['Mediazione e supporto emotivo.', 'Implemento procedure formali di risoluzione.', 'Valuto fattori sistemici e culturali dell\'organizzazione.'] },
-      { img: 'images/q4.jpg', text: 'Come gestisce la selezione dei candidati per posizioni chiave?', answers: ['Focalizzandomi sul fit culturale.', 'Valutando competenze tecniche e potenziale di crescita.', 'Analizzando la compatibilità con i processi esistenti.'] },
-      { img: 'images/q5.jpg', text: 'Qual è la sua strategia per motivare il personale?', answers: ['Riconoscimento e feedback continuo.', 'Sviluppo di opportunità di carriera strutturate.', 'Ottimizzazione degli strumenti di lavoro e ambienti.'] },
-      { img: 'images/q6.jpg', text: 'Quando definisce il ruolo di un collaboratore, cosa considera prioritario?', answers: ['Le sue aspirazioni e desideri professionali.', 'L’allineamento con la mission aziendale.', 'L’efficienza operativa e l’organizzazione del lavoro.'] },
-      { img: 'images/q7.jpg', text: 'Come approccia la formazione continua in azienda?', answers: ['Percorsi personalizzati secondo le esigenze individuali.', 'Programmi formativi standardizzati e certificati.', 'Analisi dei bisogni formativi e adozione di e-learning flessibile.'] }
+      {
+        img: './images/q1.jpg',
+        text: 'Quando un collaboratore mostra segni di disimpegno, come reagisce?',
+        answers: [
+          'Offro un percorso di coaching individuale.',
+          'Rivedo gli obiettivi e definisco KPI più chiari.',
+          'Analizzo i processi organizzativi per individuare criticità.'
+        ]
+      },
+      {
+        img: './images/q2.jpg',
+        text: 'Quale caratteristica ritiene più influente per un leader efficace?',
+        answers: [
+          'Empatia e ascolto attivo.',
+          'Visione strategica a lungo termine.',
+          'Capacità di adattamento e resilienza.'
+        ]
+      },
+      {
+        img: './images/q3.jpg',
+        text: 'In caso di conflitto tra membri del team, quale approccio utilizza?',
+        answers: [
+          'Mediazione e supporto emotivo.',
+          'Implemento procedure formali di risoluzione.',
+          'Valuto fattori sistemici e culturali dell\'organizzazione.'
+        ]
+      },
+      {
+        img: './images/q4.jpg',
+        text: 'Come gestisce la selezione dei candidati per posizioni chiave?',
+        answers: [
+          'Focalizzandomi sul fit culturale.',
+          'Valutando competenze tecniche e potenziale di crescita.',
+          'Analizzando la compatibilità con i processi esistenti.'
+        ]
+      },
+      {
+        img: './images/q5.jpg',
+        text: 'Qual è la sua strategia per motivare il personale?',
+        answers: [
+          'Riconoscimento e feedback continuo.',
+          'Sviluppo di opportunità di carriera strutturate.',
+          'Ottimizzazione degli strumenti di lavoro e ambienti.'
+        ]
+      },
+      {
+        img: './images/q6.jpg',
+        text: 'Quando definisce il ruolo di un collaboratore, cosa considera prioritario?',
+        answers: [
+          'Le sue aspirazioni e desideri professionali.',
+          'L’allineamento con la mission aziendale.',
+          'L’efficienza operativa e l’organizzazione del lavoro.'
+        ]
+      },
+      {
+        img: './images/q7.jpg',
+        text: 'Come approccia la formazione continua in azienda?',
+        answers: [
+          'Percorsi personalizzati secondo le esigenze individuali.',
+          'Programmi formativi standardizzati e certificati.',
+          'Analisi dei bisogni formativi e adozione di e-learning flessibile.'
+        ]
+      }
     ];
 
     let current = 0;
     const responses = [];
 
+    // Funzione per renderizzare la domanda corrente
     function renderQuestion() {
-      const quiz = document.getElementById('quiz');
-      quiz.innerHTML = '';
+      const quizContainer = document.getElementById('quiz');
+      quizContainer.innerHTML = '';
+
       if (current < questions.length) {
-        const qc = document.createElement('div'); qc.className = 'question-container';
-        const img = document.createElement('img'); img.className = 'question-image'; img.src = questions[current].img; img.alt = `Domanda ${current+1}`;
-        qc.appendChild(img);
-        const ansDiv = document.createElement('div'); ansDiv.className = 'answers';
-        const h3 = document.createElement('h3'); h3.textContent = `Domanda ${current+1}: ${questions[current].text}`; ansDiv.appendChild(h3);
-        questions[current].answers.forEach((a,i) => {
-          const label = document.createElement('label');
-          const radio = document.createElement('input'); radio.type = 'radio'; radio.name = 'answer'; radio.value = ['A','B','C'][i];
-          const span = document.createElement('span'); span.textContent = a;
-          label.append(radio, span);
-          ansDiv.appendChild(label);
-          radio.addEventListener('change', () => { responses[current]=radio.value; navNext.disabled=false; });
+        const questionData = questions[current];
+
+        // Container domanda
+        const qc = document.createElement('div');
+        qc.className = 'question-container';
+
+        // Immagine
+        const imgEl = document.createElement('img');
+        imgEl.className = 'question-image';
+        imgEl.src = questionData.img;
+        imgEl.alt = `Domanda ${current + 1}`;
+        qc.appendChild(imgEl);
+
+        // Sezione risposte
+        const answersDiv = document.createElement('div');
+        answersDiv.className = 'answers';
+
+        const titleEl = document.createElement('h3');
+        titleEl.textContent = `Domanda ${current + 1}: ${questionData.text}`;
+        answersDiv.appendChild(titleEl);
+
+        // Pulsanti di navigazione
+        const navDiv = document.createElement('div');
+        navDiv.className = 'navigation';
+
+        const prevBtn = document.createElement('button');
+        prevBtn.textContent = 'Indietro';
+        prevBtn.disabled = current === 0;
+        prevBtn.addEventListener('click', () => {
+          saveResponse();
+          current--;
+          renderQuestion();
         });
-        const nav = document.createElement('div'); nav.className='navigation';
-        const navPrev = document.createElement('button'); navPrev.textContent='Indietro'; navPrev.disabled=current===0; navPrev.addEventListener('click', ()=>{ save(); current--; renderQuestion(); });
-        const navNext = document.createElement('button'); navNext.textContent = current===questions.length-1?'Vedi Profilo':'Avanti';
-        navNext.disabled = responses[current]===undefined;
-        navNext.addEventListener('click', ()=>{ save(); current++; renderQuestion(); });
-        nav.append(navPrev, navNext);
-        ansDiv.appendChild(nav);
-        qc.appendChild(ansDiv);
-        quiz.appendChild(qc);
+
+        const nextBtn = document.createElement('button');
+        nextBtn.textContent = current === questions.length - 1 ? 'Vedi Profilo' : 'Avanti';
+        nextBtn.disabled = responses[current] === undefined;
+        nextBtn.addEventListener('click', () => {
+          saveResponse();
+          current++;
+          renderQuestion();
+        });
+
+        navDiv.append(prevBtn, nextBtn);
+
+        // Generazione risposte
+        questionData.answers.forEach((answerText, idx) => {
+          const labelEl = document.createElement('label');
+
+          const radioEl = document.createElement('input');
+          radioEl.type = 'radio';
+          radioEl.name = 'answer';
+          radioEl.value = ['A', 'B', 'C'][idx];
+
+          radioEl.addEventListener('change', () => {
+            responses[current] = radioEl.value;
+            nextBtn.disabled = false;
+          });
+
+          const spanEl = document.createElement('span');
+          spanEl.textContent = answerText;
+
+          labelEl.append(radioEl, spanEl);
+          answersDiv.appendChild(labelEl);
+        });
+
+        answersDiv.appendChild(navDiv);
+        qc.appendChild(answersDiv);
+        quizContainer.appendChild(qc);
+
       } else {
         showResult();
       }
     }
-    function save() {
-      const sel = document.querySelector('input[name="answer"]:checked'); if(sel) responses[current]=sel.value;
-    }
-    function showResult() {
-      const quiz = document.getElementById('quiz'); quiz.innerHTML='';
-      const cnt={A:0,B:0,C:0}; responses.forEach(r=>cnt[r]++);
-      const total=questions.length;
-      const rd=document.createElement('div'); rd.id='result';
-      const t=document.createElement('h2'); t.textContent='Profilo Psicologico HR'; rd.appendChild(t);
-      const maxv=Math.max(cnt.A,cnt.B,cnt.C); const dom=Object.keys(cnt).filter(k=>cnt[k]===maxv);
-      let story='';
-      if(dom.length===1){
-        if(dom[0]==='A') story='Il suo sguardo si posa sul riflesso di sé nell’altro, come se ogni gesto fosse un’eco del desiderio che pulsa sotto la superficie. In questo racconto interno, la figura del capo non impone ordini ma si specchia nelle aspettative, trasformando l’ambiente di lavoro in uno specchio mobile in cui si cerca sempre un senso di riconoscimento.';
-        if(dom[0]==='B') story='La sua mente architetta simboli e strutture, intesse trame di presenza e di regole, dove ogni protocollo diventa narrazione di potere e responsabilità. In questo universo il significante guida le azioni, e l’anima dell’organizzazione si rivela attraverso un linguaggio segreto fatto di obiettivi e gerarchie.';
-        if(dom[0]==='C') story='Nel silenzio delle pratiche quotidiane si annida un nucleo oscuro: ciò che sfugge alle parole, l’imprevisto e la traccia del trauma diventano motore di cambiamento. Qui la verità emerge in frammenti, disarticolata, e invita a guardare oltre i vincoli convenzionali per trovare nuovi slanci di resilienza.';
-      } else {
-        story='Il suo spirito si muove tra mondi diversi, oscillando tra lo specchio dell’identità e i segni del racconto simbolico, fino alle forze sotterranee dell’ignoto. È un’esperienza molteplice che trasforma ogni sfida in un’opera drammatica, in cui il profilo si svela come trama polifonica.';
+
+    // Salva la risposta selezionata
+    function saveResponse() {
+      const selected = document.querySelector('input[name="answer"]:checked');
+      if (selected) {
+        responses[current] = selected.value;
       }
-      const p1=document.createElement('p'); p1.textContent=story; rd.appendChild(p1);
-      const p2=document.createElement('p'); p2.textContent='Un intreccio di desiderio, mancanza e parola che riflette le tensioni nascoste in ogni organizzazione.'; rd.appendChild(p2);
-      const cv=document.createElement('canvas'); cv.id='histogram'; rd.appendChild(cv);
-      const tbl=document.createElement('table'); tbl.id='frequency-grid'; tbl.innerHTML=`<thead><tr><th>Risposta</th><th>Frequenza</th><th>Percentuale</th></tr></thead><tbody><tr><td>A</td><td>${cnt.A}</td><td>${((cnt.A/total)*100).toFixed(1)}%</td></tr><tr><td>B</td><td>${cnt.B}</td><td>${((cnt.B/total)*100).toFixed(1)}%</td></tr><tr><td>C</td><td>${cnt.C}</td><td>${((cnt.C/total)*100).toFixed(1)}%</td></tr></tbody>`; rd.appendChild(tbl);
-      quiz.appendChild(rd);
-      new Chart(document.getElementById('histogram').getContext('2d'),{type:'bar',data:{labels:['A','B','C'],datasets:[{data:[cnt.A,cnt.B,cnt.C],backgroundColor:['var(--hist-a)','var(--hist-b)','var(--hist-c)']}]},options:{scales:{y:{beginAtZero:true,stepSize:1}},plugins:{legend:{display:false}}}});
     }
+
+    // Mostra il risultato finale
+    function showResult() {
+      const quizContainer = document.getElementById('quiz');
+      quizContainer.innerHTML = '';
+
+      // Calcola frequenze
+      const counts = { A: 0, B: 0, C: 0 };
+      responses.forEach(r => counts[r]++);
+      const total = questions.length;
+
+      const resultDiv = document.createElement('div');
+      resultDiv.id = 'result';
+
+      const headerEl = document.createElement('h2');
+      headerEl.textContent = 'Profilo Psicologico HR';
+      resultDiv.appendChild(headerEl);
+
+      // Costruisci narrativa finale
+      const maxCount = Math.max(counts.A, counts.B, counts.C);
+      const dominantKeys = Object.keys(counts).filter(key => counts[key] === maxCount);
+
+      let narrativeText = '';
+      if (dominantKeys.length === 1) {
+        switch (dominantKeys[0]) {
+          case 'A':
+            narrativeText = 'Il suo sguardo si posa sul riflesso di sé nell’altro, trasformando ogni gesto in un segno di riconoscimento e appartenenza.';
+            break;
+          case 'B':
+            narrativeText = 'Costruisce trame simboliche e strutture narrative, dove le regole diventano parole che danno forma all’identità collettiva.';
+            break;
+          case 'C':
+            narrativeText = 'Ascolta il silenzio nascosto dietro le pratiche, dove l’inatteso e l’ombra si fanno leva per il cambiamento.';
+            break;
+        }
+      } else {
+        narrativeText = 'Si muove tra diversi registri, tessendo una trama complessa che unisce riflessione, struttura e slancio inatteso.';
+      }
+
+      const narrativeEl = document.createElement('p');
+      narrativeEl.textContent = narrativeText;
+      resultDiv.appendChild(narrativeEl);
+
+      // Crea istogramma
+      const canvasEl = document.createElement('canvas');
+      canvasEl.id = 'histogram';
+      resultDiv.appendChild(canvasEl);
+
+      // Crea tabella frequenze
+      const tableEl = document.createElement('table');
+      tableEl.id = 'frequency-grid';
+      tableEl.innerHTML = `
+        <thead>
+          <tr>
+            <th>Risposta</th>
+            <th>Frequenza</th>
+            <th>Percentuale</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>A</td><td>${counts.A}</td><td>${((counts.A / total) * 100).toFixed(1)}%</td></tr>
+          <tr><td>B</td><td>${counts.B}</td><td>${((counts.B / total) * 100).toFixed(1)}%</td></tr>
+          <tr><td>C</td><td>${counts.C}</td><td>${((counts.C / total) * 100).toFixed(1)}%</td></tr>
+        </tbody>
+      `;
+      resultDiv.appendChild(tableEl);
+
+      quizContainer.appendChild(resultDiv);
+
+      // Render Chart.js
+      new Chart(canvasEl.getContext('2d'), {
+        type: 'bar',
+        data: {
+          labels: ['A', 'B', 'C'],
+          datasets: [{
+            data: [counts.A, counts.B, counts.C],
+            backgroundColor: ['var(--hist-a)', 'var(--hist-b)', 'var(--hist-c)']
+          }]
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true,
+              stepSize: 1
+            }
+          },
+          plugins: {
+            legend: { display: false }
+          }
+        }
+      });
+    }
+
+    // Inizializza il quiz
     document.addEventListener('DOMContentLoaded', renderQuestion);
   </script>
 </body>
