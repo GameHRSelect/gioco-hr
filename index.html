@@ -5,8 +5,8 @@
   <title>Test Interattivo HR – Profilo Psicologico</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
+    /* Palette Selèct */
     :root {
-      /* Palette Selèct */
       --bg-light: #F1E5D7;
       --dark-magenta: #8D064A;
       --dark-blue: #06283F;
@@ -17,11 +17,7 @@
       --hist-b: var(--blue);
       --hist-c: var(--red);
     }
-
-    *, *::before, *::after {
-      box-sizing: border-box;
-    }
-
+    *, *::before, *::after { box-sizing: border-box; }
     body {
       margin: 0;
       font-family: 'Georgia', serif;
@@ -29,43 +25,39 @@
       color: var(--dark-blue);
       line-height: 1.6;
     }
-
     .container {
       max-width: 900px;
       margin: 40px auto;
       background: #fff;
       border-radius: 10px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
       overflow: hidden;
     }
-
     .question-container {
       display: grid;
       grid-template-columns: 1fr 2fr;
       gap: 20px;
-      padding: 25px;
+      padding: 30px;
       border-bottom: 2px solid var(--light-blue);
     }
-
+    .question-container:last-child { border-bottom: none; }
     .question-image {
       width: 100%;
-      min-height: 200px;
+      height: 250px;
       background: #eee;
       border-radius: 8px;
       border: 2px solid var(--blue);
       object-fit: cover;
     }
-
     .answers h3 {
-      margin-bottom: 15px;
+      margin-bottom: 20px;
       color: var(--dark-magenta);
-      font-size: 1.25rem;
+      font-size: 1.3rem;
     }
-
     .answers label {
       display: flex;
       align-items: center;
-      margin-bottom: 12px;
+      margin-bottom: 15px;
       padding: 14px;
       border: 2px solid var(--blue);
       border-radius: 6px;
@@ -74,102 +66,74 @@
       transition: background 0.2s, border-color 0.2s;
       font-size: 1rem;
     }
-
-    .answers input[type="radio"] {
-      margin-right: 10px;
-    }
-
-    .answers label:hover {
-      background: var(--bg-light);
-      border-color: var(--light-blue);
-    }
-
+    .answers input[type="radio"] { margin-right: 12px; }
+    .answers label:hover { background: var(--bg-light); border-color: var(--light-blue); }
     .answers input[type="radio"]:checked + span {
       background: var(--light-blue);
       border-radius: 4px;
-      padding: 6px 10px;
+      padding: 6px 12px;
       border: 2px solid var(--dark-magenta);
     }
-
     .navigation {
       text-align: right;
-      padding: 0 25px 25px;
+      margin-top: 20px;
     }
-
     .navigation button {
       background: var(--dark-magenta);
       color: #fff;
       border: none;
-      padding: 12px 18px;
+      padding: 12px 20px;
       border-radius: 6px;
       font-size: 1rem;
       cursor: pointer;
       margin-left: 10px;
       transition: background 0.2s;
     }
-
-    .navigation button:disabled {
-      background: #ccc;
-      cursor: not-allowed;
-    }
-
-    .navigation button:not(:disabled):hover {
-      background: var(--red);
-    }
-
+    .navigation button:disabled { background: #ccc; cursor: not-allowed; }
+    .navigation button:not(:disabled):hover { background: var(--red); }
     #result {
-      padding: 30px;
+      padding: 40px;
     }
-
     #result h2 {
-      margin-bottom: 20px;
+      margin-bottom: 30px;
       color: var(--blue);
-      font-size: 1.8rem;
+      font-size: 2rem;
     }
-
     #result p {
-      margin-bottom: 16px;
+      margin-bottom: 20px;
+      text-align: justify;
     }
-
     #histogram {
       display: block;
-      margin: 30px auto;
+      margin: 40px auto;
       max-width: 600px;
     }
-
     #frequency-grid {
       width: 100%;
       border-collapse: collapse;
-      margin: 20px 0;
+      margin: 30px 0;
     }
-
     #frequency-grid th,
     #frequency-grid td {
       border: 1px solid var(--light-blue);
       padding: 12px;
       text-align: center;
     }
-
     #frequency-grid th {
       background: var(--dark-blue);
       color: #fff;
     }
-
-    #frequency-grid tr:nth-child(even) {
-      background: var(--bg-light);
-    }
+    #frequency-grid tr:nth-child(even) { background: var(--bg-light); }
   </style>
 </head>
 <body>
-
   <div class="container">
     <div id="quiz"></div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>
-
-    // Array di domande e risposte
+    // Definizione delle domande (complete) con percorso immagini
     const questions = [
       {
         img: './images/q1.jpg',
@@ -239,31 +203,31 @@
     let current = 0;
     const responses = [];
 
-    // Funzione per renderizzare la domanda corrente
+    // Renderizza la domanda corrente
     function renderQuestion() {
-      const quizContainer = document.getElementById('quiz');
-      quizContainer.innerHTML = '';
+      const quiz = document.getElementById('quiz');
+      quiz.innerHTML = '';
 
       if (current < questions.length) {
-        const questionData = questions[current];
+        const data = questions[current];
 
-        // Container domanda
+        // Contenitore domanda
         const qc = document.createElement('div');
         qc.className = 'question-container';
 
-        // Immagine
+        // Immagine domanda
         const imgEl = document.createElement('img');
         imgEl.className = 'question-image';
-        imgEl.src = questionData.img;
+        imgEl.src = data.img;
         imgEl.alt = `Domanda ${current + 1}`;
         qc.appendChild(imgEl);
 
-        // Sezione risposte
+        // Sezione risposte e titolo
         const answersDiv = document.createElement('div');
         answersDiv.className = 'answers';
 
         const titleEl = document.createElement('h3');
-        titleEl.textContent = `Domanda ${current + 1}: ${questionData.text}`;
+        titleEl.textContent = `Domanda ${current + 1}: ${data.text}`;
         answersDiv.appendChild(titleEl);
 
         // Pulsanti di navigazione
@@ -274,47 +238,38 @@
         prevBtn.textContent = 'Indietro';
         prevBtn.disabled = current === 0;
         prevBtn.addEventListener('click', () => {
-          saveResponse();
-          current--;
-          renderQuestion();
+          saveResponse(); current--; renderQuestion();
         });
 
         const nextBtn = document.createElement('button');
         nextBtn.textContent = current === questions.length - 1 ? 'Vedi Profilo' : 'Avanti';
         nextBtn.disabled = responses[current] === undefined;
         nextBtn.addEventListener('click', () => {
-          saveResponse();
-          current++;
-          renderQuestion();
+          saveResponse(); current++; renderQuestion();
         });
 
         navDiv.append(prevBtn, nextBtn);
 
-        // Generazione risposte
-        questionData.answers.forEach((answerText, idx) => {
+        // Generazione delle risposte
+        data.answers.forEach((ansText, idx) => {
           const labelEl = document.createElement('label');
-
           const radioEl = document.createElement('input');
           radioEl.type = 'radio';
           radioEl.name = 'answer';
-          radioEl.value = ['A', 'B', 'C'][idx];
-
+          radioEl.value = ['A','B','C'][idx];
           radioEl.addEventListener('change', () => {
             responses[current] = radioEl.value;
             nextBtn.disabled = false;
           });
-
           const spanEl = document.createElement('span');
-          spanEl.textContent = answerText;
-
+          spanEl.textContent = ansText;
           labelEl.append(radioEl, spanEl);
           answersDiv.appendChild(labelEl);
         });
 
         answersDiv.appendChild(navDiv);
         qc.appendChild(answersDiv);
-        quizContainer.appendChild(qc);
-
+        quiz.appendChild(qc);
       } else {
         showResult();
       }
@@ -322,18 +277,16 @@
 
     // Salva la risposta selezionata
     function saveResponse() {
-      const selected = document.querySelector('input[name="answer"]:checked');
-      if (selected) {
-        responses[current] = selected.value;
-      }
+      const sel = document.querySelector('input[name="answer"]:checked');
+      if (sel) responses[current] = sel.value;
     }
 
-    // Mostra il risultato finale
+    // Mostra il profilo finale
     function showResult() {
-      const quizContainer = document.getElementById('quiz');
-      quizContainer.innerHTML = '';
+      const quiz = document.getElementById('quiz');
+      quiz.innerHTML = '';
 
-      // Calcola frequenze
+      // Calcolo frequenze
       const counts = { A: 0, B: 0, C: 0 };
       responses.forEach(r => counts[r]++);
       const total = questions.length;
@@ -341,63 +294,69 @@
       const resultDiv = document.createElement('div');
       resultDiv.id = 'result';
 
-      const headerEl = document.createElement('h2');
-      headerEl.textContent = 'Profilo Psicologico HR';
-      resultDiv.appendChild(headerEl);
+      const header = document.createElement('h2');
+      header.textContent = 'Profilo Psicologico HR';
+      resultDiv.appendChild(header);
 
-      // Costruisci narrativa finale
+      // Narrativa estesa
       const maxCount = Math.max(counts.A, counts.B, counts.C);
-      const dominantKeys = Object.keys(counts).filter(key => counts[key] === maxCount);
-
-      let narrativeText = '';
+      const dominantKeys = Object.keys(counts).filter(k => counts[k] === maxCount);
+      
+      let narrative = '';
       if (dominantKeys.length === 1) {
         switch (dominantKeys[0]) {
           case 'A':
-            narrativeText = 'Il suo sguardo si posa sul riflesso di sé nell’altro, trasformando ogni gesto in un segno di riconoscimento e appartenenza.';
+            narrative = "Il soggetto si muove nel regno dell’<strong>immagine</strong>, dove ogni relazione è specchio e ogni gesto è segno. " +
+                        "In questo spazio, la leadership si fonda sulla risonanza emotiva e sulla continua ricerca di appartenenza. " +
+                        "Il desiderio di essere visti e riconosciuti trasforma l’organizzazione in un palcoscenico di infinite performance personali.";
             break;
           case 'B':
-            narrativeText = 'Costruisce trame simboliche e strutture narrative, dove le regole diventano parole che danno forma all’identità collettiva.';
+            narrative = "Naviga nel territorio del <strong>linguaggio</strong> e della parola, tessendo reti di significati che ordinano il potere e i ruoli. " +
+                        "Le procedure diventano rituali e i protocolli si caricano di senso: ogni parola è atto, ogni segno è legge. " +
+                        "La struttura organizzativa si erge come architettura simbolica, solida ma permeabile alle interpretazioni collettive.";
             break;
-          case 'C':
-            narrativeText = 'Ascolta il silenzio nascosto dietro le pratiche, dove l’inatteso e l’ombra si fanno leva per il cambiamento.';
+                    case 'C':
+            narrative = "Abita il regno dell’<strong>inafferrabile</strong>, dove il non detto e l’inconscio emergono come forze motrici. " +
+                        "Il vuoto diventa opportunità e il trauma diventa slancio: in questo paesaggio, la trasformazione nasce dalla rottura dei confini. " +
+                        "La resilienza si reinventa attraverso l’inaspettato, costruendo spazi di creatività nel crepaccio dell’ordine.";
             break;
         }
       } else {
-        narrativeText = 'Si muove tra diversi registri, tessendo una trama complessa che unisce riflessione, struttura e slancio inatteso.';
+        narrative = "Il profilo si manifesta come un’opera polifonica, dove immagini, parole e impulsi emergono in simultanea. " +
+                    "È un viaggio che attraversa specchi e simboli, vuoti e parole, creando un’orchestra di tensioni nascoste e risonanze condivise.";
       }
 
-      const narrativeEl = document.createElement('p');
-      narrativeEl.textContent = narrativeText;
-      resultDiv.appendChild(narrativeEl);
+      // Paragrafi narrativi
+      const p1 = document.createElement('p');
+      p1.innerHTML = narrative;
+      resultDiv.appendChild(p1);
 
-      // Crea istogramma
-      const canvasEl = document.createElement('canvas');
-      canvasEl.id = 'histogram';
-      resultDiv.appendChild(canvasEl);
+      
 
-      // Crea tabella frequenze
-      const tableEl = document.createElement('table');
-      tableEl.id = 'frequency-grid';
-      tableEl.innerHTML = `
+      // Istogramma
+      const canvas = document.createElement('canvas');
+      canvas.id = 'histogram';
+      resultDiv.appendChild(canvas);
+
+      // Tabella frequenze
+      const table = document.createElement('table');
+      table.id = 'frequency-grid';
+      table.innerHTML = `
         <thead>
-          <tr>
-            <th>Risposta</th>
-            <th>Frequenza</th>
-            <th>Percentuale</th>
-          </tr>
+          <tr><th>Risposta</th><th>Frequenza</th><th>Percentuale</th></tr>
         </thead>
         <tbody>
-          <tr><td>A</td><td>${counts.A}</td><td>${((counts.A / total) * 100).toFixed(1)}%</td></tr>
-          <tr><td>B</td><td>${counts.B}</td><td>${((counts.B / total) * 100).toFixed(1)}%</td></tr>
-          <tr><td>C</td><td>${counts.C}</td><td>${((counts.C / total) * 100).toFixed(1)}%</td></tr>
+          <tr><td>A</td><td>${counts.A}</td><td>${((counts.A/total)*100).toFixed(1)}%</td></tr>
+          <tr><td>B</td><td>${counts.B}</td><td>${((counts.B/total)*100).toFixed(1)}%</td></tr>
+          <tr><td>C</td><td>${counts.C}</td><td>${((counts.C/total)*100).toFixed(1)}%</td></tr>
         </tbody>
       `;
-      resultDiv.appendChild(tableEl);
+      resultDiv.appendChild(table);
 
-      quizContainer.appendChild(resultDiv);
+      quiz.appendChild(resultDiv);
 
-      // Render Chart.js
-      new Chart(canvasEl.getContext('2d'), {
+      // Rendering dell'istogramma con Chart.js
+      new Chart(canvas.getContext('2d'), {
         type: 'bar',
         data: {
           labels: ['A', 'B', 'C'],
@@ -408,19 +367,13 @@
         },
         options: {
           scales: {
-            y: {
-              beginAtZero: true,
-              stepSize: 1
-            }
+            y: { beginAtZero: true, stepSize: 1 }
           },
-          plugins: {
-            legend: { display: false }
-          }
+          plugins: { legend: { display: false } }
         }
       });
     }
 
-    // Inizializza il quiz
     document.addEventListener('DOMContentLoaded', renderQuestion);
   </script>
 </body>
