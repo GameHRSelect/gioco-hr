@@ -1,31 +1,40 @@
 <!DOCTYPE html>
 <html lang="it">
+
 <head>
   <meta charset="UTF-8">
   <title>Test Interattivo HR – Profilo Psicologico</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- ===================================== -->
-  <!-- STILI GENERALI e PALETTE SELÈCT          -->
-  <!-- ===================================== -->
+
+  <!--
+    =======================================================
+    STILI GENERALI e PALETTE SELÈCT
+    =======================================================
+  -->
   <style>
     :root {
-      /* Palette Selèct */
+      /* Palette principale */
       --bg-light: #F1E5D7;
       --dark-magenta: #8D064A;
       --dark-blue: #06283F;
       --blue: #1B65A5;
       --red: #D80D32;
       --light-blue: #4AAFD8;
+
+      /* Colori istogramma */
       --hist-a: var(--dark-magenta);
       --hist-b: var(--blue);
       --hist-c: var(--red);
     }
-    /* RESET E BOX MODEL */
+
+    /* Reset base e box model */
     *, *::before, *::after {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
     }
+
+    /* Layout generale */
     body {
       background: var(--bg-light);
       font-family: 'Georgia', serif;
@@ -34,57 +43,64 @@
       display: flex;
       justify-content: center;
     }
+
     .container {
       width: 100%;
       max-width: 900px;
       background: #fff;
       border-radius: 12px;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
       overflow: hidden;
     }
-    /* HEADER */
+
+    /* Header e progress bar */
     header {
       background: var(--blue);
       color: #fff;
       padding: 20px;
       text-align: center;
     }
+
     header h1 {
       font-size: 2.2rem;
       margin-bottom: 6px;
     }
+
     header p {
-      opacity: 0.8;
+      opacity: 0.85;
       font-size: 0.95rem;
     }
-    /* BARRA DI PROGRESSO */
+
     .progress-container {
-      width: 100%;
       background: #eee;
       height: 8px;
       margin-top: 12px;
     }
+
     .progress-bar {
       height: 100%;
       width: 0;
       background: var(--light-blue);
       transition: width 0.4s ease;
     }
-    /* CONTENUTO PRINCIPALE */
+
+    /* Contenuto quiz */
     .content {
       padding: 24px;
     }
-    /* DOMANDA */
-    .question {
+
+    .question-box {
       margin-bottom: 32px;
     }
-    .question h3 {
+
+    .question-box h3 {
       font-size: 1.5rem;
       color: var(--dark-magenta);
       margin-bottom: 20px;
       line-height: 1.3;
     }
-    /* RISPOSTE */
+
+    /* Risposte */
     .answers label {
       display: flex;
       align-items: center;
@@ -96,15 +112,18 @@
       transition: background 0.2s, border-color 0.2s;
       font-size: 1rem;
     }
+
     .answers label:hover {
       background: var(--bg-light);
       border-color: var(--light-blue);
     }
+
     .answers input[type="radio"] {
       margin-right: 12px;
       width: 18px;
       height: 18px;
     }
+
     .answers input[type="radio"]:checked + span {
       background: var(--light-blue);
       color: #fff;
@@ -112,11 +131,13 @@
       border-radius: 4px;
       border: 2px solid var(--dark-magenta);
     }
-    /* NAVIGATION BUTTONS */
+
+    /* Navigazione */
     .navigation {
       text-align: right;
       margin-top: 24px;
     }
+
     .navigation button {
       padding: 12px 24px;
       margin-left: 12px;
@@ -128,87 +149,103 @@
       cursor: pointer;
       transition: background 0.2s;
     }
+
     .navigation button:disabled {
       background: #ccc;
       cursor: not-allowed;
     }
+
     .navigation button:not(:disabled):hover {
       background: var(--red);
     }
-    /* RISULTATI */
+
+    /* Risultati */
     #result {
       padding: 32px;
       animation: fadeIn 0.5s ease;
     }
+
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
     }
+
     #result h2 {
       font-size: 2rem;
       color: var(--blue);
       margin-bottom: 20px;
     }
+
     #result p {
       margin-bottom: 20px;
       text-align: justify;
       font-size: 1rem;
     }
+
     #histogram {
       display: block;
       margin: 32px auto;
       max-width: 600px;
     }
+
     table {
       width: 100%;
       border-collapse: collapse;
       margin-top: 24px;
     }
+
     th, td {
       border: 1px solid var(--light-blue);
       padding: 12px;
       text-align: center;
     }
+
     th {
       background: var(--dark-blue);
       color: #fff;
     }
+
     tr:nth-child(even) {
       background: var(--bg-light);
     }
   </style>
 </head>
+
 <body>
   <div class="container">
     <header>
       <h1>Test Interattivo HR</h1>
-      <p>7 Domande per profilare lo stile decisionale</p>
+      <p>7 Domande per delineare il tuo profilo decisionale</p>
       <div class="progress-container">
         <div class="progress-bar" id="progressBar"></div>
       </div>
     </header>
+
     <div class="content">
       <div id="quiz"></div>
     </div>
   </div>
 
-  <!-- Chart.js -->
+  <!-- Chart.js per grafici -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>
-    // -------------------------------------------------
-    // Configurazione delle domande e risposte
-    // -------------------------------------------------
+    /**
+     * Dataset delle domande
+     * Ogni oggetto contiene:
+     * - text: testo della domanda
+     * - answers: array delle possibili risposte (A, B, C)
+     */
     const questions = [
       {
         text: 'Quando un collaboratore mostra segni di disimpegno, come reagisce?',
         answers: [
-          'Offro coaching individuale',
-          'Rivedo KPI e obiettivi chiaramente',
-          'Approfondisco le motivazioni e i processi interni'
+          'Offro un percorso di coaching individuale',
+          'Rivedo gli obiettivi e definisco KPI più chiari',
+          'Analizzo le motivazioni e i processi interni'
         ]
       },
       {
-        text: 'Quale caratteristica è cruciale per un leader?',
+        text: 'Quale caratteristica è cruciale per un leader efficiente?',
         answers: [
           'Empatia e ascolto attivo',
           'Visione strategica a lungo termine',
@@ -216,43 +253,43 @@
         ]
       },
       {
-        text: 'In caso di conflitto, quale approccio preferisce?',
+        text: 'In caso di conflitto, quale approccio adotta?',
         answers: [
-          'Mediazione e dialogo',
-          'Adozione di politiche formali',
-          'Analisi sistemica e culturale'
+          'Mediazione e supporto emotivo',
+          'Implementazione di procedure formali',
+          'Analisi culturale e sistemica dell’organizzazione'
         ]
       },
       {
-        text: 'Come gestisce la selezione per ruoli chiave?',
+        text: 'Come seleziona i candidati per ruoli chiave?',
         answers: [
-          'Selezione sul fit culturale',
-          'Valutazione di competenze tecniche e soft skill',
-          'Verifica compatibilità con processi esistenti'
+          'Valuto principalmente il fit culturale',
+          'Analizzo competenze tecniche e potenziale di crescita',
+          'Controllo la compatibilità con i processi aziendali'
         ]
       },
       {
         text: 'La sua strategia di motivazione è basata su:',
         answers: [
-          'Riconoscimento e feedback continuo',
-          'Percorsi di carriera strutturati',
-          'Miglioramento delle condizioni e strumenti'
+          'Feedback continuo e riconoscimenti',
+          'Piani di carriera strutturati',
+          'Ottimizzazione degli strumenti e dell’ambiente di lavoro'
         ]
       },
       {
-        text: 'Nel definire un ruolo, dà priorità a:',
+        text: 'Nel definire un ruolo, quale criterio pesa di più?',
         answers: [
-          'Desideri e aspirazioni personali',
-          'Allineamento con la mission aziendale',
-          'Efficienza operativa e risultati'
+          'Le aspirazioni personali del collaboratore',
+          'L’allineamento con la missione aziendale',
+          'L’efficienza operativa e i risultati attesi'
         ]
       },
       {
         text: 'L’approccio alla formazione continua è:',
         answers: [
-          'Personalizzato secondo bisogni individuali',
-          'Standardizzato con certificazioni',
-          'Flessibile tramite e-learning'
+          'Personalizzato secondo esigenze individuali',
+          'Standardizzato con certificazioni riconosciute',
+          'Flessibile tramite piattaforme e-learning'
         ]
       }
     ];
@@ -260,151 +297,157 @@
     let current = 0;
     const responses = [];
 
-    // -------------------------------------------------
-    // Utility per creare elementi DOM
-    // -------------------------------------------------
-    function createElement(tag, props = {}, ...children) {
-      const el = document.createElement(tag);
-      Object.entries(props).forEach(([key, value]) => {
-        el[key] = value;
-      });
-      children.forEach(child => {
-        if (typeof child === 'string') {
-          el.appendChild(document.createTextNode(child));
-        } else {
-          el.appendChild(child);
-        }
-      });
-      return el;
-    }
-
-    // -------------------------------------------------
-    // Aggiorna la barra di progresso
-    // -------------------------------------------------
+    /**
+     * Aggiorna la larghezza della barra di progresso
+     */
     function updateProgress() {
-      const percent = (current / questions.length) * 100;
-      document.getElementById('progressBar').style.width = percent + '%';
+      const bar = document.getElementById('progressBar');
+      bar.style.width = `${(current / questions.length) * 100}%`;
     }
 
-    // -------------------------------------------------
-    // Renderizza la domanda corrente
-    // -------------------------------------------------
+    /**
+     * Renderizza la domanda corrente
+     * Gestisce la logica di navigazione avanti/indietro
+     */
     function renderQuestion() {
       updateProgress();
-      const quiz = document.getElementById('quiz');
-      quiz.innerHTML = '';
+      const container = document.getElementById('quiz');
+      container.innerHTML = '';
 
       if (current < questions.length) {
         const qData = questions[current];
 
         // Contenitore domanda
-        const qContainer = createElement('div', { className: 'question' });
-        const title = createElement('h3', {}, `Domanda ${current + 1}/${questions.length}: ${qData.text}`);
-        qContainer.appendChild(title);
+        const qBox = document.createElement('div');
+        qBox.className = 'question-box';
 
-        // Risposte radio
-        const ansContainer = createElement('div', { className: 'answers' });
-        qData.answers.forEach((ansText, idx) => {
+        const questionTitle = document.createElement('h3');
+        questionTitle.textContent = `Domanda ${current + 1}/${questions.length}: ${qData.text}`;
+        qBox.appendChild(questionTitle);
+
+        // Creazione risposte
+        const ansDiv = document.createElement('div');
+        ansDiv.className = 'answers';
+
+        qData.answers.forEach((ans, idx) => {
           const id = `q${current}a${idx}`;
-          const radio = createElement('input', { type: 'radio', name: 'answer', id, value: ['A','B','C'][idx] });
+          const label = document.createElement('label');
+
+          const radio = document.createElement('input');
+          radio.type = 'radio';
+          radio.name = 'answer';
+          radio.id = id;
+          radio.value = ['A', 'B', 'C'][idx];
           radio.addEventListener('change', () => {
             responses[current] = radio.value;
             document.getElementById('btnNext').disabled = false;
           });
-          const label = createElement('label', { htmlFor: id }, radio, createElement('span', {}, ansText));
-          ansContainer.appendChild(label);
+
+          const span = document.createElement('span');
+          span.textContent = ans;
+
+          label.appendChild(radio);
+          label.appendChild(span);
+          ansDiv.appendChild(label);
         });
 
-        // Navigazione
-        const nav = createElement('div', { className: 'navigation' });
-        const btnPrev = createElement('button', { disabled: current === 0 }, 'Indietro');
+        qBox.appendChild(ansDiv);
+
+        // Navigazione avanti/indietro
+        const nav = document.createElement('div');
+        nav.className = 'navigation';
+
+        const btnPrev = document.createElement('button');
+        btnPrev.textContent = 'Indietro';
+        btnPrev.disabled = (current === 0);
         btnPrev.addEventListener('click', () => {
           saveResponse();
           current--;
           renderQuestion();
         });
-        const btnNext = createElement('button', { id: 'btnNext', disabled: responses[current] === undefined },
-          current === questions.length - 1 ? 'Vedi Profilo' : 'Avanti'
-        );
+
+        const btnNext = document.createElement('button');
+        btnNext.id = 'btnNext';
+        btnNext.textContent = (current === questions.length - 1) ? 'Vedi Profilo' : 'Avanti';
+        btnNext.disabled = !responses[current];
         btnNext.addEventListener('click', () => {
           saveResponse();
           current++;
           renderQuestion();
         });
+
         nav.appendChild(btnPrev);
         nav.appendChild(btnNext);
 
-        // Appendi al quiz
-        quiz.appendChild(qContainer);
-        quiz.appendChild(ansContainer);
-        quiz.appendChild(nav);
+        container.appendChild(qBox);
+        container.appendChild(nav);
       } else {
         showResult();
       }
     }
 
-    // -------------------------------------------------
-    // Salva risposta selezionata
-    // -------------------------------------------------
+    /**
+     * Salva la risposta selezionata per la domanda corrente
+     */
     function saveResponse() {
-      const sel = document.querySelector('input[name="answer"]:checked');
-      if (sel) {
-        responses[current] = sel.value;
+      const selected = document.querySelector('input[name="answer"]:checked');
+      if (selected) {
+        responses[current] = selected.value;
       }
     }
 
-    // -------------------------------------------------
-    // Mostra risultato finale
-    // -------------------------------------------------
+    /**
+     * Calcola e mostra il profilo finale
+     */
     function showResult() {
       updateProgress();
-      const quiz = document.getElementById('quiz');
-      quiz.innerHTML = '';
+      const container = document.getElementById('quiz');
+      container.innerHTML = '';
 
-      // Conta risposte
+      // Conta le risposte
       const counts = { A: 0, B: 0, C: 0 };
       responses.forEach(r => counts[r]++);
       const total = questions.length;
 
-      // Container risultati
-      const resDiv = createElement('div', { id: 'result' });
-      const header = createElement('h2', {}, 'Profilo Psicologico HR');
-      resDiv.appendChild(header);
+      // Sezione risultati
+      const resDiv = document.createElement('div');
+      resDiv.id = 'result';
 
-      // Narrazione dettagliata
-      const maxCount = Math.max(counts.A, counts.B, counts.C);
-      const dominantKeys = Object.keys(counts).filter(k => counts[k] === maxCount);
-      let narrativeText = '';
-      if (dominantKeys.length === 1) {
-        switch (dominantKeys[0]) {
-          case 'A':
-            narrativeText = "Sei guidato dall’<strong>immagine</strong>: cerchi nel gruppo un riflesso del tuo sé, e trasformi la leadership in una scena di riconoscimento emotivo.";
-            break;
-          case 'B':
-            narrativeText = "Vivi nel regno del <strong>linguaggio</strong>: le parole diventano strutture di potere e ogni procedimento è un atto simbolico.";
-            break;
-          case 'C':
-            narrativeText = "Abiti l’<strong>inafferrabile</strong>: il tuo potere sorge dal vuoto e dal non detto, generando innovazione nell’imprevisto.";
-            break;
-        }
-      } else {
-        narrativeText = "Possiedi un profilo <strong>ibrido</strong>: immagini, parole e spiriti d’innovazione si fondono nella tua strategia di leadership.";
+      const title = document.createElement('h2');
+      title.textContent = 'Profilo Psicologico HR';
+      resDiv.appendChild(title);
+
+      // Generazione narrazione finale
+      const maxVal = Math.max(counts.A, counts.B, counts.C);
+      const dominant = Object.keys(counts).find(key => counts[key] === maxVal);
+      let narrative = '';
+
+      switch (dominant) {
+        case 'A':
+          narrative = 'Sei guidato dall’<strong>immagine</strong>: cerchi sempre il riscontro emotivo e trasformi ogni relazione in specchio.';
+          break;
+        case 'B':
+          narrative = 'Abiti il <strong>linguaggio</strong>: le parole strutturano la tua visione e ogni procedura diventa atto simbolico.';
+          break;
+        case 'C':
+          narrative = 'Vivi nell’<strong>inafferrabile</strong>: il non detto e l’inatteso sono leve di innovazione per te.';
+          break;
       }
-      resDiv.appendChild(createElement('p', { innerHTML: narrativeText }));
 
-      // Istogramma
-      const canvas = createElement('canvas', { id: 'histogram' });
-      resDiv.appendChild(canvas);
+      const para = document.createElement('p');
+      para.innerHTML = narrative;
+      resDiv.appendChild(para);
 
-      // Tabella frequenze
-      const table = createElement('table');
+      // Istogramma dei risultati
+      const chartCanvas = document.createElement('canvas');
+      chartCanvas.id = 'histogram';
+      resDiv.appendChild(chartCanvas);
+
+      // Tabella delle frequenze
+      const table = document.createElement('table');
       table.innerHTML = `
         <thead>
-          <tr>
-            <th>Risposta</th>
-            <th>Conteggio</th>
-            <th>Percentuale</th>
-          </tr>
+          <tr><th>Risposta</th><th>Conteggio</th><th>Percentuale</th></tr>
         </thead>
         <tbody>
           <tr><td>A</td><td>${counts.A}</td><td>${((counts.A/total)*100).toFixed(1)}%</td></tr>
@@ -414,15 +457,17 @@
       `;
       resDiv.appendChild(table);
 
-      // Appendi risultati
-      quiz.appendChild(resDiv);
+      container.appendChild(resDiv);
 
       // Rendering Chart.js
-      new Chart(canvas.getContext('2d'), {
+      new Chart(chartCanvas.getContext('2d'), {
         type: 'bar',
         data: {
-          labels: ['A','B','C'],
-          datasets: [{ data: [counts.A, counts.B, counts.C], backgroundColor: ['var(--hist-a)','var(--hist-b)','var(--hist-c)'] }]
+          labels: ['A', 'B', 'C'],
+          datasets: [{
+            data: [counts.A, counts.B, counts.C],
+            backgroundColor: ['var(--hist-a)', 'var(--hist-b)', 'var(--hist-c)']
+          }]
         },
         options: {
           scales: { y: { beginAtZero: true, stepSize: 1 } },
@@ -431,8 +476,9 @@
       });
     }
 
-    // Avvio quiz al caricamento
+    // Inizializza il quiz al caricamento
     document.addEventListener('DOMContentLoaded', renderQuestion);
   </script>
 </body>
+
 </html>
